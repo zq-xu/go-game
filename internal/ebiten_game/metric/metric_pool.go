@@ -10,8 +10,6 @@ import (
 	"golang.org/x/image/font"
 )
 
-var metricSet = make(map[string]metricObject)
-
 var colorSet = []color.Color{color.Black, color.RGBA{0xff, 0, 0, 0xff}, color.RGBA{0, 0, 0xff, 0xff}}
 
 type Interface interface {
@@ -32,22 +30,27 @@ type DrawConfig struct {
 	Color color.Color
 }
 
-func Register(name string, i Interface) {
-	_, ok := metricSet[name]
-	if ok {
-		return
-	}
+type Pool struct {
+	metricSet map[string]metricObject
+}
 
-	metricSet[name] = metricObject{
-		Interface: i,
-
-		name:  name,
-		index: len(metricSet),
+func NewMetricPool() *Pool {
+	return &Pool{
+		metricSet: make(map[string]metricObject),
 	}
 }
 
-func DrawMetrics(screen *ebiten.Image) {
-	for name, obj := range metricSet {
+func (p *Pool) Register(name string, i Interface) {
+	p.metricSet[name] = metricObject{
+		Interface: i,
+
+		name:  name,
+		index: len(p.metricSet),
+	}
+}
+
+func (p *Pool) DrawMetrics(screen *ebiten.Image) {
+	for name, obj := range p.metricSet {
 		dc := &DrawConfig{
 			Face:  bitmapfont.Face,
 			X:     4,

@@ -4,19 +4,14 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/metric"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/model/img"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/model/input"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/data"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/mode"
 )
 
 type Game struct {
-	cfg *config.Config
+	data *data.GameData
 
-	input *input.Input
-
-	ship *img.Ship
-
-	shoot *Shoot
+	modeHandler mode.GameModeHandler
 }
 
 func NewGame() *Game {
@@ -24,37 +19,26 @@ func NewGame() *Game {
 	ebiten.SetWindowTitle(config.Cfg.Title)
 
 	g := &Game{
-		input: input.NewInput(),
-		cfg:   config.Cfg,
-		ship:  img.NewShipImg(config.Cfg),
-		shoot: NewShoot(),
+		data: data.NewGameData(),
 	}
 
-	metric.Register(input.InputName, g.input)
-	metric.Register(img.ShipName, g.ship)
-	metric.Register(ShootName, g.shoot)
-
+	g.SetMode(mode.WaitingStartMode)
 	return g
 }
 
-func (g *Game) Update() error {
-	g.input.Update()
-	g.ship.Update()
-	g.shoot.Update(g.cfg, g.ship)
+// SetMode: implement ModeListener
+func (g *Game) SetMode(m mode.Mode) {
+	g.modeHandler, _ = mode.NewModeHandler(m, g.data, g)
+}
 
-	return nil
+func (g *Game) Update() error {
+	return g.modeHandler.Update()
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	screen.Fill(g.cfg.BgColor)
-
-	g.ship.Draw(screen)
-	g.input.Draw(screen, g.cfg)
-	g.shoot.Draw(screen)
-
-	metric.DrawMetrics(screen)
+	g.modeHandler.Draw(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return g.cfg.ScreenWidth, g.cfg.ScreenHeight
+	return g.modeHandler.Layout(outsideWidth, outsideHeight)
 }

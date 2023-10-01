@@ -3,8 +3,6 @@ package img
 import (
 	"path"
 
-	"github.com/hajimehoshi/ebiten/v2"
-
 	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
 )
 
@@ -22,7 +20,10 @@ func NewBulletImg(cfg *config.Config, s *Ship) *Bullet {
 	img.X = s.X + float64(s.Width-img.Width)/2
 	img.Y = s.Y - float64(img.Height)
 
-	return &Bullet{Image: *img, SpeedFactor: 3}
+	return &Bullet{
+		Image:       *img,
+		SpeedFactor: 3,
+	}
 }
 
 /*
@@ -36,10 +37,4 @@ func (b *Bullet) Update() bool {
 
 	b.Y -= b.SpeedFactor
 	return true
-}
-
-func (b *Bullet) Draw(screen *ebiten.Image) {
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(b.X, b.Y)
-	screen.DrawImage(b.Image.Image, op)
 }

@@ -27,8 +27,10 @@ func NewShipImg(cfg *config.Config) *Ship {
 	img.X = (float64(cfg.ScreenWidth - img.Width)) / 2
 	img.Y = float64(cfg.ScreenHeight - img.Height)
 
-	s := &Ship{Image: *img, SpeedFactor: 5}
-	return s
+	return &Ship{
+		Image:       *img,
+		SpeedFactor: 5,
+	}
 }
 
 func (s *Ship) Update() {
@@ -43,12 +45,6 @@ func (s *Ship) Update() {
 	} else if ebiten.IsKeyPressed(ebiten.KeyDown) {
 		s.SetY(s.Y + s.SpeedFactor)
 	}
-}
-
-func (s *Ship) Draw(screen *ebiten.Image) {
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(s.X, s.Y)
-	screen.DrawImage(s.Image.Image, op)
 }
 
 func (s *Ship) DrawMetrics(screen *ebiten.Image, cfg *metric.DrawConfig) {

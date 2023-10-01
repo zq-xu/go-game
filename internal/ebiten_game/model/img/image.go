@@ -70,3 +70,9 @@ func (i *Image) SetY(y float64) {
 
 	i.Y = y
 }
+
+func (i *Image) Draw(screen *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(i.X, i.Y)
+	screen.DrawImage(i.Image, op)
+}

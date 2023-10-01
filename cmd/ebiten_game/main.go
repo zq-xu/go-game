@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+
 	// ebiten.SetWindowSize(640, 480)
 	// ebiten.SetWindowTitle("Geometry Matrix")
 	if err := ebiten.RunGame(ebitengame.NewGame()); err != nil {

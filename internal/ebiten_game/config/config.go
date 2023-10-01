@@ -8,7 +8,12 @@ var Cfg = &Config{
 		ScreenHeight: 720,
 	},
 
-	Title:         "Ebiten Game",
+	Title: "Ebiten Game",
+
+	TitleFontSize: 24,
+	FontSize:      12,
+	SmallFontSize: 12,
+
 	BgColor:       color.RGBA{0xff, 0xff, 0xff, 0xff},
 	ImageRootPath: "../../assets/image",
 }
@@ -16,7 +21,12 @@ var Cfg = &Config{
 type Config struct {
 	ScreenConfig `json:",inline"`
 
-	Title         string     `json:"title"`
+	Title string `json:"title"`
+
+	TitleFontSize int `json:"titleFontSize"`
+	FontSize      int `json:"fontSize"`
+	SmallFontSize int `json:"smallFontSize"`
+
 	BgColor       color.RGBA `json:"bgColor"`
 	ImageRootPath string     `json:"imageRootPath"`
 }
