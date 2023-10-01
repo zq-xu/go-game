@@ -2,13 +2,13 @@ package img
 
 import (
 	"fmt"
-	"path"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 
 	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/metric"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/resources"
 )
 
 const ShipName = "Ship"
@@ -20,9 +20,7 @@ type Ship struct {
 }
 
 func NewShipImg(cfg *config.Config) *Ship {
-	p := path.Join(config.Cfg.ImageRootPath, "ship.png")
-
-	img := NewImage(p, &cfg.ScreenConfig)
+	img := NewImage(resources.ShipPng, &cfg.ScreenConfig)
 
 	img.X = (float64(cfg.ScreenWidth - img.Width)) / 2
 	img.Y = float64(cfg.ScreenHeight - img.Height)

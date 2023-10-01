@@ -1,9 +1,8 @@
 package img
 
 import (
-	"path"
-
 	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/resources"
 )
 
 type Bullet struct {
@@ -13,9 +12,7 @@ type Bullet struct {
 }
 
 func NewBulletImg(cfg *config.Config, s *Ship) *Bullet {
-	p := path.Join(config.Cfg.ImageRootPath, "bullet.png")
-
-	img := NewImage(p, &cfg.ScreenConfig)
+	img := NewImage(resources.BulletPng, &cfg.ScreenConfig)
 
 	img.X = s.X + float64(s.Width-img.Width)/2
 	img.Y = s.Y - float64(img.Height)

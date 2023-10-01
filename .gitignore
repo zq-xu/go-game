@@ -24,3 +24,7 @@ bin
 .vscode/
 node_modules
 .DS_Store
+
+gh-pages
+*.wasm
+wasm_exec.js

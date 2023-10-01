@@ -2,9 +2,9 @@ package img
 
 import (
 	"math/rand"
-	"path"
 
 	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/resources"
 )
 
 type UFO struct {
@@ -15,9 +15,7 @@ type UFO struct {
 }
 
 func NewUFOImg(cfg *config.Config) *UFO {
-	p := path.Join(config.Cfg.ImageRootPath, "ufo.png")
-
-	img := NewImage(p, &cfg.ScreenConfig)
+	img := NewImage(resources.UFOPng, &cfg.ScreenConfig)
 
 	img.X = float64(rand.Intn(cfg.ScreenWidth-img.Width*2) + img.Width)
 	img.Y = -float64(img.Height)

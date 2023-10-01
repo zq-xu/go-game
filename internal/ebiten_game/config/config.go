@@ -14,8 +14,7 @@ var Cfg = &Config{
 	FontSize:      12,
 	SmallFontSize: 12,
 
-	BgColor:       color.RGBA{0xff, 0xff, 0xff, 0xff},
-	ImageRootPath: "../../assets/image",
+	BgColor: color.RGBA{0xff, 0xff, 0xff, 0xff},
 }
 
 type Config struct {
@@ -27,8 +26,7 @@ type Config struct {
 	FontSize      int `json:"fontSize"`
 	SmallFontSize int `json:"smallFontSize"`
 
-	BgColor       color.RGBA `json:"bgColor"`
-	ImageRootPath string     `json:"imageRootPath"`
+	BgColor color.RGBA `json:"bgColor"`
 }
 
 type ScreenConfig struct {

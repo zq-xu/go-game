@@ -1,7 +1,7 @@
 package img
 
 import (
-	_ "image/png"
+	"bytes"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -22,8 +22,8 @@ type Image struct {
 	sc *config.ScreenConfig
 }
 
-func NewImage(imgPath string, sc *config.ScreenConfig) *Image {
-	img, _, err := ebitenutil.NewImageFromFile(imgPath)
+func NewImage(imgByte []byte, sc *config.ScreenConfig) *Image {
+	img, _, err := ebitenutil.NewImageFromReader(bytes.NewReader(imgByte))
 	if err != nil {
 		log.Fatal(err)
 	}

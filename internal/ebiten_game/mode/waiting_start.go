@@ -6,12 +6,13 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 
+	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/data"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/model/font"
 )
 
 var (
-	TitleTexts = []string{"ALIEN INVASION", "AUTHOR: ZHIQIANG XU"}
+	TitleTexts = []string{config.Cfg.Title, "AUTHOR: ZHIQIANG XU"}
 	StartTexts = []string{"", "", "", "", "PRESS ENTER KEY TO START"}
 )
 
