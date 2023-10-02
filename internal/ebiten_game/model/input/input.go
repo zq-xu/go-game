@@ -1,6 +1,7 @@
 package input
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -8,7 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 
 	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/metric"
+	"github.com/zq-xu/2d-game/pkg/metric"
 )
 
 const InputName = "Input"
@@ -43,5 +44,5 @@ func (i *Input) Draw(screen *ebiten.Image, cfg *config.Config) {
 }
 
 func (i *Input) DrawMetrics(screen *ebiten.Image, cfg *metric.DrawConfig) {
-	text.Draw(screen, i.GetKeyString(), cfg.Face, cfg.X, cfg.Y, cfg.Color)
+	text.Draw(screen, fmt.Sprintf("KeyPress: %v", i.GetKeyString()), cfg.Face, cfg.X, cfg.Y, cfg.Color)
 }

@@ -3,8 +3,10 @@ package img
 import (
 	"math/rand"
 
+	"github.com/zq-xu/2d-game/internal/ebiten_game/brick"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/resources"
+	"github.com/zq-xu/2d-game/pkg/utils"
 )
 
 type UFO struct {
@@ -12,6 +14,9 @@ type UFO struct {
 
 	YSpeedFactor float64
 	XSpeedFactor float64
+	XTimesToTop  int
+
+	calX func() float64
 }
 
 func NewUFOImg(cfg *config.Config) *UFO {
@@ -19,12 +24,21 @@ func NewUFOImg(cfg *config.Config) *UFO {
 
 	img.X = float64(rand.Intn(cfg.ScreenWidth-img.Width*2) + img.Width)
 	img.Y = -float64(img.Height)
-
-	return &UFO{
+	u := &UFO{
 		Image:        *img,
 		YSpeedFactor: 3,
-		XSpeedFactor: 1,
+		XSpeedFactor: 5,
+		XTimesToTop:  20,
 	}
+
+	maxTrail := utils.RandomForMinFloat64(img.X, float64(cfg.ScreenWidth)-img.X)
+	if maxTrail > 100 {
+		u.calX = brick.GenerateRandomStableTrail(img.X, 0, float64(cfg.ScreenHeight), u.XSpeedFactor)
+	} else {
+		u.calX = brick.GenerateRandomSinTrailWithBase(img.X, maxTrail, u.XTimesToTop)
+	}
+
+	return u
 }
 
 /*
@@ -37,5 +51,7 @@ func (u *UFO) Update() bool {
 	}
 
 	u.Y += u.YSpeedFactor
+
+	u.X = u.calX()
 	return true
 }

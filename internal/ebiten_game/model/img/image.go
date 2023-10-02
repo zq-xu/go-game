@@ -36,11 +36,6 @@ func NewImage(imgByte []byte, sc *config.ScreenConfig) *Image {
 	}
 }
 
-// func NewGopherImg() *Image {
-// 	p := path.Join(config.Cfg.ImageRootPath, "gopher.png")
-// 	return NewImage(p)
-// }
-
 func (i *Image) SetX(x float64) {
 	if x < 0 {
 		i.X = 0

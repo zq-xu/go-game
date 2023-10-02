@@ -8,8 +8,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 
 	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/metric"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/model/img"
+	"github.com/zq-xu/2d-game/pkg/metric"
 )
 
 const UFOsName = "UFOs"
