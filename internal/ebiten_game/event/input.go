@@ -1,4 +1,4 @@
-package input
+package event
 
 import (
 	"fmt"
@@ -39,9 +39,7 @@ func (i *Input) GetKeyString() string {
 	return strings.Join(keyStrs, ", ") + "\n" + strings.Join(keyNames, ", ")
 }
 
-func (i *Input) Draw(screen *ebiten.Image, cfg *config.Config) {
-	// text.Draw(screen, i.GetKeyString(), bitmapfont.Face, 4, 12, color.Black)
-}
+func (i *Input) Draw(screen *ebiten.Image, cfg *config.Config) {}
 
 func (i *Input) DrawMetrics(screen *ebiten.Image, cfg *metric.DrawConfig) {
 	text.Draw(screen, fmt.Sprintf("KeyPress: %v", i.GetKeyString()), cfg.Face, cfg.X, cfg.Y, cfg.Color)

@@ -33,3 +33,7 @@ type ScreenConfig struct {
 	ScreenWidth  int `json:"screenWidth"`
 	ScreenHeight int `json:"screenHeight"`
 }
+
+func (c *ScreenConfig) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+	return c.ScreenWidth, c.ScreenHeight
+}

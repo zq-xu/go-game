@@ -4,41 +4,34 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/data"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/mode"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/loader"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/stage"
 )
 
 type Game struct {
-	data *data.GameData
-
-	modeHandler mode.GameModeHandler
+	loader *loader.Loader
+	stage  *stage.StageController
 }
 
 func NewGame() *Game {
 	ebiten.SetWindowSize(config.Cfg.ScreenWidth, config.Cfg.ScreenHeight)
 	ebiten.SetWindowTitle(config.Cfg.Title)
 
-	g := &Game{
-		data: data.NewGameData(),
-	}
+	g := &Game{}
+	g.loader = loader.NewLoader()
+	g.stage = stage.NewStageController(g.loader)
 
-	g.SetMode(mode.WaitingStartMode)
 	return g
 }
 
-// SetMode: implement ModeListener
-func (g *Game) SetMode(m mode.Mode) {
-	g.modeHandler, _ = mode.NewModeHandler(m, g.data, g)
-}
-
 func (g *Game) Update() error {
-	return g.modeHandler.Update()
+	return g.stage.Update()
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.modeHandler.Draw(screen)
+	g.stage.Draw(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return g.modeHandler.Layout(outsideWidth, outsideHeight)
+	return g.stage.Layout(outsideWidth, outsideHeight)
 }
