@@ -2,6 +2,7 @@ package stage
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+
 	"github.com/zq-xu/2d-game/internal/ebiten_game/loader"
 )
 
@@ -22,13 +23,17 @@ type Interface interface {
 
 type StageController struct {
 	loader *loader.Loader
-	stage  Interface
+
+	stage Interface
 }
 
 func NewStageController(loader *loader.Loader) *StageController {
-	return &StageController{
-		stage: NewBeginningStage(loader),
-	}
+	s := &StageController{}
+
+	s.loader = loader
+	s.stage = NewBeginningStage(loader)
+
+	return s
 }
 
 func (s *StageController) Update() error {
