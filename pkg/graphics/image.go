@@ -30,11 +30,17 @@ func NewImage(imgByte []byte) (*Image, error) {
 type ImageEntity struct {
 	Img *Image
 
+	ScreenWidth  int
+	ScreenHeight int
+
 	X float64 // x position
 	Y float64 // y position
 
-	ScreenWidth  int
-	ScreenHeight int
+	MinX float64
+	MaxX float64
+
+	MinY float64
+	MaxY float64
 }
 
 func NewImageEntityWithImage(img *Image, w, h int) *ImageEntity {
@@ -42,6 +48,9 @@ func NewImageEntityWithImage(img *Image, w, h int) *ImageEntity {
 		Img:          img,
 		ScreenWidth:  w,
 		ScreenHeight: h,
+
+		MaxX: float64(w - img.Width),
+		MaxY: float64(h - img.Height),
 	}
 }
 
@@ -54,15 +63,38 @@ func NewImageEntity(imgByte []byte, w, h int) (*ImageEntity, error) {
 	return NewImageEntityWithImage(img, w, h), nil
 }
 
+func (i *ImageEntity) SetXLimit(min, max float64) {
+	i.MinX, i.MaxX = min, max
+}
+
+func (i *ImageEntity) SetYLimit(min, max float64) {
+	i.MinY, i.MaxY = min, max
+}
+
+func (i *ImageEntity) UnlimitTop() {
+	i.SetYLimit(-float64(i.Img.Height), i.MaxY)
+}
+
+func (i *ImageEntity) UnlimitBottom() {
+	i.SetYLimit(i.MinY, float64(i.ScreenHeight))
+}
+
+func (i *ImageEntity) UnlimitLeft() {
+	i.SetXLimit(-float64(i.Img.Width), i.MaxX)
+}
+
+func (i *ImageEntity) UnlimitRight() {
+	i.SetXLimit(i.MinX, float64(i.ScreenWidth))
+}
+
 func (i *ImageEntity) SetX(x float64) {
-	if x < 0 {
-		i.X = 0
+	if x < i.MinX {
+		i.X = i.MinX
 		return
 	}
 
-	maxX := float64(i.ScreenWidth - i.Img.Width)
-	if x > maxX {
-		i.X = maxX
+	if x > i.MaxX {
+		i.X = i.MaxX
 		return
 	}
 
@@ -70,14 +102,13 @@ func (i *ImageEntity) SetX(x float64) {
 }
 
 func (i *ImageEntity) SetY(y float64) {
-	if y < 0 {
-		i.Y = 0
+	if y < i.MinY {
+		i.Y = i.MinY
 		return
 	}
 
-	maxY := float64(i.ScreenHeight - i.Img.Height)
-	if y > maxY {
-		i.Y = maxY
+	if y > i.MaxY {
+		i.Y = i.MaxY
 		return
 	}
 
@@ -85,19 +116,19 @@ func (i *ImageEntity) SetY(y float64) {
 }
 
 func (i *ImageEntity) MoveLeft(dx float64) {
-	i.X -= dx
+	i.SetX(i.X - dx)
 }
 
 func (i *ImageEntity) MoveRight(dx float64) {
-	i.X += dx
+	i.SetX(i.X + dx)
 }
 
 func (i *ImageEntity) MoveUp(dy float64) {
-	i.Y -= dy
+	i.SetY(i.Y - dy)
 }
 
 func (i *ImageEntity) MoveDown(dy float64) {
-	i.Y += dy
+	i.SetY(i.Y + dy)
 }
 
 func (i *ImageEntity) Draw(screen *ebiten.Image) {

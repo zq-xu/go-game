@@ -22,6 +22,9 @@ type UFO struct {
 func NewUFO(ld *loader.Loader) *UFO {
 	entity := graphics.NewImageEntityWithImage(ld.ImageLoader.GetUFOImage(), ld.Cfg.ScreenWidth, ld.Cfg.ScreenHeight)
 
+	entity.UnlimitTop()
+	entity.UnlimitBottom()
+
 	entity.SetX(float64(rand.Intn(ld.Cfg.ScreenWidth-entity.Img.Width*2) + entity.Img.Width))
 	entity.SetY(-float64(entity.Img.Height))
 

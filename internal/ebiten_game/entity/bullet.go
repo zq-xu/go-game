@@ -14,12 +14,14 @@ type Bullet struct {
 func NewBullet(ld *loader.Loader, s *Ship) *Bullet {
 	entity := graphics.NewImageEntityWithImage(ld.ImageLoader.GetBulletImage(), ld.Cfg.ScreenWidth, ld.Cfg.ScreenHeight)
 
+	entity.UnlimitTop()
+
 	entity.SetX(s.X + float64(s.Img.Width-entity.Img.Width)/2)
 	entity.SetY(s.Y - float64(entity.Img.Height))
 
 	return &Bullet{
 		ImageEntity: *entity,
-		SpeedFactor: 5,
+		SpeedFactor: ld.Cfg.BulletSpeedFactor,
 	}
 }
 

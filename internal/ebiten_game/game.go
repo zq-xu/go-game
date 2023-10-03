@@ -14,6 +14,7 @@ type Game struct {
 }
 
 func NewGame() *Game {
+	ebiten.SetFullscreen(config.Cfg.FullScreen)
 	ebiten.SetWindowSize(config.Cfg.ScreenWidth, config.Cfg.ScreenHeight)
 	ebiten.SetWindowTitle(config.Cfg.Title)
 
