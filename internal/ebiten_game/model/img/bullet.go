@@ -19,7 +19,7 @@ func NewBulletImg(cfg *config.Config, s *Ship) *Bullet {
 
 	return &Bullet{
 		Image:       *img,
-		SpeedFactor: 3,
+		SpeedFactor: 5,
 	}
 }
 

@@ -27,8 +27,8 @@ func NewUFOImg(cfg *config.Config) *UFO {
 	u := &UFO{
 		Image:        *img,
 		YSpeedFactor: 3,
-		XSpeedFactor: 5,
-		XTimesToTop:  20,
+		XSpeedFactor: 2,
+		XTimesToTop:  3 * 60,
 	}
 
 	maxTrail := utils.RandomForMinFloat64(img.X, float64(cfg.ScreenWidth)-img.X)

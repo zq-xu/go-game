@@ -27,7 +27,7 @@ func NewShipImg(cfg *config.Config) *Ship {
 
 	return &Ship{
 		Image:       *img,
-		SpeedFactor: 5,
+		SpeedFactor: 3,
 	}
 }
 
