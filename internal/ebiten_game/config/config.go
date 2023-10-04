@@ -5,15 +5,13 @@ import "image/color"
 var Cfg = &Config{
 	ScreenConfig: ScreenConfig{
 		FullScreen:   true,
-		ScreenWidth:  1920,
-		ScreenHeight: 1080,
+		ScreenWidth:  1920 / 2,
+		ScreenHeight: 1080 / 2,
 	},
 
-	Title: "Ebiten Game",
-
-	TitleFontSize: 24,
-	FontSize:      12,
-	SmallFontSize: 12,
+	Title:          "Ebiten Game",
+	AuthorText:     "AUTHOR: ZHIQIANG XU",
+	StartHintTexts: []string{"", "", "PRESS ENTER KEY TO START", "", "", "", ""},
 
 	BgColor: color.RGBA{0xff, 0xff, 0xff, 0xff},
 
@@ -25,11 +23,9 @@ var Cfg = &Config{
 type Config struct {
 	ScreenConfig `json:",inline"`
 
-	Title string `json:"title"`
-
-	TitleFontSize int `json:"titleFontSize"`
-	FontSize      int `json:"fontSize"`
-	SmallFontSize int `json:"smallFontSize"`
+	Title          string   `json:"title"`
+	AuthorText     string   `json:"authorText"`
+	StartHintTexts []string `json:"startHintTexts"`
 
 	BgColor color.RGBA `json:"bgColor"`
 

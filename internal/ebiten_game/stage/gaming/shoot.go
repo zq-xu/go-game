@@ -8,14 +8,15 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 
 	"github.com/zq-xu/2d-game/internal/ebiten_game/entity"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/loader"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
 	"github.com/zq-xu/2d-game/pkg/metric"
 )
 
 const ShootName = "Shoot"
 
 type Shoot struct {
-	loader      *loader.Loader
+	ctx *game.Context
+
 	lastShootAt time.Time
 	bullets     map[*entity.Bullet]bool
 
@@ -24,9 +25,9 @@ type Shoot struct {
 	BulletInterval time.Duration // the interval between two bullets, the unit is ms.
 }
 
-func NewShoot(loader *loader.Loader) *Shoot {
+func NewShoot(ctx *game.Context) *Shoot {
 	return &Shoot{
-		loader:         loader,
+		ctx:            ctx,
 		bullets:        make(map[*entity.Bullet]bool, 0),
 		BulletInterval: 200 * time.Millisecond,
 		MaxBulletNum:   20,
@@ -37,7 +38,7 @@ func (s *Shoot) Update(ship *entity.Ship) error {
 	if ebiten.IsKeyPressed(ebiten.KeySpace) &&
 		len(s.bullets) < s.MaxBulletNum &&
 		time.Since(s.lastShootAt) > s.BulletInterval {
-		bullet := entity.NewBullet(s.loader, ship)
+		bullet := entity.NewBullet(s.ctx, ship)
 		s.AddBullet(bullet)
 	}
 

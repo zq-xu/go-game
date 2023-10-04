@@ -1,7 +1,8 @@
 package entity
 
 import (
-	"github.com/zq-xu/2d-game/internal/ebiten_game/loader"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/loader"
 	"github.com/zq-xu/2d-game/pkg/graphics"
 )
 
@@ -11,8 +12,9 @@ type Bullet struct {
 	SpeedFactor float64
 }
 
-func NewBullet(ld *loader.Loader, s *Ship) *Bullet {
-	entity := graphics.NewImageEntityWithImage(ld.ImageLoader.GetBulletImage(), ld.Cfg.ScreenWidth, ld.Cfg.ScreenHeight)
+func NewBullet(ctx *game.Context, s *Ship) *Bullet {
+	img := ctx.Resource.ImageLoader.ImgLoader.MustGetImage(loader.BulletImgPath)
+	entity := graphics.NewImageEntityWithImage(img, ctx.Resource.Cfg.ScreenWidth, ctx.Resource.Cfg.ScreenHeight)
 
 	entity.UnlimitTop()
 
@@ -21,7 +23,7 @@ func NewBullet(ld *loader.Loader, s *Ship) *Bullet {
 
 	return &Bullet{
 		ImageEntity: *entity,
-		SpeedFactor: ld.Cfg.BulletSpeedFactor,
+		SpeedFactor: ctx.Resource.Cfg.BulletSpeedFactor,
 	}
 }
 

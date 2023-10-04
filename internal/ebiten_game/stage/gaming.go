@@ -5,20 +5,21 @@ import (
 
 	"github.com/zq-xu/2d-game/internal/ebiten_game/entity"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/event"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/loader"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/stage/gaming"
 )
 
 type GamingStage struct {
-	loader   *loader.Loader
+	ctx *game.Context
+
 	gameData *gaming.GameData
-	status   StageStatus
+	status   game.StageStatus
 }
 
-func NewGamingStage(loader *loader.Loader) *GamingStage {
+func NewGamingStage(ctx *game.Context) *GamingStage {
 	return &GamingStage{
-		loader:   loader,
-		gameData: gaming.NewGameData(loader),
+		ctx:      ctx,
+		gameData: gaming.NewGameData(ctx),
 	}
 }
 
@@ -35,10 +36,10 @@ func (g *GamingStage) Update() error {
 }
 
 func (g *GamingStage) Draw(screen *ebiten.Image) {
-	screen.Fill(g.loader.Cfg.BgColor)
+	screen.Fill(g.ctx.Resource.Cfg.BgColor)
 
 	g.gameData.Ship.Draw(screen)
-	g.gameData.Input.Draw(screen, g.loader.Cfg)
+	g.gameData.Input.Draw(screen, g.ctx.Resource.Cfg)
 	g.gameData.Shoot.Draw(screen)
 	g.gameData.UFOs.Draw(screen)
 
@@ -46,7 +47,7 @@ func (g *GamingStage) Draw(screen *ebiten.Image) {
 }
 
 func (g *GamingStage) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return g.loader.Cfg.Layout(outsideWidth, outsideHeight)
+	return g.ctx.Resource.Cfg.Layout(outsideWidth, outsideHeight)
 }
 
 func (g *GamingStage) checkShootCollision() {
@@ -63,15 +64,15 @@ func (g *GamingStage) checkShootCollision() {
 func (g *GamingStage) checkShipCollision() {
 	g.gameData.UFOs.RangeUFOs(func(u *entity.UFO, uv bool) {
 		if event.CheckCollision(&u.ImageEntity, &g.gameData.Ship.ImageEntity) {
-			g.status = FailStageStatus
+			g.status = game.FailStageStatus
 		}
 	})
 }
 
 func (g *GamingStage) GoNextStatus() (bool, Interface) {
 	switch g.status {
-	case SuccessStageStatus, FailStageStatus:
-		return true, NewEndingStage(g.loader, g.status)
+	case game.SuccessStageStatus, game.FailStageStatus:
+		return true, NewEndingStage(g.ctx, g.status)
 	default:
 		return false, nil
 	}

@@ -2,18 +2,8 @@ package stage
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-
-	"github.com/zq-xu/2d-game/internal/ebiten_game/loader"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
 )
-
-const (
-	RunningStageStatus StageStatus = iota
-	SuccessStageStatus
-	FailStageStatus
-	ReturnBackStageStatus
-)
-
-type StageStatus int
 
 type Interface interface {
 	ebiten.Game
@@ -22,16 +12,17 @@ type Interface interface {
 }
 
 type StageController struct {
-	loader *loader.Loader
+	ctx *game.Context
 
 	stage Interface
 }
 
-func NewStageController(loader *loader.Loader) *StageController {
+func NewStageController(ctx *game.Context) *StageController {
 	s := &StageController{}
 
-	s.loader = loader
-	s.stage = NewBeginningStage(loader)
+	s.ctx = ctx
+	// s.stage = NewBeginningStage(loader)
+	s.stage = NewMenuStage(ctx)
 
 	return s
 }

@@ -2,9 +2,13 @@ package graphics
 
 import (
 	"bytes"
+	"image/color"
+	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+
+	"github.com/zq-xu/2d-game/assets"
 )
 
 type Image struct {
@@ -12,6 +16,25 @@ type Image struct {
 
 	Width  int
 	Height int
+}
+
+func NewImageFromFile(path string) (*Image, error) {
+	f, err := assets.EmbeddedImages.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	img, _, err := ebitenutil.NewImageFromReader(f)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Image{
+		Image:  img,
+		Width:  img.Bounds().Dx(),
+		Height: img.Bounds().Dy(),
+	}, nil
 }
 
 func NewImage(imgByte []byte) (*Image, error) {
@@ -143,4 +166,18 @@ func (i *ImageEntity) IsUpOfScreen() bool {
 
 func (i *ImageEntity) IsDownOfScreen() bool {
 	return i.Y >= float64(i.ScreenHeight)
+}
+
+func HexToColor(h string) color.Color {
+	u, err := strconv.ParseUint(h, 16, 0)
+	if err != nil {
+		panic(err)
+	}
+
+	return color.NRGBA{
+		R: uint8(u & 0xff0000 >> 16),
+		G: uint8(u & 0xff00 >> 8),
+		B: uint8(u & 0xff),
+		A: 255,
+	}
 }

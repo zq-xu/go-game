@@ -8,14 +8,14 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 
 	"github.com/zq-xu/2d-game/internal/ebiten_game/entity"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/loader"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
 	"github.com/zq-xu/2d-game/pkg/metric"
 )
 
 const UFOsName = "UFOs"
 
 type UFOs struct {
-	loader *loader.Loader
+	ctx *game.Context
 
 	lastAddAt time.Time
 	ufos      map[*entity.UFO]bool
@@ -25,9 +25,9 @@ type UFOs struct {
 	UFOInterval time.Duration // the interval between two UFOs, the unit is ms.
 }
 
-func NewUFOs(loader *loader.Loader) *UFOs {
+func NewUFOs(ctx *game.Context) *UFOs {
 	return &UFOs{
-		loader:      loader,
+		ctx:         ctx,
 		ufos:        make(map[*entity.UFO]bool, 0),
 		UFOInterval: 1000 * time.Millisecond,
 		MaxUFONum:   20,
@@ -37,7 +37,7 @@ func NewUFOs(loader *loader.Loader) *UFOs {
 func (us *UFOs) Update() error {
 	if len(us.ufos) < us.MaxUFONum &&
 		time.Since(us.lastAddAt) >= us.UFOInterval {
-		u := entity.NewUFO(us.loader)
+		u := entity.NewUFO(us.ctx)
 		us.AddUFO(u)
 	}
 

@@ -6,7 +6,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 
-	"github.com/zq-xu/2d-game/internal/ebiten_game/loader"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/loader"
 	"github.com/zq-xu/2d-game/pkg/graphics"
 	"github.com/zq-xu/2d-game/pkg/metric"
 )
@@ -19,16 +20,17 @@ type Ship struct {
 	YSpeedFactor float64
 }
 
-func NewShip(ld *loader.Loader) *Ship {
-	entity := graphics.NewImageEntityWithImage(ld.ImageLoader.GetShipImage(), ld.Cfg.ScreenWidth, ld.Cfg.ScreenHeight)
+func NewShip(ctx *game.Context) *Ship {
+	img := ctx.Resource.ImageLoader.ImgLoader.MustGetImage(loader.ShipImgPath)
+	entity := graphics.NewImageEntityWithImage(img, ctx.Resource.Cfg.ScreenWidth, ctx.Resource.Cfg.ScreenHeight)
 
-	entity.SetX((float64(ld.Cfg.ScreenWidth - entity.Img.Width)) / 2)
-	entity.SetY(float64(ld.Cfg.ScreenHeight - entity.Img.Height))
+	entity.SetX((float64(ctx.Resource.Cfg.ScreenWidth - entity.Img.Width)) / 2)
+	entity.SetY(float64(ctx.Resource.Cfg.ScreenHeight - entity.Img.Height))
 
 	return &Ship{
 		ImageEntity:  *entity,
-		XSpeedFactor: ld.Cfg.ShipXSpeedFactor,
-		YSpeedFactor: ld.Cfg.ShipYSpeedFactor,
+		XSpeedFactor: ctx.Resource.Cfg.ShipXSpeedFactor,
+		YSpeedFactor: ctx.Resource.Cfg.ShipYSpeedFactor,
 	}
 }
 
