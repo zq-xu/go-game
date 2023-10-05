@@ -19,4 +19,5 @@ git add .
 git commit -m "auto deploy ${commitId}"
 git push -f origin main:gh-pages
 
+cd ..
 rm -rf gh-pages
