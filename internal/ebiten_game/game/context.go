@@ -1,6 +1,8 @@
 package game
 
-import "github.com/zq-xu/2d-game/internal/ebiten_game/resource"
+import (
+	"github.com/zq-xu/2d-game/internal/ebiten_game/resource"
+)
 
 type Context struct {
 	Resource *resource.Resource

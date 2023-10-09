@@ -14,6 +14,7 @@ import (
 
 const ShipName = "Ship"
 
+// TODO resize for widows size changes
 type Ship struct {
 	graphics.ImageEntity
 	XSpeedFactor float64
@@ -22,15 +23,15 @@ type Ship struct {
 
 func NewShip(ctx *game.Context) *Ship {
 	img := ctx.Resource.ImageLoader.ImgLoader.MustGetImage(loader.ShipImgPath)
-	entity := graphics.NewImageEntityWithImage(img, ctx.Resource.Cfg.ScreenWidth, ctx.Resource.Cfg.ScreenHeight)
+	entity := graphics.NewImageEntityWithImage(img, ctx.Resource.ScreenWidth, ctx.Resource.ScreenHeight)
 
-	entity.SetX((float64(ctx.Resource.Cfg.ScreenWidth - entity.Img.Width)) / 2)
-	entity.SetY(float64(ctx.Resource.Cfg.ScreenHeight - entity.Img.Height))
+	entity.SetX((float64(ctx.Resource.ScreenWidth - entity.Img.Width)) / 2)
+	entity.SetY(float64(ctx.Resource.ScreenHeight - entity.Img.Height))
 
 	return &Ship{
 		ImageEntity:  *entity,
-		XSpeedFactor: ctx.Resource.Cfg.ShipXSpeedFactor,
-		YSpeedFactor: ctx.Resource.Cfg.ShipYSpeedFactor,
+		XSpeedFactor: ctx.Resource.ShipXSpeedFactor,
+		YSpeedFactor: ctx.Resource.ShipYSpeedFactor,
 	}
 }
 

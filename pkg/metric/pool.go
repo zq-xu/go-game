@@ -10,6 +10,8 @@ import (
 	"golang.org/x/image/font"
 )
 
+const metricLineHeight = 16
+
 var colorSet = []color.Color{color.Black, color.RGBA{0xff, 0, 0, 0xff}, color.RGBA{0, 0, 0xff, 0xff}}
 
 type Interface interface {
@@ -50,11 +52,15 @@ func (p *Pool) Register(name string, i Interface) {
 }
 
 func (p *Pool) DrawMetrics(screen *ebiten.Image) {
+	p.drawMetrics(screen, metricLineHeight)
+}
+
+func (p *Pool) drawMetrics(screen *ebiten.Image, strartY int) {
 	for name, obj := range p.metricSet {
 		dc := &DrawConfig{
 			Face:  bitmapfont.Face,
 			X:     4,
-			Y:     (obj.index + 1) * 16,
+			Y:     obj.index*metricLineHeight + strartY,
 			Color: colorSet[obj.index%len(colorSet)],
 		}
 		text.Draw(screen, fmt.Sprintf("%s: ", name), dc.Face, dc.X, dc.Y, dc.Color)

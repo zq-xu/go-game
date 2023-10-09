@@ -1,21 +1,21 @@
-package stage
+package stages
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/stage/menu"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/stage/gameui"
 )
 
 type MenuStage struct {
 	ctx *game.Context
-	ui  *menu.MainMenu
+	ui  *gameui.MainMenu
 }
 
 func NewMenuStage(ctx *game.Context) *MenuStage {
 	return &MenuStage{
 		ctx: ctx,
-		ui:  menu.NewMainMenu(ctx),
+		ui:  gameui.NewMainMenu(ctx),
 	}
 }
 
@@ -29,15 +29,15 @@ func (g *MenuStage) Draw(screen *ebiten.Image) {
 }
 
 func (g *MenuStage) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return g.ctx.Resource.Cfg.Layout(outsideWidth, outsideHeight)
+	return g.ctx.Resource.Layout(outsideWidth, outsideHeight)
 
 }
 
 func (g *MenuStage) GoNextStatus() (bool, Interface) {
 	switch g.ui.Status {
-	case menu.StartMenuStatus:
+	case gameui.StartMenuStatus:
 		return true, NewGamingStage(g.ctx)
-	case menu.BackMenuStatus:
+	case gameui.BackMenuStatus:
 		return true, NewBeginningStage(g.ctx)
 	}
 

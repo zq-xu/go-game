@@ -1,4 +1,4 @@
-package gaming
+package runtime
 
 import (
 	"fmt"

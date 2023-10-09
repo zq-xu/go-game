@@ -4,15 +4,16 @@ import (
 	"image/color"
 
 	"github.com/ebitenui/ebitenui/widget"
-
 	"golang.org/x/image/font"
+
+	uiColor "github.com/zq-xu/2d-game/internal/ebiten_game/resource/ui/color"
 )
 
 type TextResource struct {
 	Color color.Color
 }
 
-func NewTextResource(cr *ColorResource) *TextResource {
+func NewTextResource(cr *uiColor.ColorResource) *TextResource {
 	return &TextResource{
 		Color: cr.TextIdleColor,
 	}

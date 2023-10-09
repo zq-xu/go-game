@@ -1,4 +1,4 @@
-package menu
+package gameui
 
 import (
 	"fmt"
@@ -23,12 +23,17 @@ type MainMenu struct {
 
 	ui *ebitenui.UI
 
+	menuWith int
+
 	Status MenuStatus
 }
 
 func NewMainMenu(ctx *game.Context) *MainMenu {
 	g := &MainMenu{ctx: ctx}
+
+	g.menuWith = ctx.Resource.ScreenWidth / 3
 	g.ui = g.mainMenuUI()
+
 	return g
 }
 
@@ -42,18 +47,21 @@ func (g *MainMenu) Draw(screen *ebiten.Image) {
 }
 
 func (g *MainMenu) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return g.ctx.Resource.Cfg.Layout(outsideWidth, outsideHeight)
+	return g.ctx.Resource.Layout(outsideWidth, outsideHeight)
 }
 
 func (g *MainMenu) mainMenuUI() *ebitenui.UI {
-	root := g.ctx.Resource.LayoutResource.NewCenterLayout(400, 10, nil, func(c *widget.Container) {
-		c.AddChild(g.newStartButton())
+	root := g.ctx.Resource.LayoutResource.NewCenterRowLayout(g.menuWith, 10, nil, func(c *widget.Container) {
+		c.AddChild(g.ctx.Resource.ButtonResource.NewMenuButton("Button Start",
+			widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+				g.Status = StartMenuStatus
+			})))
 
 		c.AddChild(g.ctx.Resource.SeparatorResource.NewSeparator(widget.RowLayoutData{
 			Stretch: true,
 		}))
 
-		s := g.ctx.Resource.ButtonResource.NewButton("Toggle Button",
+		s := g.ctx.Resource.ButtonResource.NewMenuButton("Toggle Button",
 			widget.ButtonOpts.CursorEnteredHandler(func(args *widget.ButtonHoverEventArgs) { fmt.Println("Cursor Entered: " + args.Button.Text().Label) }),
 			widget.ButtonOpts.CursorExitedHandler(func(args *widget.ButtonHoverEventArgs) { fmt.Println("Cursor Exited: " + args.Button.Text().Label) }),
 			widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
@@ -64,13 +72,4 @@ func (g *MainMenu) mainMenuUI() *ebitenui.UI {
 	})
 
 	return &ebitenui.UI{Container: root}
-}
-
-func (g *MainMenu) newStartButton() *widget.Button {
-	return g.ctx.Resource.ButtonResource.NewButton("Button Start",
-		widget.ButtonOpts.CursorEnteredHandler(func(args *widget.ButtonHoverEventArgs) { fmt.Println("Cursor Entered: " + args.Button.Text().Label) }),
-		widget.ButtonOpts.CursorExitedHandler(func(args *widget.ButtonHoverEventArgs) { fmt.Println("Cursor Exited: " + args.Button.Text().Label) }),
-		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-			g.Status = StartMenuStatus
-		}))
 }

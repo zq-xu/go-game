@@ -1,16 +1,16 @@
-package ui
+package layout
 
 import "github.com/ebitenui/ebitenui/widget"
 
-type LayoutResource struct{}
+type CenterLayoutResource struct{}
 
-func NewLayoutResource() *LayoutResource {
-	return &LayoutResource{}
+func NewCenterLayoutResource() *CenterLayoutResource {
+	return &CenterLayoutResource{}
 }
 
-func (lr *LayoutResource) NewCenterLayout(minWidth, spacing int, rowscale []bool, fn func(row *widget.Container)) *widget.Container {
+func (cr *CenterLayoutResource) NewCenterRowLayout(minWidth, spacing int, rowscale []bool, fn func(row *widget.Container)) *widget.Container {
 	root := newAnchorContainer()
-	c := newRowLayoutContainerWithMinWidth(minWidth, spacing, rowscale)
+	c := newSingleColumnGridLayout(minWidth, spacing, rowscale)
 	root.AddChild(c)
 
 	fn(c)
@@ -20,19 +20,20 @@ func (lr *LayoutResource) NewCenterLayout(minWidth, spacing int, rowscale []bool
 
 func newAnchorContainer() *widget.Container {
 	return widget.NewContainer(
+		widget.ContainerOpts.Layout(widget.NewAnchorLayout()),
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
 			StretchHorizontal: true,
 		})),
-		widget.ContainerOpts.Layout(widget.NewAnchorLayout()))
+	)
 }
 
-func newRowLayoutContainerWithMinWidth(minWidth, spacing int, rowscale []bool) *widget.Container {
+func newSingleColumnGridLayout(minWidth, spacing int, rowscale []bool) *widget.Container {
 	return widget.NewContainer(
+		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.MinSize(minWidth, 0)),
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
 			StretchHorizontal: true,
 			StretchVertical:   true,
 		})),
-		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.MinSize(minWidth, 0)),
 		widget.ContainerOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
 				HorizontalPosition: widget.AnchorLayoutPositionCenter,

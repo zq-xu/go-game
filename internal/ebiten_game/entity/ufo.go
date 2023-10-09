@@ -22,12 +22,12 @@ type UFO struct {
 
 func NewUFO(ctx *game.Context) *UFO {
 	img := ctx.Resource.ImageLoader.ImgLoader.MustGetImage(loader.UFOImgPath)
-	entity := graphics.NewImageEntityWithImage(img, ctx.Resource.Cfg.ScreenWidth, ctx.Resource.Cfg.ScreenHeight)
+	entity := graphics.NewImageEntityWithImage(img, ctx.Resource.ScreenWidth, ctx.Resource.ScreenHeight)
 
 	entity.UnlimitTop()
 	entity.UnlimitBottom()
 
-	entity.SetX(float64(rand.Intn(ctx.Resource.Cfg.ScreenWidth-entity.Img.Width*2) + entity.Img.Width))
+	entity.SetX(float64(rand.Intn(ctx.Resource.ScreenWidth-entity.Img.Width*2) + entity.Img.Width))
 	entity.SetY(-float64(entity.Img.Height))
 
 	u := &UFO{
@@ -37,9 +37,9 @@ func NewUFO(ctx *game.Context) *UFO {
 		XTimesToTop:  3 * 60,
 	}
 
-	maxTrail := utils.RandomForMinFloat64(entity.X, float64(ctx.Resource.Cfg.ScreenWidth)-entity.X)
+	maxTrail := utils.RandomForMinFloat64(entity.X, float64(ctx.Resource.ScreenWidth)-entity.X)
 	if maxTrail > 100 {
-		u.calX = brick.GenerateRandomStableTrail(entity.X, 0, float64(ctx.Resource.Cfg.ScreenHeight), u.XSpeedFactor)
+		u.calX = brick.GenerateRandomStableTrail(entity.X, 0, float64(ctx.Resource.ScreenHeight), u.XSpeedFactor)
 	} else {
 		u.calX = brick.GenerateRandomSinTrailWithBase(entity.X, maxTrail, u.XTimesToTop)
 	}

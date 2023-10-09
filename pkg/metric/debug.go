@@ -7,6 +7,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
+const (
+	DebugMetricsName = "DebugMetrics"
+)
+
+var DebugMetricsInstance = &DebugerMetrics{}
+
 type DebugerMetrics struct{}
 
 func (dm *DebugerMetrics) DrawMetrics(screen *ebiten.Image, cfg *DrawConfig) {

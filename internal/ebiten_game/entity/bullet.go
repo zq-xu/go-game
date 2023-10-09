@@ -14,7 +14,7 @@ type Bullet struct {
 
 func NewBullet(ctx *game.Context, s *Ship) *Bullet {
 	img := ctx.Resource.ImageLoader.ImgLoader.MustGetImage(loader.BulletImgPath)
-	entity := graphics.NewImageEntityWithImage(img, ctx.Resource.Cfg.ScreenWidth, ctx.Resource.Cfg.ScreenHeight)
+	entity := graphics.NewImageEntityWithImage(img, ctx.Resource.ScreenWidth, ctx.Resource.ScreenHeight)
 
 	entity.UnlimitTop()
 
@@ -23,7 +23,7 @@ func NewBullet(ctx *game.Context, s *Ship) *Bullet {
 
 	return &Bullet{
 		ImageEntity: *entity,
-		SpeedFactor: ctx.Resource.Cfg.BulletSpeedFactor,
+		SpeedFactor: ctx.Resource.BulletSpeedFactor,
 	}
 }
 

@@ -14,7 +14,6 @@ type Loader struct {
 
 func NewLoader() *Loader {
 	return &Loader{
-		Cfg:         config.Cfg,
 		FontLoader:  NewFontLoader(),
 		ImageLoader: NewImageLoader(),
 	}

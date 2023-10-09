@@ -5,8 +5,8 @@ import "image/color"
 var Cfg = &Config{
 	ScreenConfig: ScreenConfig{
 		FullScreen:   true,
-		ScreenWidth:  1920 / 2,
-		ScreenHeight: 1080 / 2,
+		ScreenWidth:  int(BaseScreenWidth),
+		ScreenHeight: int(BaseScreenHeight),
 	},
 
 	Title:          "Ebiten Game",
@@ -14,32 +14,20 @@ var Cfg = &Config{
 	StartHintTexts: []string{"", "", "PRESS ENTER KEY TO START", "", "", "", ""},
 
 	BgColor: color.RGBA{0xff, 0xff, 0xff, 0xff},
-
-	ShipXSpeedFactor:  10,
-	ShipYSpeedFactor:  5,
-	BulletSpeedFactor: 10,
 }
 
 type Config struct {
-	ScreenConfig `json:",inline"`
+	ScreenConfig ScreenConfig `json:",inline"`
 
 	Title          string   `json:"title"`
 	AuthorText     string   `json:"authorText"`
 	StartHintTexts []string `json:"startHintTexts"`
 
 	BgColor color.RGBA `json:"bgColor"`
-
-	ShipXSpeedFactor  float64 `json:"shipXSpeedFactor"`
-	ShipYSpeedFactor  float64 `json:"shipYSpeedFactor"`
-	BulletSpeedFactor float64 `json:"bulletSpeedFactor"`
 }
 
 type ScreenConfig struct {
 	FullScreen   bool `json:"fullScreen"`
 	ScreenWidth  int  `json:"screenWidth"`
 	ScreenHeight int  `json:"screenHeight"`
-}
-
-func (c *ScreenConfig) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return c.ScreenWidth, c.ScreenHeight
 }
