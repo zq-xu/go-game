@@ -13,7 +13,6 @@ type StageController struct {
 
 	Input *event.Input
 
-	preStage     stages.Interface
 	currentStage stages.Interface
 }
 
@@ -29,7 +28,6 @@ func NewStageController(ctx *game.Context) *StageController {
 func (g *StageController) Update() error {
 	b, i := g.currentStage.GoNextStatus()
 	if b {
-		g.preStage = g.currentStage
 		g.currentStage = i
 	}
 

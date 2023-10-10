@@ -6,6 +6,7 @@ import (
 
 	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/stage/gameui"
+	"github.com/zq-xu/2d-game/internal/ebiten_game/stage/listener"
 )
 
 type GamingStage struct {
@@ -15,6 +16,7 @@ type GamingStage struct {
 
 	navbar *gameui.Navbar
 
+	inputLitener *listener.InputListener
 	Status
 }
 
@@ -38,6 +40,14 @@ func NewGamingStage(ctx *game.Context) *GamingStage {
 			}),
 		))
 
+	g.inputLitener = listener.NewInputListener(ctx, func() bool {
+		if ebiten.IsKeyPressed(ebiten.KeySpace) {
+			g.checkoutNextStage(NewPauseStage(g.ctx, g))
+			return true
+		}
+
+		return false
+	})
 	return g
 }
 
@@ -52,6 +62,7 @@ func (g *GamingStage) Update() error {
 		return err
 	}
 
+	g.inputLitener.Update()
 	return nil
 }
 

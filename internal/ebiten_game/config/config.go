@@ -1,6 +1,8 @@
 package config
 
-import "image/color"
+import (
+	"image/color"
+)
 
 var Cfg = &Config{
 	ScreenConfig: ScreenConfig{
@@ -13,7 +15,10 @@ var Cfg = &Config{
 	AuthorText:     "AUTHOR: ZHIQIANG XU",
 	StartHintTexts: []string{"", "", "PRESS ENTER KEY TO START", "", "", "", ""},
 
-	BgColor: color.RGBA{0xff, 0xff, 0xff, 0xff},
+	BgColor:     color.RGBA{0xff, 0xff, 0xff, 0xff},
+	ShadowColor: color.RGBA{0x30, 0x30, 0x30, 0x30},
+
+	KeyInterval: 500,
 }
 
 type Config struct {
@@ -24,6 +29,10 @@ type Config struct {
 	StartHintTexts []string `json:"startHintTexts"`
 
 	BgColor color.RGBA `json:"bgColor"`
+
+	ShadowColor color.RGBA `json:"shadowColor"`
+
+	KeyInterval int `json:"keyInterval" description:"base on the TPS"`
 }
 
 type ScreenConfig struct {
