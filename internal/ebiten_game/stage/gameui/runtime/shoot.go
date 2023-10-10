@@ -34,18 +34,28 @@ func NewShoot(ctx *game.Context) *Shoot {
 	}
 }
 
+/*
+Update: add bullet per interval.
+if the bullet is up of the screen, remove it from the storage.
+*/
 func (s *Shoot) Update(ship *entity.Ship) error {
-	if ebiten.IsKeyPressed(ebiten.KeySpace) &&
-		len(s.bullets) < s.MaxBulletNum &&
-		time.Since(s.lastShootAt) > s.BulletInterval {
+	// if ebiten.IsKeyPressed(ebiten.KeySpace) &&
+	// 	len(s.bullets) < s.MaxBulletNum &&
+	// 	time.Since(s.lastShootAt) > s.BulletInterval {
+	// 	bullet := entity.NewBullet(s.ctx, ship)
+	// 	s.AddBullet(bullet)
+	// }
+
+	if time.Since(s.lastShootAt) > s.BulletInterval {
 		bullet := entity.NewBullet(s.ctx, ship)
 		s.AddBullet(bullet)
 	}
 
-	for bullet := range s.bullets {
-		inScreen := bullet.Update()
-		if !inScreen {
-			s.RemoveBullet(bullet)
+	for b := range s.bullets {
+		b.Update()
+
+		if b.IsUpOfScreen() {
+			s.RemoveBullet(b)
 		}
 	}
 
@@ -67,8 +77,15 @@ func (s *Shoot) Draw(screen *ebiten.Image) {
 	}
 }
 
-func (s *Shoot) DrawMetrics(screen *ebiten.Image, cfg *metric.DrawConfig) {
-	text.Draw(screen, fmt.Sprintf("bulletCount: %d\n", len(s.bullets)), cfg.Face, cfg.X, cfg.Y, cfg.Color)
+func (s *Shoot) DrawMetrics(screen *ebiten.Image, dc *metric.DrawConfig) {
+	text.Draw(screen, fmt.Sprintf("%s: ", ShootName), dc.Face, dc.X, dc.Y, dc.Color)
+	text.Draw(screen,
+		fmt.Sprintf("bulletCount: %d\n", len(s.bullets)),
+		dc.Face,
+		dc.X+metric.MetricCharWidth*(len(ShootName)+5),
+		dc.Y,
+		dc.Color,
+	)
 }
 
 func (s *Shoot) RangeBullets(fn func(k *entity.Bullet, v bool)) {

@@ -14,7 +14,7 @@ type Game struct {
 
 	stage *stage.StageController
 
-	mListener *MetricListener
+	gmListener *GlobalMetricListener
 }
 
 func NewGame() *Game {
@@ -30,9 +30,7 @@ func NewGame() *Game {
 	g.ctx = game.NewContext()
 
 	g.stage = stage.NewStageController(g.ctx)
-
-	g.mListener = NewMetricListener()
-	metric.MultiPool.Add(g.mListener.MetricPool)
+	g.gmListener = NewGlobalMetricListener()
 
 	return g
 }
@@ -40,12 +38,13 @@ func NewGame() *Game {
 func (g *Game) Update() error {
 	// g.ctx.Resource.Listen()
 
-	g.mListener.Update()
+	g.gmListener.Update()
 	return g.stage.Update()
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.stage.Draw(screen)
+
 	metric.MultiPool.Draw(screen)
 }
 

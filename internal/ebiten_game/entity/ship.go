@@ -53,6 +53,14 @@ func (s *Ship) Update() {
 	}
 }
 
-func (s *Ship) DrawMetrics(screen *ebiten.Image, cfg *metric.DrawConfig) {
-	text.Draw(screen, fmt.Sprintf("X: %.0f\tY: %.0f", s.X, s.Y), cfg.Face, cfg.X, cfg.Y, cfg.Color)
+func (s *Ship) DrawMetrics(screen *ebiten.Image, dc *metric.DrawConfig) {
+	text.Draw(screen, fmt.Sprintf("%s: ", ShipName), dc.Face, dc.X, dc.Y, dc.Color)
+	text.Draw(screen,
+		fmt.Sprintf("X: %.0f\tY: %.0f", s.X, s.Y),
+		dc.Face,
+		dc.X+metric.MetricCharWidth*(len(ShipName)+5),
+		dc.Y,
+		dc.Color,
+	)
+
 }

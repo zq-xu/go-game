@@ -10,6 +10,8 @@ import (
 	"github.com/zq-xu/2d-game/pkg/metric"
 )
 
+const runtimeName = "Runtime"
+
 type Runtime struct {
 	ctx *game.Context
 
@@ -29,7 +31,7 @@ func NewRuntime(ctx *game.Context) *Runtime {
 	g.ctx = ctx
 
 	g.MetricPool = metric.NewMetricPool()
-	metric.MultiPool.Add(g.MetricPool)
+	metric.MultiPool.Add(runtimeName, g.MetricPool)
 
 	g.Ship = entity.NewShip(ctx)
 	g.MetricPool.Register(entity.ShipName, g.Ship)

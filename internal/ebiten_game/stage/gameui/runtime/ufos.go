@@ -34,6 +34,10 @@ func NewUFOs(ctx *game.Context) *UFOs {
 	}
 }
 
+/*
+Update: add ufos per interval.
+if the ufo is down of the screen, remove it from the storage.
+*/
 func (us *UFOs) Update() error {
 	if len(us.ufos) < us.MaxUFONum &&
 		time.Since(us.lastAddAt) >= us.UFOInterval {
@@ -42,8 +46,9 @@ func (us *UFOs) Update() error {
 	}
 
 	for u := range us.ufos {
-		inScreen := u.Update()
-		if !inScreen {
+		u.Update()
+
+		if u.IsDownOfScreen() {
 			us.RemoveUFO(u)
 		}
 	}
@@ -66,8 +71,15 @@ func (us *UFOs) Draw(screen *ebiten.Image) {
 	}
 }
 
-func (us *UFOs) DrawMetrics(screen *ebiten.Image, cfg *metric.DrawConfig) {
-	text.Draw(screen, fmt.Sprintf("UFOsCount: %d\n", len(us.ufos)), cfg.Face, cfg.X, cfg.Y, cfg.Color)
+func (us *UFOs) DrawMetrics(screen *ebiten.Image, dc *metric.DrawConfig) {
+	text.Draw(screen, fmt.Sprintf("%s: ", UFOsName), dc.Face, dc.X, dc.Y, dc.Color)
+	text.Draw(screen,
+		fmt.Sprintf("UFOsCount: %d\n", len(us.ufos)),
+		dc.Face,
+		dc.X+metric.MetricCharWidth*(len(UFOsName)+5),
+		dc.Y,
+		dc.Color,
+	)
 }
 
 func (us *UFOs) RangeUFOs(fn func(k *entity.UFO, v bool)) {

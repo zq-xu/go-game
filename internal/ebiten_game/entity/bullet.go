@@ -28,14 +28,8 @@ func NewBullet(ctx *game.Context, s *Ship) *Bullet {
 }
 
 /*
-Update: update the bullet position (minus speedFactor).
-return whether the bullet is out of the screen (for removing it from the storage).
+Update: update the bullet position (based on the speedFactor).
 */
-func (b *Bullet) Update() bool {
-	if b.IsUpOfScreen() {
-		return false
-	}
-
+func (b *Bullet) Update() {
 	b.MoveUp(b.SpeedFactor)
-	return true
 }

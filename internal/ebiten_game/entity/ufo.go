@@ -48,15 +48,9 @@ func NewUFO(ctx *game.Context) *UFO {
 }
 
 /*
-Update: update the UFO position (minus speedFactor).
-return whether the UFO is out of the screen (for removing it from the storage).
+Update: update the ufo position (based on the speedFactor).
 */
-func (u *UFO) Update() bool {
-	if u.IsDownOfScreen() {
-		return false
-	}
-
+func (u *UFO) Update() {
 	u.MoveDown(u.YSpeedFactor)
 	u.SetX(u.calX())
-	return true
 }
