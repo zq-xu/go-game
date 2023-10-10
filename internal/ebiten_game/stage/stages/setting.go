@@ -8,38 +8,41 @@ import (
 	"github.com/zq-xu/2d-game/internal/ebiten_game/stage/gameui"
 )
 
-type MenuStage struct {
+type SettingStage struct {
 	ctx *game.Context
-	ui  *gameui.Menu
+	ui  *gameui.Setting
 
 	Status
 }
 
-func NewMenuStage(ctx *game.Context) *MenuStage {
-	g := &MenuStage{
+func NewSettingStage(ctx *game.Context, preStage Interface) *SettingStage {
+	g := &SettingStage{
 		ctx: ctx,
+		Status: Status{
+			preStage: preStage,
+		},
 	}
 
-	g.ui = gameui.NewMenu(ctx,
-		gameui.WithMenuNextButonOpts(
+	g.ui = gameui.NewSetting(ctx,
+		gameui.WithSettingBackButonOpts(
 			widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-				g.checkoutNextStage(NewGamingStage(g.ctx))
+				g.checkoutPreStage()
 			}),
 		))
 
 	return g
 }
 
-func (g *MenuStage) Update() error {
+func (g *SettingStage) Update() error {
 	g.ui.Update()
+
 	return nil
 }
 
-func (g *MenuStage) Draw(screen *ebiten.Image) {
+func (g *SettingStage) Draw(screen *ebiten.Image) {
 	g.ui.Draw(screen)
 }
 
-func (g *MenuStage) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+func (g *SettingStage) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return g.ctx.Resource.Layout(outsideWidth, outsideHeight)
-
 }

@@ -1,8 +1,6 @@
 package gameui
 
 import (
-	"fmt"
-
 	"github.com/ebitenui/ebitenui"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -10,19 +8,28 @@ import (
 	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
 )
 
+type NavbarOpt func(nb *Navbar)
+
 type Navbar struct {
 	ctx *game.Context
 
 	ui *ebitenui.UI
+
+	settingButtonOpts []widget.ButtonOpt
 }
 
-func NewNavbar(ctx *game.Context) *Navbar {
-	g := &Navbar{
-		ctx: ctx,
+func WithNavbarSettingButonOpts(opts ...widget.ButtonOpt) NavbarOpt {
+	return func(nb *Navbar) { nb.settingButtonOpts = opts }
+}
+
+func NewNavbar(ctx *game.Context, opts ...NavbarOpt) *Navbar {
+	g := &Navbar{ctx: ctx}
+
+	for _, fn := range opts {
+		fn(g)
 	}
 
 	g.ui = g.newUI()
-
 	return g
 }
 
@@ -37,11 +44,12 @@ func (g *Navbar) Draw(screen *ebiten.Image) {
 
 func (g *Navbar) newUI() *ebitenui.UI {
 	rootContainer := g.ctx.Resource.LayoutResource.NewRightTopRowLayout(0, 0, func(c *widget.Container) {
-		c.AddChild(g.ctx.Resource.ButtonResource.NewSettingButton(
-			widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-				fmt.Print("click setting")
-			})))
+		c.AddChild(g.newSettingButton())
 	})
 
 	return &ebitenui.UI{Container: rootContainer}
+}
+
+func (g *Navbar) newSettingButton() *widget.Button {
+	return g.ctx.Resource.ButtonResource.NewSettingButton(g.settingButtonOpts...)
 }

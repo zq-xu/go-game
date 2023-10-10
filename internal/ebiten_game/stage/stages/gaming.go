@@ -1,6 +1,7 @@
 package stages
 
 import (
+	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
@@ -11,27 +12,42 @@ type GamingStage struct {
 	ctx *game.Context
 
 	runtime *gameui.Runtime
-	status  game.StageStatus
 
 	navbar *gameui.Navbar
+
+	Status
 }
 
 func NewGamingStage(ctx *game.Context) *GamingStage {
-	return &GamingStage{
-		ctx:     ctx,
-		runtime: gameui.NewRuntime(ctx),
-		navbar:  gameui.NewNavbar(ctx),
+	g := &GamingStage{
+		ctx: ctx,
 	}
+
+	g.runtime = gameui.NewRuntime(ctx,
+		gameui.WithRuntimeCollission(func(b bool) {
+			if b {
+				g.checkoutNextStage(NewEndingStage(g.ctx, game.FailStatus))
+			}
+		}),
+	)
+
+	g.navbar = gameui.NewNavbar(ctx,
+		gameui.WithNavbarSettingButonOpts(
+			widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+				g.checkoutNextStage(NewSettingStage(g.ctx, g))
+			}),
+		))
+
+	return g
 }
 
 func (g *GamingStage) Update() error {
-
 	err := g.runtime.Update()
 	if err != nil {
 		return err
 	}
 
-	g.navbar.Update()
+	err = g.navbar.Update()
 	if err != nil {
 		return err
 	}
@@ -48,13 +64,4 @@ func (g *GamingStage) Draw(screen *ebiten.Image) {
 
 func (g *GamingStage) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return g.ctx.Resource.Layout(outsideWidth, outsideHeight)
-}
-
-func (g *GamingStage) GoNextStatus() (bool, Interface) {
-	switch g.runtime.GetStatus() {
-	case game.SuccessStageStatus, game.FailStageStatus:
-		return true, NewEndingStage(g.ctx, g.status)
-	default:
-		return false, nil
-	}
 }

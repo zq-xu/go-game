@@ -11,8 +11,9 @@ import (
 type BeginningStage struct {
 	ctx *game.Context
 
-	ui     *ebitenui.UI
-	status game.StageStatus
+	ui *ebitenui.UI
+
+	Status
 }
 
 func NewBeginningStage(ctx *game.Context) *BeginningStage {
@@ -24,7 +25,7 @@ func NewBeginningStage(ctx *game.Context) *BeginningStage {
 
 func (g *BeginningStage) Update() error {
 	if ebiten.IsKeyPressed(ebiten.KeyEnter) {
-		g.status = game.SuccessStageStatus
+		g.checkoutNextStage(NewGamingStage(g.ctx))
 	}
 
 	g.ui.Update()
@@ -38,15 +39,6 @@ func (g *BeginningStage) Draw(screen *ebiten.Image) {
 
 func (g *BeginningStage) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return g.ctx.Resource.Layout(outsideWidth, outsideHeight)
-}
-
-func (g *BeginningStage) GoNextStatus() (bool, Interface) {
-	switch g.status {
-	case game.SuccessStageStatus:
-		return true, NewGamingStage(g.ctx)
-	default:
-		return false, nil
-	}
 }
 
 func NewBeginningUI(ctx *game.Context) *ebitenui.UI {

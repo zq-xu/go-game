@@ -1,10 +1,13 @@
 package game
 
 const (
-	RunningStageStatus StageStatus = iota
-	SuccessStageStatus
-	FailStageStatus
-	ReturnBackStageStatus
+	RunningStatus Status = iota
+	TerminatingStatus
+	NextStatus
+	BackStatus
+	SuccessStatus
+	FailStatus
+	ConfirmStatus
 )
 
-type StageStatus int
+type Status int

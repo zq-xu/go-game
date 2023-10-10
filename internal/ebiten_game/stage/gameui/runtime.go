@@ -12,10 +12,10 @@ import (
 
 const runtimeName = "Runtime"
 
+type RuntimeOpt func(r *Runtime)
+
 type Runtime struct {
 	ctx *game.Context
-
-	status game.StageStatus
 
 	Ship *entity.Ship
 
@@ -24,11 +24,24 @@ type Runtime struct {
 	UFOs *runtime.UFOs
 
 	MetricPool *metric.Pool
+
+	Status game.Status
+
+	collissionCallback func(bool)
 }
 
-func NewRuntime(ctx *game.Context) *Runtime {
-	g := &Runtime{}
-	g.ctx = ctx
+func WithRuntimeCollission(callback func(bool)) RuntimeOpt {
+	return func(r *Runtime) {
+		r.collissionCallback = callback
+	}
+}
+
+func NewRuntime(ctx *game.Context, opts ...RuntimeOpt) *Runtime {
+	g := &Runtime{ctx: ctx}
+
+	for _, fn := range opts {
+		fn(g)
+	}
 
 	g.MetricPool = metric.NewMetricPool()
 	metric.MultiPool.Add(runtimeName, g.MetricPool)
@@ -74,13 +87,11 @@ func (g *Runtime) checkShootCollision() {
 }
 
 func (g *Runtime) checkShipCollision() {
-	g.UFOs.RangeUFOs(func(u *entity.UFO, uv bool) {
-		if event.CheckCollision(&u.ImageEntity, &g.Ship.ImageEntity) {
-			g.status = game.FailStageStatus
-		}
-	})
-}
+	if g.collissionCallback == nil {
+		return
+	}
 
-func (g *Runtime) GetStatus() game.StageStatus {
-	return g.status
+	g.UFOs.RangeUFOs(func(u *entity.UFO, uv bool) {
+		g.collissionCallback(event.CheckCollision(&u.ImageEntity, &g.Ship.ImageEntity))
+	})
 }

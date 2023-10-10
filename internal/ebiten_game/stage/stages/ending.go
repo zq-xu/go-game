@@ -12,9 +12,9 @@ var (
 	SuccessText = "SUCCESS"
 	FailureText = "FAILED"
 
-	resultTextSet = map[game.StageStatus]string{
-		game.SuccessStageStatus: SuccessText,
-		game.FailStageStatus:    FailureText,
+	resultTextSet = map[game.Status]string{
+		game.SuccessStatus: SuccessText,
+		game.FailStatus:    FailureText,
 	}
 )
 
@@ -23,22 +23,19 @@ type EndingStage struct {
 
 	ui *ebitenui.UI
 
-	status game.StageStatus
+	Status
 }
 
-func NewEndingStage(ctx *game.Context, status game.StageStatus) *EndingStage {
+func NewEndingStage(ctx *game.Context, status game.Status) *EndingStage {
 	return &EndingStage{
 		ctx: ctx,
-
-		ui: NewEndingUI(ctx, status),
-
-		status: status,
+		ui:  NewEndingUI(ctx, status),
 	}
 }
 
 func (g *EndingStage) Update() error {
 	if ebiten.IsKeyPressed(ebiten.KeyEnter) {
-		g.status = game.SuccessStageStatus
+		g.checkoutNextStage(NewGamingStage(g.ctx))
 	}
 
 	g.ui.Update()
@@ -54,16 +51,7 @@ func (g *EndingStage) Layout(outsideWidth, outsideHeight int) (screenWidth, scre
 	return g.ctx.Resource.Layout(outsideWidth, outsideHeight)
 }
 
-func (g *EndingStage) GoNextStatus() (bool, Interface) {
-	switch g.status {
-	case game.SuccessStageStatus:
-		return true, NewGamingStage(g.ctx)
-	default:
-		return false, nil
-	}
-}
-
-func NewEndingUI(ctx *game.Context, status game.StageStatus) *ebitenui.UI {
+func NewEndingUI(ctx *game.Context, status game.Status) *ebitenui.UI {
 	titleTexts := []string{"GAME OVER", resultTextSet[status]}
 
 	root := ctx.Resource.LayoutResource.NewCenterRowLayout(400, 10, nil, func(c *widget.Container) {
