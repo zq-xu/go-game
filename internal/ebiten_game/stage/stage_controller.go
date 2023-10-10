@@ -27,15 +27,15 @@ func NewStageController(ctx *game.Context) *StageController {
 }
 
 func (g *StageController) Update() error {
-	err := g.currentStage.Update()
-	if err != nil {
-		return err
-	}
-
 	b, i := g.currentStage.GoNextStatus()
 	if b {
 		g.preStage = g.currentStage
 		g.currentStage = i
+	}
+
+	err := g.currentStage.Update()
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -46,5 +46,5 @@ func (g *StageController) Draw(screen *ebiten.Image) {
 }
 
 func (g *StageController) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return g.ctx.Resource.Layout(outsideWidth, outsideHeight)
+	return g.currentStage.Layout(outsideWidth, outsideHeight)
 }
