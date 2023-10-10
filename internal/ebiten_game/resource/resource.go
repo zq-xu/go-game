@@ -24,7 +24,7 @@ func NewResource() *Resource {
 
 	rsc.Loader = *loader.NewLoader()
 
-	rsc.UIResource = *ui.NewUIResource(&rsc.Loader)
+	rsc.UIResource = *ui.NewUIResource(rsc.Cfg, &rsc.Loader)
 
 	rsc.Setting = *setting.NewSetting(rsc.Cfg)
 

@@ -14,7 +14,7 @@ const (
 )
 
 var (
-	pauseText = []string{"", "", "PRESS Space KEY TO START", "", "", "", ""}
+	pauseText = []string{"", "", "PRESS SPACE KEY TO START", "", "", "", ""}
 )
 
 type PauseStage struct {
@@ -58,7 +58,7 @@ func (g *PauseStage) Update() error {
 func (g *PauseStage) Draw(screen *ebiten.Image) {
 	g.preStage.Draw(screen)
 
-	// screen.Fill(g.ctx.Resource.Cfg.ShadowColor)
+	g.ctx.Resource.ShadowResource.DrawShadow(screen)
 
 	g.ui.Draw(screen)
 }

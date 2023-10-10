@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/loader"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/ui/button"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/ui/color"
@@ -9,8 +10,10 @@ import (
 )
 
 type UIResource struct {
-	ColorResource      *uiColor.ColorResource
+	ColorResource *uiColor.ColorResource
+
 	BackgroundResource *BackgroundResource
+	ShadowResource     *ShadowResource
 
 	SeparatorResource *SeparatorResource
 	ButtonResource    *button.ButtonResource
@@ -19,11 +22,12 @@ type UIResource struct {
 	LayoutResource *layout.LayoutResource
 }
 
-func NewUIResource(ld *loader.Loader) *UIResource {
+func NewUIResource(cfg *config.Config, ld *loader.Loader) *UIResource {
 	ur := &UIResource{}
 
 	ur.ColorResource = color.NewColorResource()
 	ur.BackgroundResource = NewBackgroundResource()
+	ur.ShadowResource = NewShadowResource(cfg)
 
 	ur.SeparatorResource = NewSeparatorResource()
 	ur.ButtonResource = button.NewButtonResource(ld, ur.ColorResource)
