@@ -6,7 +6,6 @@ import (
 	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
 	"github.com/zq-xu/2d-game/internal/ebiten_game/stage"
-	"github.com/zq-xu/2d-game/pkg/metric"
 )
 
 type Game struct {
@@ -45,7 +44,7 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.stage.Draw(screen)
 
-	metric.MultiPool.Draw(screen)
+	// metric.MultiPool.Draw(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

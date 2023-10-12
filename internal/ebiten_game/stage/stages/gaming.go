@@ -16,7 +16,10 @@ type GamingStage struct {
 
 	navbar *gameui.Navbar
 
+	metric *gameui.Metric
+
 	inputLitener *listener.InputListener
+
 	Status
 }
 
@@ -48,6 +51,9 @@ func NewGamingStage(ctx *game.Context) *GamingStage {
 
 		return false
 	})
+
+	g.metric = gameui.NewMetric(ctx)
+
 	return g
 }
 
@@ -71,6 +77,7 @@ func (g *GamingStage) Draw(screen *ebiten.Image) {
 
 	g.runtime.Draw(screen)
 	g.navbar.Draw(screen)
+	g.metric.Draw(screen)
 }
 
 func (g *GamingStage) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

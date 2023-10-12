@@ -22,6 +22,8 @@ type PauseStage struct {
 
 	ui *ebitenui.UI
 
+	shadowDrawer func(screen *ebiten.Image)
+
 	inputLitener *listener.InputListener
 
 	Status
@@ -45,6 +47,8 @@ func NewPauseStage(ctx *game.Context, preStage Interface) *PauseStage {
 		return false
 	})
 
+	g.shadowDrawer = g.ctx.Resource.ShadowResource.GenerateShadowDrawerFn(0)
+
 	return g
 }
 
@@ -58,7 +62,7 @@ func (g *PauseStage) Update() error {
 func (g *PauseStage) Draw(screen *ebiten.Image) {
 	g.preStage.Draw(screen)
 
-	g.ctx.Resource.ShadowResource.DrawShadow(screen)
+	g.shadowDrawer(screen)
 
 	g.ui.Draw(screen)
 }

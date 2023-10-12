@@ -18,15 +18,6 @@ func (cr *CenterLayoutResource) NewCenterRowLayout(minWidth, spacing int, rowsca
 	return root
 }
 
-func newAnchorContainer() *widget.Container {
-	return widget.NewContainer(
-		widget.ContainerOpts.Layout(widget.NewAnchorLayout()),
-		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
-			StretchHorizontal: true,
-		})),
-	)
-}
-
 func newSingleColumnGridLayout(minWidth, spacing int, rowscale []bool) *widget.Container {
 	return widget.NewContainer(
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.MinSize(minWidth, 0)),

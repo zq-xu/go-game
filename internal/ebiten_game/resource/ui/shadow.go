@@ -10,27 +10,47 @@ import (
 
 type ShadowResource struct {
 	cfg *config.Config
-
-	shadowImage *ebiten.Image
-
-	op *ebiten.DrawImageOptions
 }
 
 func NewShadowResource(cfg *config.Config) *ShadowResource {
 	return &ShadowResource{cfg: cfg}
 }
 
-func (s *ShadowResource) DrawShadow(screen *ebiten.Image) {
-	if s.shadowImage == nil {
-		s.shadowImage = ebiten.NewImage(s.cfg.ScreenConfig.ScreenWidth, s.cfg.ScreenConfig.ScreenHeight)
-		s.shadowImage.Fill(color.Black)
+// func (s *ShadowResource) DrawShadow(screen *ebiten.Image) {
+// 	if s.shadowImage == nil {
+// 		s.shadowImage = ebiten.NewImage(screen.Bounds().Dx(), screen.Bounds().Dy())
+// 		s.shadowImage.Fill(color.Black)
 
+// 	}
+
+// 	if s.op == nil {
+// 		s.op = &ebiten.DrawImageOptions{}
+// 		s.op.ColorScale.ScaleAlpha(0.7)
+// 	}
+
+// 	screen.DrawImage(s.shadowImage, s.op)
+// }
+
+func (s *ShadowResource) GenerateShadowDrawerFn(scale float32) func(screen *ebiten.Image) {
+	var shadowImage *ebiten.Image
+	var op *ebiten.DrawImageOptions
+
+	if scale == 0 {
+		scale = 0.3
 	}
 
-	if s.op == nil {
-		s.op = &ebiten.DrawImageOptions{}
-		s.op.ColorScale.ScaleAlpha(0.7)
+	return func(screen *ebiten.Image) {
+		if shadowImage == nil {
+			shadowImage = ebiten.NewImage(screen.Bounds().Dx(), screen.Bounds().Dy())
+			shadowImage.Fill(color.Black)
+		}
+
+		if op == nil {
+			op = &ebiten.DrawImageOptions{}
+			op.ColorScale.ScaleAlpha(scale)
+		}
+
+		screen.DrawImage(shadowImage, op)
 	}
 
-	screen.DrawImage(s.shadowImage, s.op)
 }
