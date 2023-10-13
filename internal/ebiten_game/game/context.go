@@ -1,7 +1,7 @@
 package game
 
 import (
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource"
 )
 
 type Context struct {

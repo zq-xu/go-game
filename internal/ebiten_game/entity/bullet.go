@@ -1,9 +1,9 @@
 package entity
 
 import (
-	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/loader"
-	"github.com/zq-xu/2d-game/pkg/graphics"
+	"github.com/zq-xu/go-game/internal/ebiten_game/game"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource/loader"
+	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 type Bullet struct {

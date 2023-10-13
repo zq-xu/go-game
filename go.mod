@@ -1,4 +1,4 @@
-module github.com/zq-xu/2d-game
+module github.com/zq-xu/go-game
 
 go 1.20
 

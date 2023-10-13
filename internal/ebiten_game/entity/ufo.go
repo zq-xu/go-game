@@ -3,11 +3,11 @@ package entity
 import (
 	"math/rand"
 
-	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/loader"
-	"github.com/zq-xu/2d-game/pkg/brick"
-	"github.com/zq-xu/2d-game/pkg/graphics"
-	"github.com/zq-xu/2d-game/pkg/utils"
+	"github.com/zq-xu/go-game/internal/ebiten_game/game"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource/loader"
+	"github.com/zq-xu/go-game/pkg/brick"
+	"github.com/zq-xu/go-game/pkg/graphics"
+	"github.com/zq-xu/go-game/pkg/utils"
 )
 
 type UFO struct {

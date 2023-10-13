@@ -5,7 +5,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 
-	ebitengame "github.com/zq-xu/2d-game/internal/ebiten_game"
+	ebitengame "github.com/zq-xu/go-game/internal/ebiten_game"
 )
 
 func main() {

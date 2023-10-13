@@ -6,7 +6,7 @@ import (
 	"github.com/ebitenui/ebitenui/widget"
 	"golang.org/x/image/font"
 
-	uiColor "github.com/zq-xu/2d-game/internal/ebiten_game/resource/ui/color"
+	uiColor "github.com/zq-xu/go-game/internal/ebiten_game/resource/ui/color"
 )
 
 type TextResource struct {

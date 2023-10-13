@@ -8,7 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 
-	"github.com/zq-xu/2d-game/assets"
+	"github.com/zq-xu/go-game/assets"
 )
 
 type Image struct {

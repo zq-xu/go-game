@@ -7,7 +7,7 @@ import (
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
 
-	"github.com/zq-xu/2d-game/pkg/graphics"
+	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 const (

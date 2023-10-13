@@ -1,7 +1,7 @@
 package loader
 
 import (
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/loader/image"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource/loader/image"
 )
 
 const (

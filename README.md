@@ -1,1 +1,1 @@
-# 2d-game
+# go-game

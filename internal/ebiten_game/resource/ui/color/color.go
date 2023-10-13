@@ -3,7 +3,7 @@ package color
 import (
 	"image/color"
 
-	"github.com/zq-xu/2d-game/pkg/graphics"
+	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 const (

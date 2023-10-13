@@ -3,9 +3,9 @@ package stage
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 
-	"github.com/zq-xu/2d-game/internal/ebiten_game/event"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/stage/stages"
+	"github.com/zq-xu/go-game/internal/ebiten_game/event"
+	"github.com/zq-xu/go-game/internal/ebiten_game/game"
+	"github.com/zq-xu/go-game/internal/ebiten_game/stage/stages"
 )
 
 type StageController struct {

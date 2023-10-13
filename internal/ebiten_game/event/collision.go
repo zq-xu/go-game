@@ -3,7 +3,7 @@ package event
 import (
 	"image"
 
-	"github.com/zq-xu/2d-game/pkg/graphics"
+	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 func CheckCollision(imgA, imgB *graphics.ImageEntity) bool {

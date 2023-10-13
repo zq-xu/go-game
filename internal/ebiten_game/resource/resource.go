@@ -1,10 +1,10 @@
 package resource
 
 import (
-	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/loader"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/setting"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/ui"
+	"github.com/zq-xu/go-game/internal/ebiten_game/config"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource/loader"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource/setting"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource/ui"
 )
 
 type Resource struct {

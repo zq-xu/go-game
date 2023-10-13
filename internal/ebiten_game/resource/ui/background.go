@@ -3,7 +3,7 @@ package ui
 import (
 	"github.com/ebitenui/ebitenui/image"
 
-	"github.com/zq-xu/2d-game/pkg/graphics"
+	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 const backgroundColor = "131a22"

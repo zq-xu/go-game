@@ -3,7 +3,7 @@ package setting
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 
-	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
+	"github.com/zq-xu/go-game/internal/ebiten_game/config"
 )
 
 type Setting struct {

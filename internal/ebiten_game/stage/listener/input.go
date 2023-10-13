@@ -3,7 +3,7 @@ package listener
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 
-	"github.com/zq-xu/2d-game/internal/ebiten_game/game"
+	"github.com/zq-xu/go-game/internal/ebiten_game/game"
 )
 
 type InputListener struct {

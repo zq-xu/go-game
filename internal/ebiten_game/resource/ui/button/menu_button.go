@@ -4,8 +4,8 @@ import (
 	"github.com/ebitenui/ebitenui/widget"
 	"golang.org/x/image/font"
 
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/loader"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/ui/color"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource/loader"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource/ui/color"
 )
 
 const (

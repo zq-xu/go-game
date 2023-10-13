@@ -1,12 +1,12 @@
 package ui
 
 import (
-	"github.com/zq-xu/2d-game/internal/ebiten_game/config"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/loader"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/ui/button"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/ui/color"
-	uiColor "github.com/zq-xu/2d-game/internal/ebiten_game/resource/ui/color"
-	"github.com/zq-xu/2d-game/internal/ebiten_game/resource/ui/layout"
+	"github.com/zq-xu/go-game/internal/ebiten_game/config"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource/loader"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource/ui/button"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource/ui/color"
+	uiColor "github.com/zq-xu/go-game/internal/ebiten_game/resource/ui/color"
+	"github.com/zq-xu/go-game/internal/ebiten_game/resource/ui/layout"
 )
 
 type UIResource struct {
