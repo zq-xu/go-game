@@ -12,24 +12,20 @@ type Game struct {
 	ctx *game.Context
 
 	stage *stage.StageController
-
-	gmListener *GlobalMetricListener
 }
 
 func NewGame() *Game {
 	// ebiten.SetFullscreen(config.Cfg.FullScreen)
-	ebiten.SetWindowSize(config.Cfg.ScreenConfig.ScreenWidth, config.Cfg.ScreenConfig.ScreenHeight)
-	ebiten.SetWindowTitle(config.Cfg.Title)
-
-	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 	// ebiten.SetScreenClearedEveryFrame(false)
 	// ebiten.SetVsyncEnabled(false)
 
-	g := &Game{}
-	g.ctx = game.NewContext()
+	ebiten.SetWindowSize(config.Cfg.ScreenConfig.ScreenWidth, config.Cfg.ScreenConfig.ScreenHeight)
+	ebiten.SetWindowTitle(config.Cfg.Title)
+	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
+
+	g := &Game{ctx: game.NewContext()}
 
 	g.stage = stage.NewStageController(g.ctx)
-	g.gmListener = NewGlobalMetricListener()
 
 	return g
 }
@@ -37,14 +33,12 @@ func NewGame() *Game {
 func (g *Game) Update() error {
 	// g.ctx.Resource.Listen()
 
-	g.gmListener.Update()
+	g.ctx.Listener.Update()
 	return g.stage.Update()
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.stage.Draw(screen)
-
-	// metric.MultiPool.Draw(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
