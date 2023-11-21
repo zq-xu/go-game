@@ -12,18 +12,23 @@ const listenerName = "Listener"
 type Listener interface {
 	Update() error
 	Draw(screen *ebiten.Image)
+
+	GameDataListener() GameDataListener
 }
 
 type listener struct {
 	MetricPool *metric.Pool
 
 	inputListener *inputListener
+
+	gameDataListener GameDataListener
 }
 
 func NewListener() Listener {
 	l := &listener{
-		MetricPool:    metric.NewMetricPool(),
-		inputListener: NewInputListener(),
+		MetricPool:       metric.NewMetricPool(),
+		inputListener:    NewInputListener(),
+		gameDataListener: NewGameDataListener(),
 	}
 
 	l.MetricPool.Register(event.InputName, l.inputListener.input)
@@ -42,3 +47,5 @@ func (l *listener) Update() error {
 func (l *listener) Draw(screen *ebiten.Image) {
 	l.MetricPool.DrawMetrics(screen)
 }
+
+func (l *listener) GameDataListener() GameDataListener { return l.gameDataListener }

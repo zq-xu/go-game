@@ -81,6 +81,7 @@ func (g *Runtime) checkShootCollision() {
 			if event.CheckCollision(&u.ImageEntity, &b.ImageEntity) {
 				g.Shoot.RemoveBullet(b)
 				g.UFOs.RemoveUFO(u)
+				g.ctx.Listener.GameDataListener().AddShotUFO(1)
 			}
 		})
 	})

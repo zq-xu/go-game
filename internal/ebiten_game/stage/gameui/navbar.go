@@ -1,6 +1,8 @@
 package gameui
 
 import (
+	"fmt"
+
 	"github.com/ebitenui/ebitenui"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -16,6 +18,8 @@ type Navbar struct {
 	ui *ebitenui.UI
 
 	settingButtonOpts []widget.ButtonOpt
+
+	shotUFOText *widget.Text
 }
 
 func WithNavbarSettingButonOpts(opts ...widget.ButtonOpt) NavbarOpt {
@@ -29,7 +33,7 @@ func NewNavbar(ctx *game.Context, opts ...NavbarOpt) *Navbar {
 		fn(g)
 	}
 
-	g.ui = g.newUI()
+	g.initializeUI()
 	return g
 }
 
@@ -39,15 +43,22 @@ func (g *Navbar) Update() error {
 }
 
 func (g *Navbar) Draw(screen *ebiten.Image) {
+	g.shotUFOText.Label = fmt.Sprintf("Shot: %d", g.ctx.Listener.GameDataListener().GetShotUFO())
 	g.ui.Draw(screen)
 }
 
-func (g *Navbar) newUI() *ebitenui.UI {
-	rootContainer := g.ctx.Resource.LayoutResource.NewRightTopRowLayout(0, 0, func(c *widget.Container) {
-		c.AddChild(g.newSettingButton())
-	})
+func (g *Navbar) initializeUI() {
+	g.shotUFOText = g.ctx.Resource.TextResource.NewCenterText(
+		fmt.Sprintf("Shot: %d", g.ctx.Listener.GameDataListener().GetShotUFO()),
+		g.ctx.Resource.FontLoader.TitleFace(),
+	)
 
-	return &ebitenui.UI{Container: rootContainer}
+	g.ui = &ebitenui.UI{
+		Container: g.ctx.Resource.LayoutResource.NewRightTopRowLayout(100, 0, func(c *widget.Container) {
+			c.AddChild(g.shotUFOText)
+			c.AddChild(g.newSettingButton())
+		}),
+	}
 }
 
 func (g *Navbar) newSettingButton() *widget.Button {
