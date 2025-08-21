@@ -1,9 +1,20 @@
 package graphics
 
 import (
-	"github.com/zq-xu/go-game/assets"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/zq-xu/go-game/pkg/graphics/font"
 )
 
-func NewFontFromFile(path string) ([]byte, error) {
-	return assets.EmbeddedFonts.ReadFile(path)
+var defaultFont Font
+
+type Font interface {
+	Face() *text.Face
+	BoldFace() *text.Face
+}
+
+func GetFont() Font {
+	if defaultFont == nil {
+		defaultFont = font.NewNotoSansFont(12)
+	}
+	return defaultFont
 }

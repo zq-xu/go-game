@@ -5,11 +5,18 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 
-	ebitengame "github.com/zq-xu/go-game/internal/ebiten_game"
+	"github.com/zq-xu/go-game/internal/game"
+	"github.com/zq-xu/go-game/pkg/logs"
 )
 
 func main() {
-	if err := ebiten.RunGame(ebitengame.NewGame()); err != nil {
+	err := logs.InitLog("debug")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = ebiten.RunGame(game.NewGame())
+	if err != nil {
 		log.Fatal(err)
 	}
 }

@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
 const (
@@ -77,9 +77,9 @@ func (l *PoolList) Draw(screen *ebiten.Image) {
 }
 
 func (pi *poolItem) drawItemTitle(screen *ebiten.Image, startY int) {
-	text.Draw(screen, fmt.Sprintf("%s: ", pi.name),
-		defaultPoolItemDrawConfig.Face,
-		poolItemTitleStartX,
-		startY,
-		defaultPoolItemDrawConfig.Color)
+	op := &text.DrawOptions{}
+	op.GeoM.Translate(float64(poolItemTitleStartX), float64(startY))
+	op.ColorScale.ScaleWithColor(defaultPoolItemDrawConfig.Color)
+
+	text.Draw(screen, fmt.Sprintf("%s: ", pi.name), defaultPoolItemDrawConfig.Face, op)
 }

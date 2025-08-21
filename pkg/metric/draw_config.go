@@ -3,8 +3,8 @@ package metric
 import (
 	"image/color"
 
-	"github.com/hajimehoshi/bitmapfont/v3"
-	"golang.org/x/image/font"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 const (
@@ -15,14 +15,14 @@ const (
 )
 
 var DefaultDrawConfig = &DrawConfig{
-	Face:  bitmapfont.Face,
+	Face:  *graphics.GetFont().Face(),
 	X:     defaultStartX,
 	Y:     MetricLineHeight,
 	Color: color.Black,
 }
 
 type DrawConfig struct {
-	Face  font.Face
+	Face  text.Face
 	X     int
 	Y     int
 	Color color.Color

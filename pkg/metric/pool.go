@@ -32,9 +32,8 @@ func NewMetricPool() *Pool {
 func (p *Pool) Register(name string, i Interface) {
 	p.metricSet[name] = metricObject{
 		Interface: i,
-
-		name:  name,
-		index: len(p.metricSet),
+		name:      name,
+		index:     len(p.metricSet),
 	}
 }
 
@@ -45,6 +44,7 @@ func (p *Pool) DrawMetrics(screen *ebiten.Image) {
 func (p *Pool) drawMetrics(screen *ebiten.Image, strartX, strartY int) {
 	for _, obj := range p.metricSet {
 		dc := DefaultDrawConfig.Copy()
+
 		dc.X = strartX
 		dc.Y = obj.index*MetricLineHeight + strartY
 		dc.Color = colorSet[obj.index%len(colorSet)]
