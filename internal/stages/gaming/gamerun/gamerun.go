@@ -1,20 +1,25 @@
-package gaming
+package gamerun
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"github.com/zq-xu/go-game/internal/listener"
-	"github.com/zq-xu/go-game/internal/stages/gaming/actors"
-	"github.com/zq-xu/go-game/internal/stages/gaming/actors/entity"
+	"github.com/zq-xu/go-game/internal/stages/gaming/gamerun/actors"
+	"github.com/zq-xu/go-game/internal/stages/gaming/gamerun/actors/entity"
 	"github.com/zq-xu/go-game/internal/status"
 	"github.com/zq-xu/go-game/pkg/metric"
 )
 
-const actorsName = "Runtime"
+const actorsName = "GameRun"
 
-type RuntimeOpt func(r *Runtime)
+type GameRun interface {
+	Update() error
+	Draw(screen *ebiten.Image)
+}
 
-type Runtime struct {
+type gameRunOpt func(r *gameRun)
+
+type gameRun struct {
 	Ship    *actors.Ship
 	Bullets actors.Bullets
 	UFOs    *actors.UFOs
@@ -24,14 +29,14 @@ type Runtime struct {
 	collissionCallback func(bool)
 }
 
-func WithRuntimeCollission(callback func(bool)) RuntimeOpt {
-	return func(r *Runtime) {
+func WithgameRunCollission(callback func(bool)) gameRunOpt {
+	return func(r *gameRun) {
 		r.collissionCallback = callback
 	}
 }
 
-func NewRuntime(opts ...RuntimeOpt) *Runtime {
-	g := &Runtime{}
+func NewGameRun(opts ...gameRunOpt) GameRun {
+	g := &gameRun{}
 
 	for _, fn := range opts {
 		fn(g)
@@ -52,7 +57,7 @@ func NewRuntime(opts ...RuntimeOpt) *Runtime {
 	return g
 }
 
-func (g *Runtime) Update() error {
+func (g *gameRun) Update() error {
 	g.Ship.Update()
 	g.Bullets.Update(g.Ship.Ship)
 	g.UFOs.Update()
@@ -63,13 +68,13 @@ func (g *Runtime) Update() error {
 	return nil
 }
 
-func (g *Runtime) Draw(screen *ebiten.Image) {
+func (g *gameRun) Draw(screen *ebiten.Image) {
 	g.Ship.Draw(screen)
 	g.Bullets.Draw(screen)
 	g.UFOs.Draw(screen)
 }
 
-func (g *Runtime) checkBulletsCollision() {
+func (g *gameRun) checkBulletsCollision() {
 	g.Bullets.RangeBullets(func(b *entity.Bullet, bv bool) {
 		g.UFOs.RangeUFOs(func(u *entity.UFO, uv bool) {
 			if actors.CheckCollision(&u.ImageEntity, &b.ImageEntity) {
@@ -81,7 +86,7 @@ func (g *Runtime) checkBulletsCollision() {
 	})
 }
 
-func (g *Runtime) checkShipCollision() {
+func (g *gameRun) checkShipCollision() {
 	if g.collissionCallback == nil {
 		return
 	}

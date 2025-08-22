@@ -20,7 +20,7 @@ var (
 	pauseText = []string{"", "", "PRESS SPACE KEY TO START", "", "", "", ""}
 )
 
-type PauseStage struct {
+type pauseStage struct {
 	ui *ebitenui.UI
 
 	shadowDrawer func(screen *ebiten.Image)
@@ -30,20 +30,16 @@ type PauseStage struct {
 	stages.BaseStage
 }
 
-func init() {
-	stages.Register(stages.PauseStage, NewPauseStage())
-}
-
-func NewPauseStage() *PauseStage {
-	s := &PauseStage{BaseStage: *stages.NewBaseStage()}
-	s.SetCurrentGameStage(s)
+// NewPauseStage
+func NewPauseStage(ctx stages.StageContext) *pauseStage {
+	s := &pauseStage{BaseStage: *stages.NewBaseStage(ctx)}
 
 	s.ui = newPauseUI()
 	s.shadowDrawer = components.GenerateShadowDrawerFn(0)
 
 	s.inputListener = event.NewInputListener(func() bool {
 		if s.IsStable() && ebiten.IsKeyPressed(ebiten.KeySpace) {
-			s.SetNexttGameStage(stages.GetGameStage(stages.GamingStage))
+			s.Context().SetCurrentGameStage(stages.GamingStage)
 			return true
 		}
 
@@ -53,14 +49,18 @@ func NewPauseStage() *PauseStage {
 	return s
 }
 
-func (g *PauseStage) Update() error {
+func (g *pauseStage) StageName() stages.StageName {
+	return stages.PauseStage
+}
+
+func (g *pauseStage) Update() error {
 	g.ui.Update()
 	g.inputListener.Update()
 	return nil
 }
 
-func (g *PauseStage) Draw(screen *ebiten.Image) {
-	stages.GetGameStage(stages.GamingStage).Draw(screen)
+func (g *pauseStage) Draw(screen *ebiten.Image) {
+	g.Context().TempDrawer().Draw(screen)
 	g.shadowDrawer(screen)
 	g.ui.Draw(screen)
 }
@@ -77,5 +77,3 @@ func newPauseUI() *ebitenui.UI {
 
 	return &ebitenui.UI{Container: root}
 }
-
-func (g *PauseStage) ReShown() { g.inputListener.Reload() }

@@ -18,6 +18,11 @@ type StageName string
 type GameStage interface {
 	ebiten.Game
 
-	NextGameStage() GameStage
+	StageName() StageName
+
+	// Reset is used to reset all the data of the stage.
+	Reset()
+
+	// Reload is invoked when the game stage is switched as the current running stage
 	Reload()
 }

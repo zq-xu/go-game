@@ -14,6 +14,11 @@ import (
 	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
+type Navbar interface {
+	Update() error
+	Draw(screen *ebiten.Image)
+}
+
 type navbarOpt func(nb *navbar)
 
 type navbar struct {

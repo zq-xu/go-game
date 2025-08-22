@@ -4,32 +4,7 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
-
-	"github.com/zq-xu/go-game/internal/config"
 )
-
-type ShadowResource struct {
-	cfg *config.Config
-}
-
-func NewShadowResource(cfg *config.Config) *ShadowResource {
-	return &ShadowResource{cfg: cfg}
-}
-
-// func (s *ShadowResource) DrawShadow(screen *ebiten.Image) {
-// 	if s.shadowImage == nil {
-// 		s.shadowImage = ebiten.NewImage(screen.Bounds().Dx(), screen.Bounds().Dy())
-// 		s.shadowImage.Fill(color.Black)
-
-// 	}
-
-// 	if s.op == nil {
-// 		s.op = &ebiten.DrawImageOptions{}
-// 		s.op.ColorScale.ScaleAlpha(0.7)
-// 	}
-
-// 	screen.DrawImage(s.shadowImage, s.op)
-// }
 
 func GenerateShadowDrawerFn(scale float32) func(screen *ebiten.Image) {
 	var shadowImage *ebiten.Image

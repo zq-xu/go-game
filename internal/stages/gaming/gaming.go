@@ -6,58 +6,38 @@ import (
 
 	"github.com/zq-xu/go-game/internal/config"
 	"github.com/zq-xu/go-game/internal/stages"
+	"github.com/zq-xu/go-game/internal/stages/gaming/gamerun"
+	"github.com/zq-xu/go-game/internal/stages/gaming/navbar"
+	"github.com/zq-xu/go-game/internal/status"
 	"github.com/zq-xu/go-game/pkg/event"
 )
 
-type GamingStage struct {
-	runtime       *Runtime
-	navbar        Navbar
+type gamingStage struct {
+	gamerun       gamerun.GameRun
+	navbar        navbar.Navbar
 	metric        *Metric
 	inputListener event.InputListener
 
 	stages.BaseStage
 }
 
-func init() {
-	stages.Register(stages.GamingStage, NewGamingStage())
-}
+func NewGamingStage(ctx stages.StageContext) *gamingStage {
+	s := &gamingStage{BaseStage: *stages.NewBaseStage(ctx)}
 
-func NewGamingStage() *GamingStage {
-	s := &GamingStage{BaseStage: *stages.NewBaseStage()}
-	s.SetCurrentGameStage(s)
-
-	s.runtime = NewRuntime(
-		WithRuntimeCollission(func(b bool) {
-			if !b {
-				return
-			}
-			s.SetNexttGameStage(stages.GetGameStage(stages.EndingStage))
-		}),
-	)
-
-	s.navbar = NewNavbar(
-		WithNavbarSettingButonOpts(
-			widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-				s.SetNexttGameStage(stages.GetGameStage(stages.SettingStage))
-			}),
-		))
-
-	s.inputListener = event.NewInputListener(func() bool {
-		if s.IsStable() && ebiten.IsKeyPressed(ebiten.KeySpace) {
-			s.SetNexttGameStage(stages.GetGameStage(stages.PauseStage))
-			return true
-		}
-
-		return false
-	})
+	s.initGameRun()
+	s.initNavbar()
+	s.initInputListener()
 
 	s.metric = NewMetric()
-
 	return s
 }
 
-func (g *GamingStage) Update() error {
-	err := g.runtime.Update()
+func (g *gamingStage) StageName() stages.StageName {
+	return stages.GamingStage
+}
+
+func (g *gamingStage) Update() error {
+	err := g.gamerun.Update()
 	if err != nil {
 		return err
 	}
@@ -71,12 +51,48 @@ func (g *GamingStage) Update() error {
 	return nil
 }
 
-func (g *GamingStage) Draw(screen *ebiten.Image) {
+func (g *gamingStage) Draw(screen *ebiten.Image) {
 	screen.Fill(config.Cfg.BgColor)
 
-	g.runtime.Draw(screen)
+	g.gamerun.Draw(screen)
 	g.navbar.Draw(screen)
 	g.metric.Draw(screen)
 }
 
-func (g *GamingStage) ReShown() { g.inputListener.Reload() }
+func (g *gamingStage) Reset() {
+	g.initGameRun()
+	g.BaseStage.Reset()
+}
+
+func (g *gamingStage) initGameRun() {
+	g.gamerun = gamerun.NewGameRun(
+		gamerun.WithgameRunCollission(func(b bool) {
+			if !b {
+				return
+			}
+			g.Context().SetStatus(status.FailStatus)
+			g.Context().SetCurrentGameStage(stages.EndingStage)
+		}),
+	)
+}
+
+func (g *gamingStage) initNavbar() {
+	g.navbar = navbar.NewNavbar(
+		navbar.WithNavbarSettingButonOpts(
+			widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+				g.Context().SetCurrentGameStage(stages.SettingStage)
+			}),
+		))
+}
+
+func (g *gamingStage) initInputListener() {
+	g.inputListener = event.NewInputListener(func() bool {
+		if g.IsStable() && ebiten.IsKeyPressed(ebiten.KeySpace) {
+			g.Context().SetTempDrawer(g)
+			g.Context().SetCurrentGameStage(stages.PauseStage)
+			return true
+		}
+
+		return false
+	})
+}

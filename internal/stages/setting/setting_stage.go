@@ -7,25 +7,21 @@ import (
 	"github.com/zq-xu/go-game/internal/stages"
 )
 
-type SettingStage struct {
+type settingStage struct {
 	ui *Setting
 
 	stages.BaseStage
 }
 
-func init() {
-	stages.Register(stages.SettingStage, NewSettingStage())
-}
-
-func NewSettingStage() *SettingStage {
-	s := &SettingStage{BaseStage: *stages.NewBaseStage()}
-	s.SetCurrentGameStage(s)
+// NewSettingStage
+func NewSettingStage(ctx stages.StageContext) *settingStage {
+	s := &settingStage{BaseStage: *stages.NewBaseStage(ctx)}
 
 	s.ui = NewSetting(
 		WithSettingBackButonOpts(
 			widget.ButtonOpts.ClickedHandler(
 				func(args *widget.ButtonClickedEventArgs) {
-					s.SetNexttGameStage(stages.GetGameStage(stages.GamingStage))
+					s.Context().SetCurrentGameStage(stages.GamingStage)
 				},
 			),
 		),
@@ -34,4 +30,15 @@ func NewSettingStage() *SettingStage {
 	return s
 }
 
-func (g *SettingStage) Draw(screen *ebiten.Image) { g.ui.Draw(screen) }
+func (g *settingStage) StageName() stages.StageName {
+	return stages.SettingStage
+}
+
+func (g *settingStage) Update() error {
+	g.ui.Update()
+	return nil
+}
+
+func (g *settingStage) Draw(screen *ebiten.Image) {
+	g.ui.Draw(screen)
+}

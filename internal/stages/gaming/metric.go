@@ -40,11 +40,11 @@ func (g *Metric) Update() error {
 }
 
 func (g *Metric) Draw(screen *ebiten.Image) {
-	g.ui.Draw(screen)
-
 	g.img.Clear()
 	g.shadowDrawer(g.img)
 	metric.MultiPool.Draw(g.img)
+
+	g.ui.Draw(screen)
 }
 
 func (g *Metric) newUI() *ebitenui.UI {

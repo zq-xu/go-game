@@ -11,19 +11,14 @@ import (
 	"github.com/zq-xu/go-game/internal/ui/layout"
 )
 
-type MenuStage struct {
+type menuStage struct {
 	ui *ebitenui.UI
 	stages.BaseStage
 }
 
-func init() {
-	stages.Register(stages.MenuStage, NewMenuStage())
-}
-
 // NewMenuStage
-func NewMenuStage() *MenuStage {
-	s := &MenuStage{BaseStage: *stages.NewBaseStage()}
-	s.SetCurrentGameStage(s)
+func NewMenuStage(ctx stages.StageContext) *menuStage {
+	s := &menuStage{BaseStage: *stages.NewBaseStage(ctx)}
 
 	menuWidth := settings.GetSettings().ScreenWidth() / 3
 	root := layout.NewCenterRowLayout(menuWidth, 10, nil, func(c *widget.Container) {
@@ -35,34 +30,39 @@ func NewMenuStage() *MenuStage {
 	})
 
 	s.ui = &ebitenui.UI{Container: root}
-
 	return s
 }
 
-func (g *MenuStage) startButton() *widget.Button {
-	return components.NewMenuButton("Start",
-		widget.ButtonOpts.ClickedHandler(
-			func(args *widget.ButtonClickedEventArgs) {
-				g.SetNexttGameStage(stages.GetGameStage(stages.BeginningStage))
-			}))
-
+func (g *menuStage) StageName() stages.StageName {
+	return stages.MenuStage
 }
 
-func (g *MenuStage) nextButton() *widget.Button {
-	return components.NewMenuButton("Next",
-		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-			g.SetNexttGameStage(stages.GetGameStage(stages.GamingStage))
-		}))
-
-}
-
-func (g *MenuStage) backButton() *widget.Button {
-	return components.NewMenuButton("Back")
-}
-
-func (g *MenuStage) Update() error {
+func (g *menuStage) Update() error {
 	g.ui.Update()
 	return nil
 }
 
-func (g *MenuStage) Draw(screen *ebiten.Image) { g.ui.Draw(screen) }
+func (g *menuStage) Draw(screen *ebiten.Image) {
+	g.ui.Draw(screen)
+}
+
+func (g *menuStage) startButton() *widget.Button {
+	return components.NewMenuButton("Start",
+		widget.ButtonOpts.ClickedHandler(
+			func(args *widget.ButtonClickedEventArgs) {
+				g.Context().SetCurrentGameStage(stages.BeginningStage)
+			}))
+
+}
+
+func (g *menuStage) nextButton() *widget.Button {
+	return components.NewMenuButton("Next",
+		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+			g.Context().SetCurrentGameStage(stages.GamingStage)
+		}))
+
+}
+
+func (g *menuStage) backButton() *widget.Button {
+	return components.NewMenuButton("Back")
+}

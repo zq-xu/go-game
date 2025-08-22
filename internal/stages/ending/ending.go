@@ -6,7 +6,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"github.com/zq-xu/go-game/internal/config"
-	"github.com/zq-xu/go-game/internal/settings"
 	"github.com/zq-xu/go-game/internal/stages"
 	"github.com/zq-xu/go-game/internal/status"
 	"github.com/zq-xu/go-game/internal/ui/components"
@@ -22,57 +21,56 @@ var (
 		status.SuccessStatus: SuccessText,
 		status.FailStatus:    FailureText,
 	}
+
+	titleTexts = []string{"GAME OVER"}
 )
 
-type EndingStage struct {
+type endingStage struct {
 	ui *ebitenui.UI
 
+	statusText *widget.Text
 	stages.BaseStage
 }
 
-func init() {
-	stages.Register(stages.EndingStage, NewEndingStage())
-}
-
-func NewEndingStage() *EndingStage {
-	s := &EndingStage{
-		ui:        NewEndingUI(),
-		BaseStage: *stages.NewBaseStage(),
-	}
-	s.SetCurrentGameStage(s)
+func NewEndingStage(ctx stages.StageContext) *endingStage {
+	s := &endingStage{BaseStage: *stages.NewBaseStage(ctx)}
+	s.initUi()
 	return s
 }
 
-func (g *EndingStage) Update() error {
+func (g *endingStage) StageName() stages.StageName {
+	return stages.EndingStage
+}
+
+func (g *endingStage) Update() error {
 	if ebiten.IsKeyPressed(ebiten.KeyEnter) {
-		g.SetNexttGameStage(stages.GetGameStage(stages.GamingStage))
+		g.Context().Reset()
+		g.Context().SetCurrentGameStage(stages.GamingStage)
 	}
 
 	g.ui.Update()
-
 	return nil
 }
 
-func (g *EndingStage) Draw(screen *ebiten.Image) {
+func (g *endingStage) Draw(screen *ebiten.Image) {
+	g.statusText.Label = resultTextSet[g.Context().Status()]
 	g.ui.Draw(screen)
 }
 
-func (g *EndingStage) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return settings.GetSettings().Layout(outsideWidth, outsideHeight)
-}
-
-func NewEndingUI() *ebitenui.UI {
-	titleTexts := []string{"GAME OVER", resultTextSet[status.SuccessStatus]}
+func (g *endingStage) initUi() {
+	g.statusText = components.NewCenterText("", graphics.GetFont(), graphics.GetColor().TextIdleColor())
 
 	root := layout.NewCenterRowLayout(400, 10, nil, func(c *widget.Container) {
 		for _, v := range titleTexts {
 			c.AddChild(components.NewCenterText(v, graphics.GetFont(), graphics.GetColor().TextIdleColor()))
 		}
 
+		c.AddChild(g.statusText)
+
 		for _, v := range config.Cfg.StartHintTexts {
 			c.AddChild(components.NewCenterText(v, graphics.GetFont(), graphics.GetColor().TextIdleColor()))
 		}
 	})
 
-	return &ebitenui.UI{Container: root}
+	g.ui = &ebitenui.UI{Container: root}
 }
