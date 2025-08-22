@@ -13,6 +13,7 @@ var (
 	GetImage = image.GetImage
 
 	GetNineSliceImage       = image.GetNineSliceImage
+	GetFixedNineSlice       = image.GetFixedNineSlice
 	GetNineSliceSimpleImage = image.GetNineSliceSimpleImage
 )
 

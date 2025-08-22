@@ -44,27 +44,27 @@ func getSettingButtonImage() (*widget.ButtonImage, error) {
 	var err error
 	bi := &widget.ButtonImage{}
 
-	bi.Idle, err = graphics.GetNineSliceImage(SettingButtonIdlePath, 50, 42)
+	bi.Idle, err = graphics.GetFixedNineSlice(SettingButtonIdlePath)
 	if err != nil {
 		return nil, eris.Wrap(err, "get setting idle image failed.")
 	}
 
-	bi.Hover, err = graphics.GetNineSliceImage(SettingButtonHoverPath, 50, 42)
+	bi.Hover, err = graphics.GetFixedNineSlice(SettingButtonHoverPath)
 	if err != nil {
 		return nil, eris.Wrap(err, "get setting hover image failed.")
 	}
 
-	bi.PressedHover, err = graphics.GetNineSliceImage(SettingButtonPressedHoverPath, 50, 42)
+	bi.PressedHover, err = graphics.GetFixedNineSlice(SettingButtonPressedHoverPath)
 	if err != nil {
 		return nil, eris.Wrap(err, "get setting pressed hover image failed.")
 	}
 
-	bi.Pressed, err = graphics.GetNineSliceImage(SettingButtonPressedPath, 50, 42)
+	bi.Pressed, err = graphics.GetFixedNineSlice(SettingButtonPressedPath)
 	if err != nil {
 		return nil, eris.Wrap(err, "get setting pressed image failed.")
 	}
 
-	bi.Disabled, err = graphics.GetNineSliceImage(SettingButtonDisabledPath, 50, 42)
+	bi.Disabled, err = graphics.GetFixedNineSlice(SettingButtonDisabledPath)
 	if err != nil {
 		return nil, eris.Wrap(err, "get setting disabled image failed.")
 	}

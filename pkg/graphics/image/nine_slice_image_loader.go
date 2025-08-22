@@ -24,6 +24,11 @@ func GetNineSliceSimpleImage(path string, borderWidthHeight, centerWidthHeight i
 }
 
 // GetNineSliceImage
+func GetFixedNineSlice(path string) (*image.NineSlice, error) {
+	return globalNineSliceImgLoader.GetFixedNineSlice(path)
+}
+
+// GetNineSliceImage
 func GetNineSliceImage(path string, centerWidth int, centerHeight int) (*image.NineSlice, error) {
 	return globalNineSliceImgLoader.GetNineSliceImage(path, centerWidth, centerHeight)
 }
@@ -41,6 +46,15 @@ func (il *nineSliceImgLoader) GetNineSliceSimpleImage(path string, borderWidthHe
 	}
 
 	return il.loadNineSliceSimpleImage(path, borderWidthHeight, centerWidthHeight)
+}
+
+func (il *nineSliceImgLoader) GetFixedNineSlice(path string) (*image.NineSlice, error) {
+	img := il.getNineSliceImage(path)
+	if img != nil {
+		return img, nil
+	}
+
+	return il.loadFixedNineSlice(path)
 }
 
 func (il *nineSliceImgLoader) GetNineSliceImage(path string, centerWidth int, centerHeight int) (*image.NineSlice, error) {
@@ -72,6 +86,19 @@ func (il *nineSliceImgLoader) loadNineSliceSimpleImage(path string, borderWidthH
 	return img, nil
 }
 
+func (il *nineSliceImgLoader) loadFixedNineSlice(path string) (*image.NineSlice, error) {
+	il.lock.Lock()
+	defer il.lock.Unlock()
+
+	img, err := loadFixedNineSlice(path)
+	if err != nil {
+		return nil, err
+	}
+
+	il.nineSliceImgSet[path] = img
+	return img, nil
+}
+
 func (il *nineSliceImgLoader) loadNineSliceImage(path string, centerWidth int, centerHeight int) (*image.NineSlice, error) {
 	il.lock.Lock()
 	defer il.lock.Unlock()
@@ -83,6 +110,15 @@ func (il *nineSliceImgLoader) loadNineSliceImage(path string, centerWidth int, c
 
 	il.nineSliceImgSet[path] = img
 	return img, nil
+}
+
+func loadFixedNineSlice(path string) (*image.NineSlice, error) {
+	i, err := NewImageFromFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return image.NewFixedNineSlice(i.img), nil
 }
 
 func loadNineSliceImage(path string, centerWidth int, centerHeight int) (*image.NineSlice, error) {

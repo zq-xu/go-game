@@ -7,6 +7,7 @@ import (
 	"github.com/zq-xu/go-game/internal/stages/gaming/gamerun/actors"
 	"github.com/zq-xu/go-game/internal/stages/gaming/gamerun/actors/entity"
 	"github.com/zq-xu/go-game/internal/status"
+	"github.com/zq-xu/go-game/internal/ui/components"
 	"github.com/zq-xu/go-game/pkg/metric"
 )
 
@@ -23,6 +24,8 @@ type gameRun struct {
 	Ship    *actors.Ship
 	Bullets actors.Bullets
 	UFOs    *actors.UFOs
+
+	background ebiten.Game
 
 	MetricPool         *metric.Pool
 	Status             status.Status
@@ -54,6 +57,7 @@ func NewGameRun(opts ...gameRunOpt) GameRun {
 	g.UFOs = actors.NewUFOs()
 	g.MetricPool.Register(actors.UFOsName, g.UFOs)
 
+	g.background = components.NewDeepStarrySkyDownwardsBackground()
 	return g
 }
 
@@ -65,10 +69,13 @@ func (g *gameRun) Update() error {
 	g.checkBulletsCollision()
 	g.checkShipCollision()
 
+	g.background.Update()
 	return nil
 }
 
 func (g *gameRun) Draw(screen *ebiten.Image) {
+	g.background.Draw(screen)
+
 	g.Ship.Draw(screen)
 	g.Bullets.Draw(screen)
 	g.UFOs.Draw(screen)
