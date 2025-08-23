@@ -9,36 +9,28 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"github.com/zq-xu/go-game/internal/listener"
+	"github.com/zq-xu/go-game/internal/stages"
 	"github.com/zq-xu/go-game/internal/ui/components"
 	"github.com/zq-xu/go-game/internal/ui/layout"
 	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 type Navbar interface {
-	Update() error
+	Update()
 	Draw(screen *ebiten.Image)
 }
 
-type navbarOpt func(nb *navbar)
-
 type navbar struct {
-	ui *ebitenui.UI
+	ctx stages.StageContext
 
-	settingButtonOpts []widget.ButtonOpt
+	ui *ebitenui.UI
 
 	shotUFOText   *widget.Text
 	settingButton *widget.Button
 }
 
-func WithNavbarSettingButonOpts(opts ...widget.ButtonOpt) navbarOpt {
-	return func(nb *navbar) { nb.settingButtonOpts = opts }
-}
-
-func NewNavbar(opts ...navbarOpt) *navbar {
-	g := &navbar{}
-	for _, fn := range opts {
-		fn(g)
-	}
+func NewNavbar(ctx stages.StageContext) *navbar {
+	g := &navbar{ctx: ctx}
 
 	g.ui = &ebitenui.UI{
 		Container: layout.NewRightTopRowLayout(50, 50, g.Add),
@@ -46,9 +38,8 @@ func NewNavbar(opts ...navbarOpt) *navbar {
 	return g
 }
 
-func (g *navbar) Update() error {
+func (g *navbar) Update() {
 	g.ui.Update()
-	return nil
 }
 
 func (g *navbar) Draw(screen *ebiten.Image) {
@@ -71,6 +62,9 @@ func (g *navbar) newShotUFOText() *widget.Text {
 }
 
 func (g *navbar) newSettingButton() *widget.Button {
-	g.settingButton = components.NewSettingButton(g.settingButtonOpts...)
+	g.settingButton = components.NewSettingButton(
+		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+			g.ctx.SetCurrentGameStage(stages.SettingStage)
+		}))
 	return g.settingButton
 }

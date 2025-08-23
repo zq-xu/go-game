@@ -1,14 +1,11 @@
 package gaming
 
 import (
-	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 
-	"github.com/zq-xu/go-game/internal/config"
 	"github.com/zq-xu/go-game/internal/stages"
 	"github.com/zq-xu/go-game/internal/stages/gaming/gamerun"
 	"github.com/zq-xu/go-game/internal/stages/gaming/navbar"
-	"github.com/zq-xu/go-game/internal/status"
 	"github.com/zq-xu/go-game/pkg/event"
 )
 
@@ -37,23 +34,13 @@ func (g *gamingStage) StageName() stages.StageName {
 }
 
 func (g *gamingStage) Update() error {
-	err := g.gamerun.Update()
-	if err != nil {
-		return err
-	}
-
-	err = g.navbar.Update()
-	if err != nil {
-		return err
-	}
-
+	g.gamerun.Update()
+	g.navbar.Update()
 	g.inputListener.Update()
 	return nil
 }
 
 func (g *gamingStage) Draw(screen *ebiten.Image) {
-	screen.Fill(config.Cfg.BgColor)
-
 	g.gamerun.Draw(screen)
 	g.navbar.Draw(screen)
 	g.metric.Draw(screen)
@@ -65,24 +52,11 @@ func (g *gamingStage) Reset() {
 }
 
 func (g *gamingStage) initGameRun() {
-	g.gamerun = gamerun.NewGameRun(
-		gamerun.WithgameRunCollission(func(b bool) {
-			if !b {
-				return
-			}
-			g.Context().SetStatus(status.FailStatus)
-			g.Context().SetCurrentGameStage(stages.EndingStage)
-		}),
-	)
+	g.gamerun = gamerun.NewGameRun(g.Context())
 }
 
 func (g *gamingStage) initNavbar() {
-	g.navbar = navbar.NewNavbar(
-		navbar.WithNavbarSettingButonOpts(
-			widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-				g.Context().SetCurrentGameStage(stages.SettingStage)
-			}),
-		))
+	g.navbar = navbar.NewNavbar(g.Context())
 }
 
 func (g *gamingStage) initInputListener() {
