@@ -3,13 +3,13 @@ package gamerun
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 
-	"github.com/zq-xu/go-game/internal/listener"
+	"github.com/zq-xu/go-game/internal/data"
 	"github.com/zq-xu/go-game/internal/stages"
 	"github.com/zq-xu/go-game/internal/stages/gaming/gamerun/actors"
 	"github.com/zq-xu/go-game/internal/stages/gaming/gamerun/actors/entity"
 	"github.com/zq-xu/go-game/internal/status"
 	"github.com/zq-xu/go-game/internal/ui/components"
-	"github.com/zq-xu/go-game/pkg/metric"
+	"github.com/zq-xu/go-game/pkg/metrics"
 )
 
 const actorsName = "GameRun"
@@ -20,34 +20,35 @@ type GameRun interface {
 }
 
 type gameRun struct {
-	ctx stages.StageContext
+	ctx      stages.StageContext
+	gameData data.Data
+
+	background ebiten.Game
 
 	ship    *actors.Ship
 	bullets actors.Bullets
 	ufos    *actors.UFOs
-
-	background ebiten.Game
-
-	MetricPool *metric.Pool
-	Status     status.Status
 }
 
-func NewGameRun(ctx stages.StageContext) GameRun {
-	g := &gameRun{}
+func NewGameRun(ctx stages.StageContext, gameData data.Data) GameRun {
+	g := &gameRun{
+		ctx:        ctx,
+		gameData:   gameData,
+		background: components.NewDeepStarrySkyDownwardsBackground(),
+	}
 
-	g.MetricPool = metric.NewMetricPool()
-	metric.MultiPool.Add(actorsName, g.MetricPool)
+	metricPool := metrics.NewMetricPool()
+	gameData.Metrics().Add(actorsName, metricPool)
 
 	g.ship = actors.NewShip()
-	g.MetricPool.Register(actors.ShipName, g.ship)
+	metricPool.Register(actors.ShipName, g.ship)
 
 	g.bullets = actors.NewBullets()
-	g.MetricPool.Register(actors.BulletsName, g.bullets)
+	metricPool.Register(actors.BulletsName, g.bullets)
 
 	g.ufos = actors.NewUFOs()
-	g.MetricPool.Register(actors.UFOsName, g.ufos)
+	metricPool.Register(actors.UFOsName, g.ufos)
 
-	g.background = components.NewDeepStarrySkyDownwardsBackground()
 	return g
 }
 
@@ -76,7 +77,7 @@ func (g *gameRun) checkBulletsCollision() {
 			if actors.CheckCollision(&u.ImageEntity, &b.ImageEntity) {
 				g.bullets.RemoveBullet(b)
 				g.ufos.RemoveUFO(u)
-				listener.GetListener().GameDataListener().AddShotUFO(1)
+				g.gameData.AddShotUFO(1)
 			}
 		})
 	})

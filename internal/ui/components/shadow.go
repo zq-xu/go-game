@@ -11,13 +11,13 @@ func GenerateShadowDrawerFn(scale float32) func(screen *ebiten.Image) {
 	var op *ebiten.DrawImageOptions
 
 	if scale == 0 {
-		scale = 0.3
+		scale = 0.2
 	}
 
 	return func(screen *ebiten.Image) {
 		if shadowImage == nil {
 			shadowImage = ebiten.NewImage(screen.Bounds().Dx(), screen.Bounds().Dy())
-			shadowImage.Fill(color.Black)
+			shadowImage.Fill(color.White)
 		}
 
 		if op == nil {
@@ -27,5 +27,4 @@ func GenerateShadowDrawerFn(scale float32) func(screen *ebiten.Image) {
 
 		screen.DrawImage(shadowImage, op)
 	}
-
 }

@@ -1,4 +1,4 @@
-package metric
+package metrics
 
 import (
 	"fmt"
@@ -8,19 +8,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
-const (
-	poolItemTitleStartX = defaultStartX
+type PoolList interface {
+	Add(name string, p MetricsPool)
+	Draw(screen *ebiten.Image)
+}
 
-	poolItemStartX = defaultStartX + 20
-)
-
-var (
-	MultiPool = NewMetricPoolList()
-
-	defaultPoolItemDrawConfig *DrawConfig
-)
-
-type PoolList struct {
+type poolList struct {
 	lock sync.RWMutex
 	ps   []*poolItem
 }
@@ -29,24 +22,16 @@ type poolItem struct {
 	index int
 
 	name string
-	p    *Pool
+	p    MetricsPool
 }
 
-func init() {
-	defaultPoolItemDrawConfig = DefaultDrawConfig.Copy()
-}
-
-func newPoolItem(index int, name string, p *Pool) *poolItem {
-	return &poolItem{index, name, p}
-}
-
-func NewMetricPoolList() *PoolList {
-	return &PoolList{
+func NewMetricsPoolList() *poolList {
+	return &poolList{
 		ps: make([]*poolItem, 0),
 	}
 }
 
-func (l *PoolList) Add(name string, p *Pool) {
+func (l *poolList) Add(name string, p MetricsPool) {
 	l.lock.Lock()
 	defer l.lock.Unlock()
 
@@ -64,16 +49,20 @@ func (l *PoolList) Add(name string, p *Pool) {
 	l.ps = append(l.ps, newPoolItem(len(l.ps), name, p))
 }
 
-func (l *PoolList) Draw(screen *ebiten.Image) {
+func (l *poolList) Draw(screen *ebiten.Image) {
 	startY := MetricLineHeight
 
 	for k := range l.ps {
 		l.ps[k].drawItemTitle(screen, startY)
 		startY += MetricLineHeight
 
-		l.ps[k].p.drawMetrics(screen, poolItemStartX, startY)
-		startY += len(l.ps[k].p.metricSet)*MetricLineHeight + 2*MetricLineHeight
+		l.ps[k].p.DrawMetrics(screen, poolItemStartX, startY)
+		startY += l.ps[k].p.Length()*MetricLineHeight*2 + MetricLineHeight*2
 	}
+}
+
+func newPoolItem(index int, name string, p MetricsPool) *poolItem {
+	return &poolItem{index, name, p}
 }
 
 func (pi *poolItem) drawItemTitle(screen *ebiten.Image, startY int) {

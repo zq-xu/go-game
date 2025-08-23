@@ -8,7 +8,7 @@ import (
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 
-	"github.com/zq-xu/go-game/internal/listener"
+	"github.com/zq-xu/go-game/internal/data"
 	"github.com/zq-xu/go-game/internal/stages"
 	"github.com/zq-xu/go-game/internal/ui/components"
 	"github.com/zq-xu/go-game/internal/ui/layout"
@@ -25,7 +25,8 @@ type Navbar interface {
 }
 
 type navbar struct {
-	ctx stages.StageContext
+	ctx      stages.StageContext
+	gameData data.Data
 
 	ui *ebitenui.UI
 
@@ -33,12 +34,13 @@ type navbar struct {
 	settingButton *widget.Button
 }
 
-func NewNavbar(ctx stages.StageContext) *navbar {
-	g := &navbar{ctx: ctx}
-
-	g.ui = &ebitenui.UI{
-		Container: layout.NewRightTopRowLayout(50, 50, g.Add),
+func NewNavbar(ctx stages.StageContext, gameData data.Data) *navbar {
+	g := &navbar{
+		ctx:      ctx,
+		gameData: gameData,
 	}
+
+	g.ui = &ebitenui.UI{Container: layout.NewRightTopRowLayout(50, 50, g.Add)}
 	return g
 }
 
@@ -47,7 +49,7 @@ func (g *navbar) Update() {
 }
 
 func (g *navbar) Draw(screen *ebiten.Image) {
-	g.shotUFOText.Label = generateShotLabel()
+	g.shotUFOText.Label = g.generateShotLabel()
 	g.ui.Draw(screen)
 }
 
@@ -58,15 +60,15 @@ func (g *navbar) Add(c *widget.Container) {
 
 func (g *navbar) newShotUFOText() *widget.Text {
 	g.shotUFOText = components.NewCenterText(
-		generateShotLabel(),
+		g.generateShotLabel(),
 		graphics.NewNotoSansFont(fontSize),
 		color.White,
 	)
 	return g.shotUFOText
 }
 
-func generateShotLabel() string {
-	return fmt.Sprintf("Shot: %d", listener.GetListener().GameDataListener().GetShotUFO())
+func (g *navbar) generateShotLabel() string {
+	return fmt.Sprintf("Shot: %d", g.gameData.GetShotUFO())
 }
 
 func (g *navbar) newSettingButton() *widget.Button {

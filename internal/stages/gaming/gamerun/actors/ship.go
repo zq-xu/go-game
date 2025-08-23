@@ -7,7 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 
 	"github.com/zq-xu/go-game/internal/stages/gaming/gamerun/actors/entity"
-	"github.com/zq-xu/go-game/pkg/metric"
+	"github.com/zq-xu/go-game/pkg/metrics"
 )
 
 const ShipName = "Ship"
@@ -20,7 +20,7 @@ func NewShip() *Ship {
 	return &Ship{Ship: entity.NewShip()}
 }
 
-func (s *Ship) DrawMetrics(screen *ebiten.Image, dc *metric.DrawConfig) {
+func (s *Ship) DrawMetrics(screen *ebiten.Image, dc *metrics.DrawConfig) {
 	op := &text.DrawOptions{}
 	op.GeoM.Translate(float64(dc.X), float64(dc.Y))
 	op.ColorScale.ScaleWithColor(dc.Color)

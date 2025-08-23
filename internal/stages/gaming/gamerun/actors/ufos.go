@@ -8,7 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 
 	"github.com/zq-xu/go-game/internal/stages/gaming/gamerun/actors/entity"
-	"github.com/zq-xu/go-game/pkg/metric"
+	"github.com/zq-xu/go-game/pkg/metrics"
 )
 
 const UFOsName = "UFOs"
@@ -68,7 +68,7 @@ func (us *UFOs) Draw(screen *ebiten.Image) {
 	}
 }
 
-func (us *UFOs) DrawMetrics(screen *ebiten.Image, dc *metric.DrawConfig) {
+func (us *UFOs) DrawMetrics(screen *ebiten.Image, dc *metrics.DrawConfig) {
 	op := &text.DrawOptions{}
 
 	op.GeoM.Translate(float64(dc.X), float64(dc.Y))

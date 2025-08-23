@@ -3,6 +3,7 @@ package gaming
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 
+	"github.com/zq-xu/go-game/internal/data"
 	"github.com/zq-xu/go-game/internal/stages"
 	"github.com/zq-xu/go-game/internal/stages/gaming/gamerun"
 	"github.com/zq-xu/go-game/internal/stages/gaming/navbar"
@@ -10,22 +11,27 @@ import (
 )
 
 type gamingStage struct {
+	gameData data.Data
+
 	gamerun       gamerun.GameRun
 	navbar        navbar.Navbar
-	metric        *Metric
+	metrics       *metrics
 	inputListener event.InputListener
 
 	stages.BaseStage
 }
 
-func NewGamingStage(ctx stages.StageContext) *gamingStage {
-	s := &gamingStage{BaseStage: *stages.NewBaseStage(ctx)}
+func NewGamingStage(ctx stages.StageContext, gameData data.Data) *gamingStage {
+	s := &gamingStage{
+		gameData:  gameData,
+		BaseStage: *stages.NewBaseStage(ctx),
+	}
 
 	s.initGameRun()
 	s.initNavbar()
 	s.initInputListener()
 
-	s.metric = NewMetric()
+	s.metrics = NewMetric(gameData)
 	return s
 }
 
@@ -43,7 +49,7 @@ func (g *gamingStage) Update() error {
 func (g *gamingStage) Draw(screen *ebiten.Image) {
 	g.gamerun.Draw(screen)
 	g.navbar.Draw(screen)
-	g.metric.Draw(screen)
+	g.metrics.Draw(screen)
 }
 
 func (g *gamingStage) Reset() {
@@ -52,11 +58,11 @@ func (g *gamingStage) Reset() {
 }
 
 func (g *gamingStage) initGameRun() {
-	g.gamerun = gamerun.NewGameRun(g.Context())
+	g.gamerun = gamerun.NewGameRun(g.Context(), g.gameData)
 }
 
 func (g *gamingStage) initNavbar() {
-	g.navbar = navbar.NewNavbar(g.Context())
+	g.navbar = navbar.NewNavbar(g.Context(), g.gameData)
 }
 
 func (g *gamingStage) initInputListener() {

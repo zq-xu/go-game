@@ -4,13 +4,13 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"github.com/zq-xu/go-game/internal/config"
-	"github.com/zq-xu/go-game/internal/listener"
+	"github.com/zq-xu/go-game/internal/data"
 )
 
 type Game struct {
 	ebiten.Game
 
-	listener listener.Listener
+	data data.Data
 }
 
 func NewGame() *Game {
@@ -22,18 +22,9 @@ func NewGame() *Game {
 	ebiten.SetWindowTitle(config.Cfg.Title)
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 
+	gameData := data.NewGameData()
 	return &Game{
-		Game:     NewStageController(),
-		listener: listener.GetListener(),
+		data: gameData,
+		Game: NewStageController(gameData),
 	}
-}
-
-func (g *Game) Update() error {
-	g.listener.Update()
-	return g.Game.Update()
-}
-
-func (g *Game) Draw(screen *ebiten.Image) {
-	g.listener.Draw(screen)
-	g.Game.Draw(screen)
 }

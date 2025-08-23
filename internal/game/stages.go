@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/zq-xu/go-game/internal/data"
 	"github.com/zq-xu/go-game/internal/stages"
 	"github.com/zq-xu/go-game/internal/stages/beginning"
 	"github.com/zq-xu/go-game/internal/stages/ending"
@@ -11,7 +12,8 @@ import (
 )
 
 type stageController struct {
-	ctx stages.StageContext
+	ctx      stages.StageContext
+	gameData data.Data
 
 	stageSettings map[stages.StageName]stages.GameStage
 
@@ -20,17 +22,18 @@ type stageController struct {
 }
 
 // NewStageController
-func NewStageController() *stageController {
-	s := &stageController{}
+func NewStageController(gameData data.Data) *stageController {
+	s := &stageController{
+		gameData: gameData,
+	}
 
 	s.ctx = stages.NewStageContext()
 	s.ctx.SetStageReseter(s)
 
 	s.stageSettings = make(map[stages.StageName]stages.GameStage)
-
 	s.appendGameStage(beginning.NewBeginningStage(s.ctx))
 	s.appendGameStage(ending.NewEndingStage(s.ctx))
-	s.appendGameStage(gaming.NewGamingStage(s.ctx))
+	s.appendGameStage(gaming.NewGamingStage(s.ctx, gameData))
 	s.appendGameStage(pause.NewPauseStage(s.ctx))
 	s.appendGameStage(menu.NewMenuStage(s.ctx))
 	s.appendGameStage(setting.NewSettingStage(s.ctx))
@@ -40,6 +43,8 @@ func NewStageController() *stageController {
 }
 
 func (g *stageController) Reset() {
+	g.gameData.Reset()
+
 	for _, v := range g.stageSettings {
 		v.Reset()
 	}

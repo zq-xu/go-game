@@ -9,7 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 
 	"github.com/zq-xu/go-game/internal/config"
-	"github.com/zq-xu/go-game/pkg/metric"
+	"github.com/zq-xu/go-game/pkg/metrics"
 )
 
 const InputName = "Input"
@@ -41,7 +41,7 @@ func (i *Input) GetKeyString() string {
 
 func (i *Input) Draw(screen *ebiten.Image, cfg *config.Config) {}
 
-func (i *Input) DrawMetrics(screen *ebiten.Image, cfg *metric.DrawConfig) {
+func (i *Input) DrawMetrics(screen *ebiten.Image, cfg *metrics.DrawConfig) {
 	op := &text.DrawOptions{}
 	op.GeoM.Translate(float64(cfg.X), float64(cfg.Y))
 	op.ColorScale.ScaleWithColor(cfg.Color)

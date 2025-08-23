@@ -1,4 +1,4 @@
-package metric
+package metrics
 
 import (
 	"image/color"
@@ -11,14 +11,24 @@ const (
 	defaultStartX = 4
 
 	MetricCharWidth  = 6
-	MetricLineHeight = 16
+	MetricLineHeight = 20
+)
+
+const (
+	poolItemTitleStartX = defaultStartX
+
+	poolItemStartX = defaultStartX + 20
+)
+
+var (
+	defaultPoolItemDrawConfig *DrawConfig
 )
 
 var DefaultDrawConfig = &DrawConfig{
 	Face:  *graphics.GetFont().Face(),
 	X:     defaultStartX,
 	Y:     MetricLineHeight,
-	Color: color.Black,
+	Color: color.White,
 }
 
 type DrawConfig struct {
@@ -26,6 +36,10 @@ type DrawConfig struct {
 	X     int
 	Y     int
 	Color color.Color
+}
+
+func init() {
+	defaultPoolItemDrawConfig = DefaultDrawConfig.Copy()
 }
 
 func NewDrawConfig() *DrawConfig {

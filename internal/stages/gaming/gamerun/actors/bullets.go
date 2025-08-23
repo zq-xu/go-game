@@ -9,7 +9,8 @@ import (
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/stages/gaming/gamerun/actors/entity"
-	"github.com/zq-xu/go-game/pkg/metric"
+
+	"github.com/zq-xu/go-game/pkg/metrics"
 )
 
 const BulletsName = "Bullets"
@@ -17,7 +18,7 @@ const BulletsName = "Bullets"
 type Bullets interface {
 	Update(ship *entity.Ship) error
 	Draw(screen *ebiten.Image)
-	DrawMetrics(screen *ebiten.Image, dc *metric.DrawConfig)
+	DrawMetrics(screen *ebiten.Image, dc *metrics.DrawConfig)
 
 	AddBullet(bullets *entity.Bullet)
 	RemoveBullet(bullets *entity.Bullet)
@@ -88,7 +89,7 @@ func (b *bullets) Draw(screen *ebiten.Image) {
 	}
 }
 
-func (s *bullets) DrawMetrics(screen *ebiten.Image, dc *metric.DrawConfig) {
+func (s *bullets) DrawMetrics(screen *ebiten.Image, dc *metrics.DrawConfig) {
 	op := &text.DrawOptions{}
 
 	op.GeoM.Translate(float64(dc.X), float64(dc.Y))
