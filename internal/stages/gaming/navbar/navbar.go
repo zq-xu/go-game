@@ -15,6 +15,10 @@ import (
 	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
+const (
+	fontSize = 20
+)
+
 type Navbar interface {
 	Update()
 	Draw(screen *ebiten.Image)
@@ -43,7 +47,7 @@ func (g *navbar) Update() {
 }
 
 func (g *navbar) Draw(screen *ebiten.Image) {
-	g.shotUFOText.Label = fmt.Sprintf("Shot: %d", listener.GetListener().GameDataListener().GetShotUFO())
+	g.shotUFOText.Label = generateShotLabel()
 	g.ui.Draw(screen)
 }
 
@@ -54,11 +58,15 @@ func (g *navbar) Add(c *widget.Container) {
 
 func (g *navbar) newShotUFOText() *widget.Text {
 	g.shotUFOText = components.NewCenterText(
-		fmt.Sprintf("Shot: %d", listener.GetListener().GameDataListener().GetShotUFO()),
-		graphics.GetFont(),
-		color.Black,
+		generateShotLabel(),
+		graphics.NewNotoSansFont(fontSize),
+		color.White,
 	)
 	return g.shotUFOText
+}
+
+func generateShotLabel() string {
+	return fmt.Sprintf("Shot: %d", listener.GetListener().GameDataListener().GetShotUFO())
 }
 
 func (g *navbar) newSettingButton() *widget.Button {

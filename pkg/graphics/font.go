@@ -7,14 +7,19 @@ import (
 
 var defaultFont Font
 
+var (
+	NewNotoSansFont = font.NewNotoSansFont
+)
+
 type Font interface {
 	Face() *text.Face
 	BoldFace() *text.Face
 }
 
+// GetFont
 func GetFont() Font {
 	if defaultFont == nil {
-		defaultFont = font.NewNotoSansFont(12)
+		defaultFont = NewNotoSansFont(12)
 	}
 	return defaultFont
 }
