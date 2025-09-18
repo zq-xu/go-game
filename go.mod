@@ -5,7 +5,9 @@ go 1.25.0
 require (
 	github.com/ebitenui/ebitenui v0.7.0
 	github.com/hajimehoshi/ebiten/v2 v2.8.8
+	github.com/lafriks/go-tiled v0.14.0
 	github.com/rotisserie/eris v0.5.4
+	github.com/samber/lo v1.51.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/smartystreets/goconvey v1.8.1
 	golang.org/x/image v0.30.0

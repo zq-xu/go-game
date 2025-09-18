@@ -5,7 +5,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 
-	"github.com/zq-xu/go-game/internal/settings"
+	"github.com/zq-xu/go-game/internal/shooter/settings"
 )
 
 type yGradientUpwards struct {

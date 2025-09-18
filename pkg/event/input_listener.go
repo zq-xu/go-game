@@ -3,7 +3,7 @@ package event
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 
-	"github.com/zq-xu/go-game/internal/config"
+	"github.com/zq-xu/go-game/pkg/config"
 )
 
 type InputListener interface {

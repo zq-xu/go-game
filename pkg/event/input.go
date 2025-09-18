@@ -8,7 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 
-	"github.com/zq-xu/go-game/internal/config"
+	"github.com/zq-xu/go-game/pkg/config"
 	"github.com/zq-xu/go-game/pkg/metrics"
 )
 
