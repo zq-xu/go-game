@@ -4,25 +4,20 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
+	"github.com/zq-xu/go-game/internal/dungeon/actor"
+	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/internal/dungeon/tiledmap"
 )
 
-const (
-	mapImg  = "assets/dungeon/map1.png"
-	mapPath = "assets/dungeon/map1.tmx"
-
-	mapWidth  = 800
-	mapHeight = 800
-)
-
 type game struct {
-	tMap tiledmap.TiledMap
+	tMap  tiledmap.TiledMap
+	actor actor.Actor
 }
 
 // StartGame
 func StartGame() error {
-	ebiten.SetWindowSize(mapWidth, mapHeight)
-	ebiten.SetWindowTitle("Tiled map demo")
+	ebiten.SetWindowSize(config.MapWidth, config.MapHeight)
+	ebiten.SetWindowTitle("Dungeon")
 
 	g, err := NewGame()
 	if err != nil {
@@ -35,14 +30,27 @@ func StartGame() error {
 func NewGame() (ebiten.Game, error) {
 	var err error
 	g := &game{}
-	g.tMap, err = tiledmap.NewTiledMap(mapImg, mapPath)
+	g.tMap, err = tiledmap.NewTiledMap(config.MapImg, config.MapPath)
+	if err != nil {
+		return nil, eris.Wrap(err, "failed to load tiledmap")
+	}
+
+	g.actor, err = actor.NewActor()
+	if err != nil {
+		return nil, eris.Wrap(err, "failed to load actor")
+	}
+
 	return g, err
 }
 
-func (g *game) Update() error { return nil }
+func (g *game) Update() error {
+	g.actor.Update()
+	return nil
+}
 
 func (g *game) Draw(screen *ebiten.Image) {
 	g.tMap.DrawBackground(screen, 0, 0)
+	g.actor.Draw(screen)
 }
 
 func (g *game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

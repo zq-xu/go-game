@@ -11,7 +11,7 @@ import (
 
 // NewFontFromFile gets font from local file
 func NewFontFromFile(path string) ([]byte, error) {
-	return assets.EmbeddedFonts.ReadFile(path)
+	return assets.EmbeddedShooter.ReadFile(path)
 }
 
 // LoadFont loads font

@@ -54,7 +54,7 @@ func (il *imgLoader) loadImage(path string) (*basicImage, error) {
 	il.lock.Lock()
 	defer il.lock.Unlock()
 
-	img, err := NewImageFromFile(path)
+	img, err := NewShooterImage(path)
 	if err != nil {
 		return nil, err
 	}

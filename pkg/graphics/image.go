@@ -7,8 +7,12 @@ import (
 )
 
 var (
-	NewImage         = image.NewImage
-	NewImageFromFile = image.NewImageFromFile
+	NewImage = image.NewImage
+
+	NewShooterImage = image.NewShooterImage
+	NewDungeonImage = image.NewDungeonImage
+
+	NewDungeonImageTable = image.NewDungeonImageTable
 
 	GetImage = image.GetImage
 

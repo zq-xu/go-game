@@ -10,6 +10,7 @@ require (
 	github.com/samber/lo v1.51.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/smartystreets/goconvey v1.8.1
+	gocv.io/x/gocv v0.42.0
 	golang.org/x/image v0.30.0
 )
 

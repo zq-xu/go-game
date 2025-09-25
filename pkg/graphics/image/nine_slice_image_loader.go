@@ -113,7 +113,7 @@ func (il *nineSliceImgLoader) loadNineSliceImage(path string, centerWidth int, c
 }
 
 func loadFixedNineSlice(path string) (*image.NineSlice, error) {
-	i, err := NewImageFromFile(path)
+	i, err := NewShooterImage(path)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +122,7 @@ func loadFixedNineSlice(path string) (*image.NineSlice, error) {
 }
 
 func loadNineSliceImage(path string, centerWidth int, centerHeight int) (*image.NineSlice, error) {
-	i, err := NewImageFromFile(path)
+	i, err := NewShooterImage(path)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ func loadNineSliceImage(path string, centerWidth int, centerHeight int) (*image.
 }
 
 func loadNineSliceSimpleImage(path string, borderWidthHeight, centerWidthHeight int) (*image.NineSlice, error) {
-	i, err := NewImageFromFile(path)
+	i, err := NewShooterImage(path)
 	if err != nil {
 		return nil, err
 	}

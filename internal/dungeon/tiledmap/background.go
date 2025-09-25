@@ -2,8 +2,8 @@ package tiledmap
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/rotisserie/eris"
+	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 type Background interface {
@@ -18,11 +18,12 @@ func NewBackground(imgPath string) (Background, error) {
 	var err error
 	var b imgBackground
 
-	b.img, _, err = ebitenutil.NewImageFromFile(imgPath)
+	basicImg, err := graphics.NewDungeonImage(imgPath)
 	if err != nil {
 		return nil, eris.Wrapf(err, "failed to load background image from file %s", imgPath)
 	}
 
+	b.img = basicImg.Image()
 	return &b, nil
 }
 

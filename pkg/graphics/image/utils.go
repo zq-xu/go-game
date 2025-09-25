@@ -8,21 +8,43 @@ import (
 	"github.com/zq-xu/go-game/assets"
 )
 
-// NewImageFromFile
-func NewImageFromFile(path string) (*basicImage, error) {
-	f, err := assets.EmbeddedImages.Open(path)
+// NewDungeonImage
+func NewDungeonImage(path string) (*basicImage, error) {
+	f, err := assets.EmbeddedDungeon.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
-	img, _, err := ebitenutil.NewImageFromReader(f)
+	img, goImg, err := ebitenutil.NewImageFromReader(f)
 	if err != nil {
 		return nil, err
 	}
 
 	return &basicImage{
 		img:    img,
+		goImg:  goImg,
+		width:  img.Bounds().Dx(),
+		height: img.Bounds().Dy(),
+	}, nil
+}
+
+// NewShooterImage
+func NewShooterImage(path string) (*basicImage, error) {
+	f, err := assets.EmbeddedShooter.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	img, goImg, err := ebitenutil.NewImageFromReader(f)
+	if err != nil {
+		return nil, err
+	}
+
+	return &basicImage{
+		img:    img,
+		goImg:  goImg,
 		width:  img.Bounds().Dx(),
 		height: img.Bounds().Dy(),
 	}, nil

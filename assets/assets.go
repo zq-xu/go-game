@@ -13,8 +13,12 @@ func GetShooterFontPath(subPath string) string {
 	return path.Join("shooter/fonts", subPath)
 }
 
-//go:embed shooter/images
-var EmbeddedImages embed.FS
+func GetDungeonImagePath(subPath string) string {
+	return path.Join("dungeon/resources", subPath)
+}
 
-//go:embed shooter/fonts
-var EmbeddedFonts embed.FS
+//go:embed dungeon/resources
+var EmbeddedDungeon embed.FS
+
+//go:embed shooter
+var EmbeddedShooter embed.FS
