@@ -3,11 +3,12 @@ package font
 import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/sirupsen/logrus"
+	"github.com/zq-xu/go-game/assets"
 )
 
-const (
-	fontFaceRegular = "fonts/NotoSans-Regular.ttf"
-	fontFaceBold    = "fonts/NotoSans-Bold.ttf"
+var (
+	fontFaceRegular = assets.GetShooterFontPath("NotoSans-Regular.ttf")
+	fontFaceBold    = assets.GetShooterFontPath("NotoSans-Bold.ttf")
 )
 
 var (

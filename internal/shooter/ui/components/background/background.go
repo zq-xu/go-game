@@ -4,15 +4,16 @@ import (
 	"github.com/ebitenui/ebitenui/image"
 	"github.com/hajimehoshi/ebiten/v2"
 
+	"github.com/zq-xu/go-game/assets"
 	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 const backgroundColor = "131a22"
 
-const (
-	DeepStarrySkyBackgroundPath = "images/background/deep-starry-sky.jpg"
-	MoonSurfaceBackgroundPath   = "images/background/moon-surface.jpg"
-	NordwoodBackgroundPath      = "images/background/nordwood.jpg"
+var (
+	DeepStarrySkyBackgroundPath = assets.GetShooterImagePath("background/deep-starry-sky.jpg")
+	MoonSurfaceBackgroundPath   = assets.GetShooterImagePath("background/moon-surface.jpg")
+	NordwoodBackgroundPath      = assets.GetShooterImagePath("background/nordwood.jpg")
 )
 
 // NewDeepStarrySkyDownwardsBackground

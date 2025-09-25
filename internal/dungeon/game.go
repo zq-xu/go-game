@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	mapImg  = "assets/tiled/map1.png"
-	mapPath = "assets/tiled/map1.tmx"
+	mapImg  = "assets/dungeon/map1.png"
+	mapPath = "assets/dungeon/map1.tmx"
 
 	mapWidth  = 800
 	mapHeight = 800

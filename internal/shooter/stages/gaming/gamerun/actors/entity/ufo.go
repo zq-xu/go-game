@@ -3,13 +3,14 @@ package entity
 import (
 	"math/rand"
 
+	"github.com/zq-xu/go-game/assets"
 	"github.com/zq-xu/go-game/internal/shooter/settings"
 	"github.com/zq-xu/go-game/pkg/brick"
 	"github.com/zq-xu/go-game/pkg/graphics"
 	"github.com/zq-xu/go-game/pkg/utils"
 )
 
-const UFOImagePath = "images/ufo.png"
+var UFOImagePath = assets.GetShooterImagePath("ufo.png")
 
 type UFO struct {
 	ImageEntity

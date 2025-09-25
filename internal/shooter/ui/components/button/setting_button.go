@@ -5,15 +5,16 @@ import (
 	"github.com/rotisserie/eris"
 	"github.com/sirupsen/logrus"
 
+	"github.com/zq-xu/go-game/assets"
 	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
-const (
-	SettingButtonIdlePath         = "images/button/setting/setting-button-idle.png"
-	SettingButtonHoverPath        = "images/button/setting/setting-button-hover.png"
-	SettingButtonPressedHoverPath = "images/button/setting/setting-button-selected-hover.png"
-	SettingButtonPressedPath      = "images/button/setting/setting-button-pressed.png"
-	SettingButtonDisabledPath     = "images/button/setting/setting-button-disabled.png"
+var (
+	SettingButtonIdlePath         = assets.GetShooterImagePath("button/setting/setting-button-idle.png")
+	SettingButtonHoverPath        = assets.GetShooterImagePath("button/setting/setting-button-hover.png")
+	SettingButtonPressedHoverPath = assets.GetShooterImagePath("button/setting/setting-button-selected-hover.png")
+	SettingButtonPressedPath      = assets.GetShooterImagePath("button/setting/setting-button-pressed.png")
+	SettingButtonDisabledPath     = assets.GetShooterImagePath("button/setting/setting-button-disabled.png")
 )
 
 var settingButtonImage *widget.ButtonImage

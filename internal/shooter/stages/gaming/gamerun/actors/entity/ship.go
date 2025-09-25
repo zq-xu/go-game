@@ -3,11 +3,12 @@ package entity
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 
+	"github.com/zq-xu/go-game/assets"
 	"github.com/zq-xu/go-game/internal/shooter/settings"
 	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
-const ShipImgPath = "images/ship.png"
+var ShipImgPath = assets.GetShooterImagePath("ship.png")
 
 // TODO resize for widows size changes
 type Ship struct {

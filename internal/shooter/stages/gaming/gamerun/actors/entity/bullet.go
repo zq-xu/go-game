@@ -1,11 +1,12 @@
 package entity
 
 import (
+	"github.com/zq-xu/go-game/assets"
 	"github.com/zq-xu/go-game/internal/shooter/settings"
 	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
-const BulletImgPath = "images/bullet.png"
+var BulletImgPath = assets.GetShooterImagePath("bullet.png")
 
 type Bullet struct {
 	ImageEntity
