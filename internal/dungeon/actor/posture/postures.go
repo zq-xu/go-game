@@ -4,7 +4,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/assets"
+	"github.com/zq-xu/go-game/assets/dungeon"
 )
 
 const idleInterval = 3
@@ -18,17 +18,17 @@ const (
 
 var (
 	idleImagesPath = map[Direction]string{
-		UpDirection:    assets.GetDungeonImagePath("/actor/idle/idle_up.png"),
-		DownDirection:  assets.GetDungeonImagePath("/actor/idle/idle_down.png"),
-		LeftDirection:  assets.GetDungeonImagePath("/actor/idle/idle_left.png"),
-		RightDirection: assets.GetDungeonImagePath("/actor/idle/idle_right.png"),
+		UpDirection:    dungeon.GetDungeonImagePath("/actor/idle/idle_up.png"),
+		DownDirection:  dungeon.GetDungeonImagePath("/actor/idle/idle_down.png"),
+		LeftDirection:  dungeon.GetDungeonImagePath("/actor/idle/idle_left.png"),
+		RightDirection: dungeon.GetDungeonImagePath("/actor/idle/idle_right.png"),
 	}
 
 	runImagesPath = map[Direction]string{
-		UpDirection:    assets.GetDungeonImagePath("/actor/run/run_up.png"),
-		DownDirection:  assets.GetDungeonImagePath("/actor/run/run_down.png"),
-		LeftDirection:  assets.GetDungeonImagePath("/actor/run/run_left.png"),
-		RightDirection: assets.GetDungeonImagePath("/actor/run/run_right.png"),
+		UpDirection:    dungeon.GetDungeonImagePath("/actor/run/run_up.png"),
+		DownDirection:  dungeon.GetDungeonImagePath("/actor/run/run_down.png"),
+		LeftDirection:  dungeon.GetDungeonImagePath("/actor/run/run_left.png"),
+		RightDirection: dungeon.GetDungeonImagePath("/actor/run/run_right.png"),
 	}
 
 	keyDirectionSet = map[ebiten.Key]Direction{

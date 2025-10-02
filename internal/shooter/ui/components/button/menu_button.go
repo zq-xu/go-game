@@ -5,17 +5,16 @@ import (
 	"github.com/rotisserie/eris"
 	"github.com/sirupsen/logrus"
 
-	"github.com/zq-xu/go-game/assets"
 	"github.com/zq-xu/go-game/internal/shooter/ui/resources"
 	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 var (
-	MenuButtonIdlePath         = assets.GetShooterImagePath("button/menu/menu-button-idle.png")
-	MenuButtonHoverPath        = assets.GetShooterImagePath("button/menu/menu-button-hover.png")
-	MenuButtonPressedHoverPath = assets.GetShooterImagePath("button/menu/menu-button-selected-hover.png")
-	MenuButtonPressedPath      = assets.GetShooterImagePath("button/menu/menu-button-pressed.png")
-	MenuButtonDisabledPath     = assets.GetShooterImagePath("button/menu/menu-button-disabled.png")
+	MenuButtonIdlePath         = resources.GetShooterImagePath("button/menu/menu-button-idle.png")
+	MenuButtonHoverPath        = resources.GetShooterImagePath("button/menu/menu-button-hover.png")
+	MenuButtonPressedHoverPath = resources.GetShooterImagePath("button/menu/menu-button-selected-hover.png")
+	MenuButtonPressedPath      = resources.GetShooterImagePath("button/menu/menu-button-pressed.png")
+	MenuButtonDisabledPath     = resources.GetShooterImagePath("button/menu/menu-button-disabled.png")
 )
 
 var menuButtonImage *widget.ButtonImage

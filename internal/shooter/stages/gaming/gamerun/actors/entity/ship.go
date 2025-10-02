@@ -6,11 +6,11 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/assets"
 	"github.com/zq-xu/go-game/internal/shooter/settings"
+	"github.com/zq-xu/go-game/internal/shooter/ui/resources"
 )
 
-var ShipImgPath = assets.GetShooterImagePath("ship.png")
+var ShipImgPath = resources.GetShooterImagePath("ship.png")
 
 // TODO resize for widows size changes
 type Ship struct {

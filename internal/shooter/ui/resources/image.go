@@ -3,7 +3,7 @@ package resources
 import (
 	"github.com/ebitenui/ebitenui/image"
 
-	"github.com/zq-xu/go-game/assets"
+	"github.com/zq-xu/go-game/assets/shooter"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imageloader"
 )
@@ -12,8 +12,13 @@ var globalImageLoader imageloader.ImageLoader
 var globalNineSliceImgLoader imageloader.NineSliceImgLoader
 
 func init() {
-	globalImageLoader = imageloader.NewimgLoader(&assets.EmbeddedShooter)
-	globalNineSliceImgLoader = imageloader.NewNineSliceImgLoader(&assets.EmbeddedShooter)
+	globalImageLoader = imageloader.NewimgLoader(&shooter.EmbeddedShooterImage)
+	globalNineSliceImgLoader = imageloader.NewNineSliceImgLoader(&shooter.EmbeddedShooterImage)
+}
+
+// GetShooterImage
+func GetShooterImagePath(imgPath string) string {
+	return shooter.GetShooterImagePath(imgPath)
 }
 
 // GetImage

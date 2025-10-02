@@ -2,11 +2,12 @@ package entity
 
 import (
 	"github.com/rotisserie/eris"
-	"github.com/zq-xu/go-game/assets"
+
 	"github.com/zq-xu/go-game/internal/shooter/settings"
+	"github.com/zq-xu/go-game/internal/shooter/ui/resources"
 )
 
-var BulletImgPath = assets.GetShooterImagePath("bullet.png")
+var BulletImgPath = resources.GetShooterImagePath("bullet.png")
 
 type Bullet struct {
 	ImageEntity

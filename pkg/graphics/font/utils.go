@@ -6,12 +6,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/assets"
+	"github.com/zq-xu/go-game/assets/shooter"
 )
 
 // NewFontFromFile gets font from local file
 func NewFontFromFile(path string) ([]byte, error) {
-	return assets.EmbeddedShooter.ReadFile(path)
+	return shooter.EmbeddedShooterFont.ReadFile(path)
 }
 
 // LoadFont loads font

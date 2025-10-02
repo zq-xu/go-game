@@ -4,13 +4,13 @@ import (
 	"math/rand"
 
 	"github.com/rotisserie/eris"
-	"github.com/zq-xu/go-game/assets"
 	"github.com/zq-xu/go-game/internal/shooter/settings"
+	"github.com/zq-xu/go-game/internal/shooter/ui/resources"
 	"github.com/zq-xu/go-game/pkg/brick"
 	"github.com/zq-xu/go-game/pkg/utils"
 )
 
-var UFOImagePath = assets.GetShooterImagePath("ufo.png")
+var UFOImagePath = resources.GetShooterImagePath("ufo.png")
 
 type UFO struct {
 	ImageEntity
