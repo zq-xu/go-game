@@ -1,11 +1,13 @@
 package entity
 
 import (
+	"fmt"
+
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/assets"
 	"github.com/zq-xu/go-game/internal/shooter/settings"
-	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 var ShipImgPath = assets.GetShooterImagePath("ship.png")
@@ -18,10 +20,17 @@ type Ship struct {
 	YSpeedFactor float64
 }
 
-func NewShip() *Ship {
-	entity := NewImageEntityWithImage(graphics.GetImage(ShipImgPath),
+func NewShip() (*Ship, error) {
+	entity, err := NewImageEntity(
+		ShipImgPath,
 		settings.GetSettings().ScreenWidth(),
 		settings.GetSettings().ScreenHeight())
+	if err != nil {
+		return nil, eris.Wrap(err, "new ship image entity failed")
+	}
+
+	fmt.Println("ship width", entity.Img.Width())
+	fmt.Println("ship height", entity.Img.Height())
 
 	entity.SetX((float64(settings.GetSettings().ScreenWidth() - entity.Img.Width())) / 2)
 	entity.SetY(float64(settings.GetSettings().ScreenHeight() - entity.Img.Height()))
@@ -30,7 +39,7 @@ func NewShip() *Ship {
 		ImageEntity:  *entity,
 		XSpeedFactor: settings.GetSettings().ShipXSpeedFactor(),
 		YSpeedFactor: settings.GetSettings().ShipYSpeedFactor(),
-	}
+	}, nil
 }
 
 func (s *Ship) Update() {

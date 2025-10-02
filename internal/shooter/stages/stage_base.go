@@ -23,7 +23,10 @@ func NewBaseStage(ctx StageContext) *BaseStage {
 
 func (g *BaseStage) Context() StageContext { return g.ctx }
 
-func (g *BaseStage) Reset() { g.shownAt = time.Time{} }
+func (g *BaseStage) Reset() error {
+	g.shownAt = time.Time{}
+	return nil
+}
 
 func (g *BaseStage) Reload() { g.shownAt = time.Now() }
 

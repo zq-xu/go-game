@@ -6,6 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/zq-xu/go-game/assets"
+	"github.com/zq-xu/go-game/internal/shooter/ui/resources"
 	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
@@ -55,27 +56,27 @@ func getMenuButtonImage() (*widget.ButtonImage, error) {
 	var err error
 	bi := &widget.ButtonImage{}
 
-	bi.Idle, err = graphics.GetNineSliceImage(MenuButtonIdlePath, 12, 0)
+	bi.Idle, err = resources.GetNineSliceImage(MenuButtonIdlePath, 12, 0)
 	if err != nil {
 		return nil, eris.Wrap(err, "get menu idle image failed.")
 	}
 
-	bi.Hover, err = graphics.GetNineSliceImage(MenuButtonHoverPath, 12, 0)
+	bi.Hover, err = resources.GetNineSliceImage(MenuButtonHoverPath, 12, 0)
 	if err != nil {
 		return nil, eris.Wrap(err, "get menu hover image failed.")
 	}
 
-	bi.PressedHover, err = graphics.GetNineSliceImage(MenuButtonPressedHoverPath, 12, 0)
+	bi.PressedHover, err = resources.GetNineSliceImage(MenuButtonPressedHoverPath, 12, 0)
 	if err != nil {
 		return nil, eris.Wrap(err, "get menu pressed hover image failed.")
 	}
 
-	bi.Pressed, err = graphics.GetNineSliceImage(MenuButtonPressedPath, 12, 0)
+	bi.Pressed, err = resources.GetNineSliceImage(MenuButtonPressedPath, 12, 0)
 	if err != nil {
 		return nil, eris.Wrap(err, "get menu pressed image failed.")
 	}
 
-	bi.Disabled, err = graphics.GetNineSliceImage(MenuButtonDisabledPath, 12, 0)
+	bi.Disabled, err = resources.GetNineSliceImage(MenuButtonDisabledPath, 12, 0)
 	if err != nil {
 		return nil, eris.Wrap(err, "get menu disabled image failed.")
 	}

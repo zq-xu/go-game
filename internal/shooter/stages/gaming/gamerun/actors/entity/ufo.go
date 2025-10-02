@@ -3,10 +3,10 @@ package entity
 import (
 	"math/rand"
 
+	"github.com/rotisserie/eris"
 	"github.com/zq-xu/go-game/assets"
 	"github.com/zq-xu/go-game/internal/shooter/settings"
 	"github.com/zq-xu/go-game/pkg/brick"
-	"github.com/zq-xu/go-game/pkg/graphics"
 	"github.com/zq-xu/go-game/pkg/utils"
 )
 
@@ -22,12 +22,14 @@ type UFO struct {
 	calX func() float64
 }
 
-func NewUFO() *UFO {
-
-	entity := NewImageEntityWithImage(
-		graphics.GetImage(UFOImagePath),
+func NewUFO() (*UFO, error) {
+	entity, err := NewImageEntity(
+		UFOImagePath,
 		settings.GetSettings().ScreenWidth(),
 		settings.GetSettings().ScreenHeight())
+	if err != nil {
+		return nil, eris.Wrap(err, "new ufo image entity failed")
+	}
 
 	entity.UnlimitTop()
 	entity.UnlimitBottom()
@@ -49,7 +51,7 @@ func NewUFO() *UFO {
 		u.calX = brick.GenerateRandomSinTrailWithBase(entity.X, maxTrail, u.XTimesToTop)
 	}
 
-	return u
+	return u, nil
 }
 
 /*

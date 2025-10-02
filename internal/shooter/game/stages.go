@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/rotisserie/eris"
 	"github.com/zq-xu/go-game/internal/shooter/data"
 	"github.com/zq-xu/go-game/internal/shooter/stages"
 	"github.com/zq-xu/go-game/internal/shooter/stages/beginning"
@@ -22,7 +23,7 @@ type stageController struct {
 }
 
 // NewStageController
-func NewStageController(gameData data.Data) *stageController {
+func NewStageController(gameData data.Data) (*stageController, error) {
 	s := &stageController{
 		gameData: gameData,
 	}
@@ -33,21 +34,32 @@ func NewStageController(gameData data.Data) *stageController {
 	s.stageSettings = make(map[stages.StageName]stages.GameStage)
 	s.appendGameStage(beginning.NewBeginningStage(s.ctx))
 	s.appendGameStage(ending.NewEndingStage(s.ctx))
-	s.appendGameStage(gaming.NewGamingStage(s.ctx, gameData))
+
+	gamingStage, err := gaming.NewGamingStage(s.ctx, gameData)
+	if err != nil {
+		return nil, eris.Wrap(err, "init game run failed.")
+	}
+	s.appendGameStage(gamingStage)
+
 	s.appendGameStage(pause.NewPauseStage(s.ctx))
 	s.appendGameStage(menu.NewMenuStage(s.ctx))
 	s.appendGameStage(setting.NewSettingStage(s.ctx))
 
 	s.GameStage = s.stageSettings[s.ctx.CurrentGameStage()]
-	return s
+	return s, nil
 }
 
-func (g *stageController) Reset() {
+func (g *stageController) Reset() error {
 	g.gameData.Reset()
 
 	for _, v := range g.stageSettings {
-		v.Reset()
+		err := v.Reset()
+		if err != nil {
+			return err
+		}
 	}
+
+	return nil
 }
 
 func (g *stageController) Update() error {

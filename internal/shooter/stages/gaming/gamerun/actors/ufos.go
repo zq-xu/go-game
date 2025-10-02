@@ -6,6 +6,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/shooter/stages/gaming/gamerun/actors/entity"
 	"github.com/zq-xu/go-game/pkg/metrics"
@@ -24,7 +25,6 @@ type UFOs struct {
 
 func NewUFOs() *UFOs {
 	return &UFOs{
-
 		ufos:        make(map[*entity.UFO]bool, 0),
 		UFOInterval: 1000 * time.Millisecond,
 		MaxUFONum:   20,
@@ -38,7 +38,11 @@ if the ufo is down of the screen, remove it from the storage.
 func (us *UFOs) Update() error {
 	if len(us.ufos) < us.MaxUFONum &&
 		time.Since(us.lastAddAt) >= us.UFOInterval {
-		u := entity.NewUFO()
+		u, err := entity.NewUFO()
+		if err != nil {
+			return eris.Wrap(err, "new ufo failed")
+		}
+
 		us.AddUFO(u)
 	}
 

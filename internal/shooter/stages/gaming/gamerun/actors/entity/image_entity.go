@@ -2,12 +2,14 @@ package entity
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/pkg/graphics"
+	"github.com/zq-xu/go-game/internal/shooter/ui/resources"
+	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 )
 
 type ImageEntity struct {
-	Img graphics.Image
+	Img imagekit.Image
 
 	ScreenWidth  int
 	ScreenHeight int
@@ -22,8 +24,13 @@ type ImageEntity struct {
 	MaxY float64
 }
 
-// NewImageEntityWithImage
-func NewImageEntityWithImage(img graphics.Image, w, h int) *ImageEntity {
+// NewImageEntity
+func NewImageEntity(imgPath string, w, h int) (*ImageEntity, error) {
+	img, err := resources.GetImage(imgPath)
+	if err != nil {
+		return nil, eris.Wrap(err, "get image failed.")
+	}
+
 	return &ImageEntity{
 		Img:          img,
 		ScreenWidth:  w,
@@ -31,17 +38,7 @@ func NewImageEntityWithImage(img graphics.Image, w, h int) *ImageEntity {
 
 		MaxX: float64(w - img.Width()),
 		MaxY: float64(h - img.Height()),
-	}
-}
-
-// NewImageEntity
-func NewImageEntity(imgByte []byte, w, h int) (*ImageEntity, error) {
-	img, err := graphics.NewImage(imgByte)
-	if err != nil {
-		return nil, err
-	}
-
-	return NewImageEntityWithImage(img, w, h), nil
+	}, nil
 }
 
 func (i *ImageEntity) SetXLimit(min, max float64) {

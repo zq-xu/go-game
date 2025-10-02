@@ -1,12 +1,11 @@
 package posture
 
 import (
-	"image"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/pkg/graphics"
+	"github.com/zq-xu/go-game/internal/dungeon/resources"
+	"github.com/zq-xu/go-game/pkg/graphics/images/imagetable"
 )
 
 const chanegPostureInterval = 20
@@ -17,21 +16,20 @@ type postureItem interface {
 }
 
 type item struct {
-	counter   int // to change the image
-	stepIndex int
+	counter int // to change the image
 
-	imageTable []image.Image
+	imageTable imagetable.RollImages
 }
 
-func newPostureItem(img string) (postureItem, error) {
+func newPostureItem(imgPath string) (postureItem, error) {
 	s := &item{}
 
-	it, err := graphics.NewDungeonImageTable(img)
+	img, err := resources.NewDungeonImage(imgPath)
 	if err != nil {
-		return nil, eris.Wrapf(err, "failed to load image table %s", img)
+		return nil, eris.Wrapf(err, "failed to load image file %s.", img)
 	}
 
-	s.imageTable = it.Images()
+	s.imageTable = imagetable.NewRollImages(img)
 	return s, nil
 }
 
@@ -42,12 +40,12 @@ func (a *item) Update() {
 	}
 
 	a.counter = 0
-	a.stepIndex = (a.stepIndex + 1) % len(a.imageTable)
+	a.imageTable.Next()
 }
 
 func (a *item) Draw(screen *ebiten.Image, x, y float64) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(x, y)
-	i := a.imageTable[a.stepIndex]
-	screen.DrawImage(i.(*ebiten.Image), op)
+
+	screen.DrawImage(a.imageTable.Image().Image(), op)
 }

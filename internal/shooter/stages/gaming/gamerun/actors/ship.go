@@ -5,6 +5,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/shooter/stages/gaming/gamerun/actors/entity"
 	"github.com/zq-xu/go-game/pkg/metrics"
@@ -16,8 +17,12 @@ type Ship struct {
 	*entity.Ship
 }
 
-func NewShip() *Ship {
-	return &Ship{Ship: entity.NewShip()}
+func NewShip() (*Ship, error) {
+	s, err := entity.NewShip()
+	if err != nil {
+		return nil, eris.Wrap(err, "new ship failed")
+	}
+	return &Ship{Ship: s}, nil
 }
 
 func (s *Ship) DrawMetrics(screen *ebiten.Image, dc *metrics.DrawConfig) {

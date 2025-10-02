@@ -1,4 +1,4 @@
-package image
+package imagekit
 
 import (
 	"image"
@@ -13,6 +13,17 @@ type basicImage struct {
 
 	width  int
 	height int
+}
+
+// NewBasicImageFromGoImage
+func NewBasicImageFromGoImage(golImage image.Image) *basicImage {
+	ebitenImage := ebiten.NewImageFromImage(golImage)
+	return &basicImage{
+		img:    ebitenImage,
+		goImg:  golImage,
+		width:  ebitenImage.Bounds().Dx(),
+		height: ebitenImage.Bounds().Dy(),
+	}
 }
 
 func (bi *basicImage) Image() *ebiten.Image { return bi.img }

@@ -2,6 +2,7 @@ package gamerun
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/shooter/data"
 	"github.com/zq-xu/go-game/internal/shooter/stages"
@@ -30,17 +31,25 @@ type gameRun struct {
 	ufos    *actors.UFOs
 }
 
-func NewGameRun(ctx stages.StageContext, gameData data.Data) GameRun {
+func NewGameRun(ctx stages.StageContext, gameData data.Data) (GameRun, error) {
+	bgImg, err := components.NewDeepStarrySkyDownwardsBackground()
+	if err != nil {
+		return nil, eris.Wrap(err, "new background failed.")
+	}
+
 	g := &gameRun{
 		ctx:        ctx,
 		gameData:   gameData,
-		background: components.NewDeepStarrySkyDownwardsBackground(),
+		background: bgImg,
 	}
 
 	metricPool := metrics.NewMetricPool()
 	gameData.Metrics().Add(actorsName, metricPool)
 
-	g.ship = actors.NewShip()
+	g.ship, err = actors.NewShip()
+	if err != nil {
+		return nil, eris.Wrap(err, "new ship failed")
+	}
 	metricPool.Register(actors.ShipName, g.ship)
 
 	g.bullets = actors.NewBullets()
@@ -49,7 +58,7 @@ func NewGameRun(ctx stages.StageContext, gameData data.Data) GameRun {
 	g.ufos = actors.NewUFOs()
 	metricPool.Register(actors.UFOsName, g.ufos)
 
-	return g
+	return g, nil
 }
 
 func (g *gameRun) Update() {

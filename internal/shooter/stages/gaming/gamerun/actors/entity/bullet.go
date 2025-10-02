@@ -1,9 +1,9 @@
 package entity
 
 import (
+	"github.com/rotisserie/eris"
 	"github.com/zq-xu/go-game/assets"
 	"github.com/zq-xu/go-game/internal/shooter/settings"
-	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 var BulletImgPath = assets.GetShooterImagePath("bullet.png")
@@ -15,10 +15,12 @@ type Bullet struct {
 }
 
 func NewBullet(s *Ship) (*Bullet, error) {
-	entity := NewImageEntityWithImage(graphics.GetImage(BulletImgPath),
+	entity, err := NewImageEntity(BulletImgPath,
 		settings.GetSettings().ScreenWidth(),
 		settings.GetSettings().ScreenHeight())
-
+	if err != nil {
+		return nil, eris.Wrap(err, "new bullet image entity failed")
+	}
 	entity.UnlimitTop()
 
 	entity.SetX(s.X + float64(s.Img.Width()-entity.Img.Width())/2)

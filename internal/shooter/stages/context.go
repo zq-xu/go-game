@@ -4,7 +4,7 @@ import "github.com/zq-xu/go-game/internal/shooter/status"
 
 type StageContext interface {
 	// Reset for restarting the game
-	Reset()
+	Reset() error
 
 	// CurrentGameStage is used to switch the game stage
 	SetCurrentGameStage(name StageName)
@@ -38,13 +38,14 @@ func NewStageContext() StageContext {
 	return s
 }
 
-func (ctx *stageContext) Reset() {
+func (ctx *stageContext) Reset() error {
 	ctx.stageReseter.Reset()
 
 	ctx.tempDrawer = newDefaultTempDrawer()
 
 	ctx.status = status.RunningStatus
 	ctx.currentStage = MenuStage
+	return nil
 }
 
 func (ctx *stageContext) SetCurrentGameStage(name StageName) { ctx.currentStage = name }

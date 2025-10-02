@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/zq-xu/go-game/assets"
-	"github.com/zq-xu/go-game/pkg/graphics"
+	"github.com/zq-xu/go-game/internal/shooter/ui/resources"
 )
 
 var (
@@ -45,27 +45,27 @@ func getSettingButtonImage() (*widget.ButtonImage, error) {
 	var err error
 	bi := &widget.ButtonImage{}
 
-	bi.Idle, err = graphics.GetFixedNineSlice(SettingButtonIdlePath)
+	bi.Idle, err = resources.GetFixedNineSlice(SettingButtonIdlePath)
 	if err != nil {
 		return nil, eris.Wrap(err, "get setting idle image failed.")
 	}
 
-	bi.Hover, err = graphics.GetFixedNineSlice(SettingButtonHoverPath)
+	bi.Hover, err = resources.GetFixedNineSlice(SettingButtonHoverPath)
 	if err != nil {
 		return nil, eris.Wrap(err, "get setting hover image failed.")
 	}
 
-	bi.PressedHover, err = graphics.GetFixedNineSlice(SettingButtonPressedHoverPath)
+	bi.PressedHover, err = resources.GetFixedNineSlice(SettingButtonPressedHoverPath)
 	if err != nil {
 		return nil, eris.Wrap(err, "get setting pressed hover image failed.")
 	}
 
-	bi.Pressed, err = graphics.GetFixedNineSlice(SettingButtonPressedPath)
+	bi.Pressed, err = resources.GetFixedNineSlice(SettingButtonPressedPath)
 	if err != nil {
 		return nil, eris.Wrap(err, "get setting pressed image failed.")
 	}
 
-	bi.Disabled, err = graphics.GetFixedNineSlice(SettingButtonDisabledPath)
+	bi.Disabled, err = resources.GetFixedNineSlice(SettingButtonDisabledPath)
 	if err != nil {
 		return nil, eris.Wrap(err, "get setting disabled image failed.")
 	}

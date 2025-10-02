@@ -1,54 +1,11 @@
-package image
+package imagetable
 
 import (
-	"fmt"
 	"image"
 	"image/color"
-	_ "image/png"
-
-	"github.com/rotisserie/eris"
 )
 
-type imageTable struct {
-	boxes []BBox
-
-	images []image.Image
-}
-
-func (i *imageTable) Print() {
-	for i, box := range i.boxes {
-		fmt.Printf("subimage %d pixels range: (xmin=%d, ymin=%d, xmax=%d, ymax=%d)\n",
-			i+1, box.Xmin, box.Ymin, box.Xmax, box.Ymax)
-	}
-}
-
-func (i *imageTable) Images() []image.Image {
-	return i.images
-}
-
-func NewDungeonImageTable(imgPath string) (*imageTable, error) {
-	img, err := NewDungeonImage(imgPath)
-	if err != nil {
-		return nil, eris.Wrapf(err, "failed to load image file %s.", imgPath)
-	}
-
-	it := &imageTable{}
-
-	it.boxes = findBoundingBoxes(img.GoImage())
-
-	for _, v := range it.boxes {
-		it.images = append(it.images, img.Image().SubImage(image.Rect(v.Xmin, v.Ymin, v.Xmax, v.Ymax)))
-	}
-
-	// fmt.Println("imgPath", imgPath, len(it.images))
-	// it.Print()
-
-	return it, nil
-}
-
-type BBox struct {
-	Xmin, Ymin, Xmax, Ymax int
-}
+const grayThreshold = uint32(60000)
 
 var (
 	minArea = 10
@@ -56,10 +13,22 @@ var (
 	minH    = 2
 )
 
-// findBoundingBoxes: find subimages in a images
+type BoundingBox interface {
+	Xmin() int
+	Ymin() int
+	Xmax() int
+	Ymax() int
+}
+
+type boundingBox struct {
+	xMin, yMin, xMax, yMax int
+	width, height          int
+}
+
+// NewBoundingBoxes: find subimages in a images
 // minArea: the area min threshold
 // minW, minH: bounding box min width and height
-func findBoundingBoxes(img image.Image) []BBox {
+func NewBoundingBoxes(img image.Image) []BoundingBox {
 	b := img.Bounds()
 	w, h := b.Dx(), b.Dy()
 
@@ -68,7 +37,7 @@ func findBoundingBoxes(img image.Image) []BBox {
 		visited[i] = make([]bool, w)
 	}
 
-	var boxes []BBox
+	var boxes []BoundingBox
 
 	for y := 0; y < h; y++ {
 		for x := 0; x < w; x++ {
@@ -85,7 +54,7 @@ func findBoundingBoxes(img image.Image) []BBox {
 			stack := []image.Point{{X: x, Y: y}}
 			visited[y][x] = true
 
-			box := BBox{Xmin: w, Ymin: h, Xmax: 0, Ymax: 0}
+			box := &boundingBox{xMin: w, yMin: h, xMax: 0, yMax: 0}
 			area := 0
 
 			for len(stack) > 0 {
@@ -94,17 +63,17 @@ func findBoundingBoxes(img image.Image) []BBox {
 				px, py := p.X, p.Y
 
 				area++
-				if px < box.Xmin {
-					box.Xmin = px
+				if px < box.xMin {
+					box.xMin = px
 				}
-				if py < box.Ymin {
-					box.Ymin = py
+				if py < box.yMin {
+					box.yMin = py
 				}
-				if px > box.Xmax {
-					box.Xmax = px
+				if px > box.xMax {
+					box.xMax = px
 				}
-				if py > box.Ymax {
-					box.Ymax = py
+				if py > box.yMax {
+					box.yMax = py
 				}
 
 				// 8 neighbors
@@ -129,10 +98,10 @@ func findBoundingBoxes(img image.Image) []BBox {
 				}
 			} // end flood-fill
 
-			width := box.Xmax - box.Xmin + 1
-			height := box.Ymax - box.Ymin + 1
+			box.width = box.xMax - box.xMin + 1
+			box.height = box.yMax - box.yMin + 1
 
-			if area >= minArea && width >= minW && height >= minH {
+			if area >= minArea && box.width >= minW && box.height >= minH {
 				boxes = append(boxes, box)
 			}
 			// otherwise, drop as noise
@@ -140,8 +109,6 @@ func findBoundingBoxes(img image.Image) []BBox {
 	}
 	return boxes
 }
-
-const grayThreshold = uint32(60000)
 
 func isForeground(c color.Color) bool {
 	r, g, b, a := c.RGBA() // return 0..65535
@@ -151,3 +118,8 @@ func isForeground(c color.Color) bool {
 	gray := (r + g + b) / 3
 	return gray < grayThreshold
 }
+
+func (bb *boundingBox) Xmin() int { return bb.xMin }
+func (bb *boundingBox) Ymin() int { return bb.yMin }
+func (bb *boundingBox) Xmax() int { return bb.xMax }
+func (bb *boundingBox) Ymax() int { return bb.yMax }

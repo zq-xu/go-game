@@ -15,7 +15,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = ebiten.RunGame(game.NewGame())
+	g, err := game.NewGame()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = ebiten.RunGame(g)
 	if err != nil {
 		log.Fatal(err)
 	}

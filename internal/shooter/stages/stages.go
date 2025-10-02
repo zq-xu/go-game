@@ -21,7 +21,7 @@ type GameStage interface {
 	StageName() StageName
 
 	// Reset is used to reset all the data of the stage.
-	Reset()
+	Reset() error
 
 	// Reload is invoked when the game stage is switched as the current running stage
 	Reload()

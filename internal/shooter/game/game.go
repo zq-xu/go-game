@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/shooter/data"
 	"github.com/zq-xu/go-game/pkg/config"
@@ -13,7 +14,8 @@ type Game struct {
 	data data.Data
 }
 
-func NewGame() *Game {
+// NewGame
+func NewGame() (*Game, error) {
 	// ebiten.SetFullscreen(config.Cfg.FullScreen)
 	// ebiten.SetScreenClearedEveryFrame(false)
 	// ebiten.SetVsyncEnabled(false)
@@ -23,8 +25,13 @@ func NewGame() *Game {
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 
 	gameData := data.NewGameData()
+	g, err := NewStageController(gameData)
+	if err != nil {
+		return nil, eris.Wrap(err, "new stage controller failed.")
+	}
+
 	return &Game{
 		data: gameData,
-		Game: NewStageController(gameData),
-	}
+		Game: g,
+	}, nil
 }

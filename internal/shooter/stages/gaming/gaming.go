@@ -2,6 +2,7 @@ package gaming
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/shooter/data"
 	"github.com/zq-xu/go-game/internal/shooter/stages"
@@ -21,18 +22,21 @@ type gamingStage struct {
 	stages.BaseStage
 }
 
-func NewGamingStage(ctx stages.StageContext, gameData data.Data) *gamingStage {
+func NewGamingStage(ctx stages.StageContext, gameData data.Data) (*gamingStage, error) {
 	s := &gamingStage{
 		gameData:  gameData,
 		BaseStage: *stages.NewBaseStage(ctx),
 	}
 
-	s.initGameRun()
+	err := s.initGameRun()
+	if err != nil {
+		return nil, eris.Wrap(err, "init game run failed.")
+	}
 	s.initNavbar()
 	s.initInputListener()
 
 	s.metrics = NewMetric(gameData)
-	return s
+	return s, nil
 }
 
 func (g *gamingStage) StageName() stages.StageName {
@@ -52,13 +56,19 @@ func (g *gamingStage) Draw(screen *ebiten.Image) {
 	g.metrics.Draw(screen)
 }
 
-func (g *gamingStage) Reset() {
-	g.initGameRun()
-	g.BaseStage.Reset()
+func (g *gamingStage) Reset() error {
+	err := g.initGameRun()
+	if err != nil {
+		return err
+	}
+
+	return g.BaseStage.Reset()
 }
 
-func (g *gamingStage) initGameRun() {
-	g.gamerun = gamerun.NewGameRun(g.Context(), g.gameData)
+func (g *gamingStage) initGameRun() error {
+	var err error
+	g.gamerun, err = gamerun.NewGameRun(g.Context(), g.gameData)
+	return err
 }
 
 func (g *gamingStage) initNavbar() {
