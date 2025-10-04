@@ -3,6 +3,7 @@ package imagetable
 import (
 	"image"
 	"image/color"
+	"sort"
 )
 
 const grayThreshold = uint32(60000)
@@ -111,16 +112,30 @@ func NewBoundingBoxes(img image.Image) []BoundingBox {
 			// otherwise, drop as noise
 		}
 	}
+
+	sortBoxes(boxes)
 	return boxes
 }
 
+func sortBoxes(boxes []BoundingBox) {
+	sort.Slice(boxes, func(i, j int) bool {
+		bi, bj := boxes[i], boxes[j]
+		return bi.Xmin() < bj.Xmin()
+	})
+}
+
+// func isForeground(c color.Color) bool {
+// 	r, g, b, a := c.RGBA() // return 0..65535
+// 	if a == 0 {
+// 		return false
+// 	}
+// 	gray := (r + g + b) / 3
+// 	return gray < grayThreshold
+// }
+
 func isForeground(c color.Color) bool {
-	r, g, b, a := c.RGBA() // return 0..65535
-	if a == 0 {
-		return false
-	}
-	gray := (r + g + b) / 3
-	return gray < grayThreshold
+	_, _, _, a := c.RGBA()
+	return a > 0 // not transparent
 }
 
 func (bb *boundingBox) Xmin() int   { return bb.xMin }

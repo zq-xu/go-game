@@ -1,10 +1,10 @@
 package imagetable
 
 import (
-	"fmt"
 	"image"
 
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
+	"github.com/zq-xu/go-game/pkg/logs"
 )
 
 type ImageTable interface {
@@ -16,13 +16,17 @@ type ImageTable interface {
 }
 
 type imageTable struct {
+	name   string
 	boxes  []BoundingBox
 	images []imagekit.Image
 }
 
 // NewDungeonImageTable
-func NewDungeonImageTable(img imagekit.Image) ImageTable {
-	it := &imageTable{boxes: NewBoundingBoxes(img.GoImage())}
+func NewDungeonImageTable(name string, img imagekit.Image) ImageTable {
+	it := &imageTable{
+		name:  name,
+		boxes: NewBoundingBoxes(img.GoImage()),
+	}
 
 	for _, v := range it.boxes {
 		goImage := img.Image().SubImage(image.Rect(v.Xmin(), v.Ymin(), v.Xmax(), v.Ymax()))
@@ -33,8 +37,9 @@ func NewDungeonImageTable(img imagekit.Image) ImageTable {
 }
 
 func (i *imageTable) LogBoxes() {
+	logs.Logger.Debugf("imagebox %s:", i.name)
 	for i, box := range i.boxes {
-		fmt.Printf("subimage %d pixels range: (xmin=%d, ymin=%d, xmax=%d, ymax=%d, width=%d, height=%d)\n",
+		logs.Logger.Debugf("  subimage %d pixels range: (xmin=%d, ymin=%d, xmax=%d, ymax=%d, width=%d, height=%d)\n",
 			i+1, box.Xmin(), box.Ymin(), box.Xmax(), box.Ymax(), box.Width(), box.Height())
 	}
 }

@@ -1,6 +1,8 @@
 package posture
 
 import (
+	"fmt"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
@@ -10,30 +12,25 @@ import (
 
 const chanegPostureInterval = 20
 
-type postureItem interface {
-	Update()
-	Draw(screen *ebiten.Image, x, y float64)
-}
-
-type item struct {
-	counter int // to change the image
-
+type movingItem struct {
+	counter    int // to change the image
+	direction  Direction
 	imageTable imagetable.RollImages
 }
 
-func newPostureItem(imgPath string) (postureItem, error) {
-	s := &item{}
+func newMovingItem(direction Direction, imgPath string) (*movingItem, error) {
+	s := &movingItem{direction: direction}
 
 	img, err := resources.NewDungeonImage(imgPath)
 	if err != nil {
 		return nil, eris.Wrapf(err, "failed to load image file %s.", img)
 	}
 
-	s.imageTable = imagetable.NewRollImages(img)
+	s.imageTable = imagetable.NewRollImages(fmt.Sprintf("moving %d", direction), img)
 	return s, nil
 }
 
-func (a *item) Update() {
+func (a *movingItem) Update() {
 	if a.counter < chanegPostureInterval {
 		a.counter++
 		return
@@ -43,9 +40,10 @@ func (a *item) Update() {
 	a.imageTable.Next()
 }
 
-func (a *item) Draw(screen *ebiten.Image, x, y float64) {
+func (a *movingItem) Draw(screen *ebiten.Image, x, y float64) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(x, y)
-
 	screen.DrawImage(a.imageTable.Image().Image(), op)
 }
+
+func (a *movingItem) Direction() Direction { return a.direction }

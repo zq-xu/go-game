@@ -1,44 +1,52 @@
 package input
 
-import (
-	"github.com/hajimehoshi/ebiten/v2"
-
-	"github.com/zq-xu/go-game/pkg/config"
-)
+import "github.com/hajimehoshi/ebiten/v2"
 
 type InputListener interface {
 	Update()
 	Reload()
+
+	Listen(e *KeyEvent)
+	Idle(fn func())
 }
 
 type inputListener struct {
-	counter int
+	lastPress ebiten.Key
 
-	threshold int
-
-	callback func() bool // return whether deal the input event
+	idle      func()
+	keyEvents []*KeyEvent
 }
 
-func NewInputListener(callback func() bool) InputListener {
-	return &inputListener{
-		callback:  callback,
-		threshold: int(ebiten.ActualTPS()) * config.Cfg.KeyInterval / 1000,
-	}
+func NewInputListener() InputListener {
+	return &inputListener{}
 }
 
 func (g *inputListener) Update() {
-	if g.callback == nil {
+	var isPressed bool
+
+	for _, v := range g.keyEvents {
+		pressed, exclusive := v.listern(g.lastPress)
+		if pressed {
+			isPressed = pressed
+			g.lastPress = v.Key
+		}
+
+		if exclusive {
+			break
+		}
+	}
+
+	if isPressed {
 		return
 	}
 
-	if g.counter < g.threshold {
-		g.counter++
-		return
-	}
+	g.lastPress = 0
 
-	if g.callback() {
-		g.counter = 0
+	if g.idle != nil {
+		g.idle()
 	}
 }
 
-func (g *inputListener) Reload() { g.counter = 0 }
+func (g *inputListener) Listen(e *KeyEvent) { g.keyEvents = append(g.keyEvents, e) }
+func (g *inputListener) Idle(fn func())     { g.idle = fn }
+func (g *inputListener) Reload()            {}

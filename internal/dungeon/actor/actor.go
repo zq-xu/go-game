@@ -6,6 +6,7 @@ import (
 
 	"github.com/zq-xu/go-game/internal/dungeon/actor/posture"
 	"github.com/zq-xu/go-game/pkg/event/collision"
+	"github.com/zq-xu/go-game/pkg/event/input"
 )
 
 type Actor interface {
@@ -16,8 +17,9 @@ type Actor interface {
 }
 
 type actor struct {
-	postures posture.Postures
-	position *position
+	postures      posture.Postures
+	position      *position
+	inputListener input.InputListener
 }
 
 func NewActor() (Actor, error) {
@@ -29,13 +31,18 @@ func NewActor() (Actor, error) {
 		return nil, eris.Wrap(err, "failed to load actor steps")
 	}
 
-	a.position = newPosition()
+	a.initPosition()
+	a.initInputListener()
 	return a, nil
 }
 
 func (a *actor) Update() {
-	a.position.update()
-	a.postures.Update()
+	a.inputListener.Update()
+}
+
+func (a *actor) move(key ebiten.Key) {
+	a.position.update(key)
+	a.postures.UpdateKeyPress(key)
 }
 
 func (a *actor) Draw(screen *ebiten.Image) {

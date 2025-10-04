@@ -1,6 +1,8 @@
 package pause
 
 import (
+	"time"
+
 	"github.com/ebitenui/ebitenui"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -37,13 +39,15 @@ func NewPauseStage(ctx stages.StageContext) *pauseStage {
 	s.ui = newPauseUI()
 	s.shadowDrawer = components.GenerateShadowDrawerFn(0)
 
-	s.inputListener = input.NewInputListener(func() bool {
-		if s.IsStable() && ebiten.IsKeyPressed(ebiten.KeySpace) {
-			s.Context().SetCurrentGameStage(stages.GamingStage)
-			return true
-		}
-
-		return false
+	s.inputListener = input.NewInputListener()
+	s.inputListener.Listen(&input.KeyEvent{
+		Key: ebiten.KeySpace,
+		Do: func() {
+			if s.IsStable() {
+				s.Context().SetCurrentGameStage(stages.GamingStage)
+			}
+		},
+		Interval: time.Second,
 	})
 
 	return s

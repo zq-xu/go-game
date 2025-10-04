@@ -1,6 +1,8 @@
 package gaming
 
 import (
+	"time"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
@@ -76,13 +78,14 @@ func (g *gamingStage) initNavbar() {
 }
 
 func (g *gamingStage) initInputListener() {
-	g.inputListener = input.NewInputListener(func() bool {
-		if g.IsStable() && ebiten.IsKeyPressed(ebiten.KeySpace) {
-			g.Context().SetTempDrawer(g)
-			g.Context().SetCurrentGameStage(stages.PauseStage)
-			return true
-		}
-
-		return false
+	g.inputListener = input.NewInputListener()
+	g.inputListener.Listen(&input.KeyEvent{
+		Key: ebiten.KeySpace,
+		Do: func() {
+			if g.IsStable() {
+				g.Context().SetCurrentGameStage(stages.PauseStage)
+			}
+		},
+		Interval: time.Second,
 	})
 }

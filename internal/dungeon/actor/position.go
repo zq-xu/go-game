@@ -9,36 +9,24 @@ import (
 const stepLength = 1
 
 type position struct {
-	// minX, minY float64
-	// maxX, maxY float64
-
 	collisionObject collision.Object
 }
 
-func newPosition() *position {
-	return &position{
-		// minX: 0,
-		// minY: 0,
-		// maxX: maxX,
-		// maxY: maxY,
-
+func (a *actor) initPosition() {
+	a.position = &position{
 		collisionObject: collision.NewResolvRectObject("The knight", 100, 100, 20, 30),
 	}
 }
 
-func (p *position) update() {
-	switch {
-	case ebiten.IsKeyPressed(ebiten.KeyUp):
-		// p.y = lo.Max([]float64{p.y - stepLength, p.minY})
+func (p *position) update(key ebiten.Key) {
+	switch key {
+	case ebiten.KeyUp:
 		p.collisionObject.Move(0, -stepLength)
-	case ebiten.IsKeyPressed(ebiten.KeyDown):
-		// p.y = lo.Min([]float64{p.y + stepLength, p.maxY})
+	case ebiten.KeyDown:
 		p.collisionObject.Move(0, stepLength)
-	case ebiten.IsKeyPressed(ebiten.KeyLeft):
-		// p.x = lo.Max([]float64{p.x - stepLength, p.minX})
+	case ebiten.KeyLeft:
 		p.collisionObject.Move(-stepLength, 0)
-	case ebiten.IsKeyPressed(ebiten.KeyRight):
-		// p.x = lo.Min([]float64{p.x + stepLength, p.maxX})
+	case ebiten.KeyRight:
 		p.collisionObject.Move(stepLength, 0)
 	}
 }

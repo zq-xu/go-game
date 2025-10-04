@@ -3,8 +3,7 @@ package posture
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
-
-	"github.com/zq-xu/go-game/assets/dungeon"
+	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 )
 
 const idleInterval = 3
@@ -16,115 +15,77 @@ const (
 	RightDirection
 )
 
-var (
-	idleImagesPath = map[Direction]string{
-		UpDirection:    dungeon.GetDungeonImagePath("/actor/idle/idle_up.png"),
-		DownDirection:  dungeon.GetDungeonImagePath("/actor/idle/idle_down.png"),
-		LeftDirection:  dungeon.GetDungeonImagePath("/actor/idle/idle_left.png"),
-		RightDirection: dungeon.GetDungeonImagePath("/actor/idle/idle_right.png"),
-	}
-
-	runImagesPath = map[Direction]string{
-		UpDirection:    dungeon.GetDungeonImagePath("/actor/run/run_up.png"),
-		DownDirection:  dungeon.GetDungeonImagePath("/actor/run/run_down.png"),
-		LeftDirection:  dungeon.GetDungeonImagePath("/actor/run/run_left.png"),
-		RightDirection: dungeon.GetDungeonImagePath("/actor/run/run_right.png"),
-	}
-
-	keyDirectionSet = map[ebiten.Key]Direction{
-		ebiten.KeyDown:  DownDirection,
-		ebiten.KeyUp:    UpDirection,
-		ebiten.KeyLeft:  LeftDirection,
-		ebiten.KeyRight: RightDirection,
-	}
+const (
+	IdleStatus Status = iota
+	RunningStatus
+	AttackStatus
 )
 
+type Status int
 type Direction int
 
 type Postures interface {
-	Update()
+	UpdateKeyPress(key ebiten.Key)
+	UpdateIdle()
 	Draw(screen *ebiten.Image, x, y float64)
 }
 
 type postures struct {
-	idleCounter int // to change to idles
-	isIdle      bool
-
-	direction   Direction
-	currentStep postureItem
-
-	idleImages map[Direction]postureItem
-	runImages  map[Direction]postureItem
+	status        Status
+	movingPosture *movingPosture
+	attackPosture *attackPosture
 }
 
 func NewPostures() (Postures, error) {
 	var err error
-	a := &postures{
-		idleImages: make(map[Direction]postureItem),
-		runImages:  make(map[Direction]postureItem),
+	a := &postures{}
+
+	a.movingPosture, err = NewMovingPostures()
+	if err != nil {
+		return nil, eris.Wrap(err, "new moving postures failed.")
 	}
 
-	for k, v := range idleImagesPath {
-		a.idleImages[k], err = newPostureItem(v)
-		if err != nil {
-			return nil, eris.Wrapf(err, "failed to load posture item %d", k)
-		}
+	a.attackPosture, err = NewAttackPosture()
+	if err != nil {
+		return nil, eris.Wrap(err, "new attack postures failed.")
 	}
 
-	for k, v := range runImagesPath {
-		a.runImages[k], err = newPostureItem(v)
-		if err != nil {
-			return nil, eris.Wrapf(err, "failed to load posture ite %d", k)
-		}
-	}
-
-	a.currentStep = a.idleImages[DownDirection]
 	return a, nil
 }
 
-func (a *postures) Update() {
-	a.updatePosture()
-	a.currentStep.Update()
-}
-
-func (a *postures) updatePosture() {
-	for k, v := range keyDirectionSet {
-		if ebiten.IsKeyPressed(k) {
-			a.moving(v)
-			return
-		}
-	}
-
-	a.checkIdle()
-}
-
-func (a *postures) moving(d Direction) {
-	if a.direction == d && !a.isIdle {
+func (a *postures) UpdateKeyPress(key ebiten.Key) {
+	if key == ebiten.KeySpace {
+		a.status = AttackStatus
+		a.attackPosture.Update(a.movingPosture.currentItem.direction)
 		return
 	}
 
-	a.isIdle = false
-	a.idleCounter = 0
-
-	a.direction = d
-	a.currentStep = a.runImages[d]
+	a.movingPosture.UpdateKeyPress(key)
+	a.status = a.movingPosture.status
 }
 
-func (a *postures) checkIdle() {
-	if a.isIdle {
-		return
-	}
-
-	if a.idleCounter < idleInterval {
-		a.idleCounter++
-		return
-	}
-
-	a.isIdle = true
-	a.idleCounter = 0
-	a.currentStep = a.idleImages[a.direction]
+func (a *postures) UpdateIdle() {
+	a.movingPosture.UpdateIdle()
+	a.status = a.movingPosture.status
 }
 
 func (a *postures) Draw(screen *ebiten.Image, x, y float64) {
-	a.currentStep.Draw(screen, x, y)
+	if a.status == AttackStatus {
+		a.attackPosture.item.Draw(screen, x, y)
+		// logs.Logger.Debug("direction: ", a.attackPosture.item.direction,
+		// 	" current index: ", a.attackPosture.item.rollImages.CurrentIndex())
+
+		return
+	}
+
+	a.movingPosture.currentItem.Draw(screen, x, y)
+}
+
+func (a *postures) DrawTest(screen *ebiten.Image, x, y float64) {
+	a.attackPosture.attackItemSet[DownDirection].rollImages.Range(func(index int, img imagekit.Image) {
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(x+float64(50*index), y)
+		screen.DrawImage(img.Image(), op)
+	})
+
 }
