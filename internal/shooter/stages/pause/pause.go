@@ -8,7 +8,7 @@ import (
 	"github.com/zq-xu/go-game/internal/shooter/stages"
 	"github.com/zq-xu/go-game/internal/shooter/ui/components"
 	"github.com/zq-xu/go-game/internal/shooter/ui/layout"
-	"github.com/zq-xu/go-game/pkg/event"
+	"github.com/zq-xu/go-game/pkg/event/input"
 	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
@@ -25,7 +25,7 @@ type pauseStage struct {
 
 	shadowDrawer func(screen *ebiten.Image)
 
-	inputListener event.InputListener
+	inputListener input.InputListener
 
 	stages.BaseStage
 }
@@ -37,7 +37,7 @@ func NewPauseStage(ctx stages.StageContext) *pauseStage {
 	s.ui = newPauseUI()
 	s.shadowDrawer = components.GenerateShadowDrawerFn(0)
 
-	s.inputListener = event.NewInputListener(func() bool {
+	s.inputListener = input.NewInputListener(func() bool {
 		if s.IsStable() && ebiten.IsKeyPressed(ebiten.KeySpace) {
 			s.Context().SetCurrentGameStage(stages.GamingStage)
 			return true

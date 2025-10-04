@@ -4,20 +4,20 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/internal/dungeon/actor/position"
 	"github.com/zq-xu/go-game/internal/dungeon/actor/posture"
-	"github.com/zq-xu/go-game/internal/dungeon/config"
+	"github.com/zq-xu/go-game/pkg/event/collision"
 )
 
 type Actor interface {
 	Update()
 	Draw(screen *ebiten.Image)
+
+	CollisionObject() collision.Object
 }
 
 type actor struct {
 	postures posture.Postures
-
-	position position.Position
+	position *position
 }
 
 func NewActor() (Actor, error) {
@@ -29,17 +29,19 @@ func NewActor() (Actor, error) {
 		return nil, eris.Wrap(err, "failed to load actor steps")
 	}
 
-	a.position = position.NewPosition(config.MapWidth, config.MapHeight)
+	a.position = newPosition()
 	return a, nil
 }
 
-func (a *actor) IdleDown() {}
-
 func (a *actor) Update() {
-	a.position.Update()
+	a.position.update()
 	a.postures.Update()
 }
 
 func (a *actor) Draw(screen *ebiten.Image) {
-	a.postures.Draw(screen, a.position.X(), a.position.Y())
+	a.postures.Draw(screen,
+		a.position.collisionObject.X(),
+		a.position.collisionObject.Y())
 }
+
+func (a *actor) CollisionObject() collision.Object { return a.position.collisionObject }

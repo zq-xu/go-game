@@ -2,6 +2,7 @@ package graphics
 
 import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
+
 	"github.com/zq-xu/go-game/pkg/graphics/font"
 )
 

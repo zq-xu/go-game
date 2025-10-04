@@ -15,9 +15,13 @@ var (
 
 type BoundingBox interface {
 	Xmin() int
-	Ymin() int
 	Xmax() int
+
+	Ymin() int
 	Ymax() int
+
+	Width() int
+	Height() int
 }
 
 type boundingBox struct {
@@ -119,7 +123,9 @@ func isForeground(c color.Color) bool {
 	return gray < grayThreshold
 }
 
-func (bb *boundingBox) Xmin() int { return bb.xMin }
-func (bb *boundingBox) Ymin() int { return bb.yMin }
-func (bb *boundingBox) Xmax() int { return bb.xMax }
-func (bb *boundingBox) Ymax() int { return bb.yMax }
+func (bb *boundingBox) Xmin() int   { return bb.xMin }
+func (bb *boundingBox) Xmax() int   { return bb.xMax }
+func (bb *boundingBox) Ymin() int   { return bb.yMin }
+func (bb *boundingBox) Ymax() int   { return bb.yMax }
+func (bb *boundingBox) Width() int  { return bb.width }
+func (bb *boundingBox) Height() int { return bb.height }

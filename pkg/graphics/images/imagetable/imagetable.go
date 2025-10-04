@@ -29,16 +29,13 @@ func NewDungeonImageTable(img imagekit.Image) ImageTable {
 		it.images = append(it.images, imagekit.NewBasicImageFromGoImage(goImage))
 	}
 
-	// fmt.Println("imgPath", imgPath, len(it.images))
-	// it.Print()
-
 	return it
 }
 
 func (i *imageTable) LogBoxes() {
 	for i, box := range i.boxes {
-		fmt.Printf("subimage %d pixels range: (xmin=%d, ymin=%d, xmax=%d, ymax=%d)\n",
-			i+1, box.Xmin, box.Ymin, box.Xmax, box.Ymax)
+		fmt.Printf("subimage %d pixels range: (xmin=%d, ymin=%d, xmax=%d, ymax=%d, width=%d, height=%d)\n",
+			i+1, box.Xmin(), box.Ymin(), box.Xmax(), box.Ymax(), box.Width(), box.Height())
 	}
 }
 

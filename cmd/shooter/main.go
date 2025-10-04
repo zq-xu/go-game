@@ -10,10 +10,7 @@ import (
 )
 
 func main() {
-	err := logs.InitLog("debug")
-	if err != nil {
-		log.Fatal(err)
-	}
+	logs.InitLogger("debug")
 
 	g, err := game.NewGame()
 	if err != nil {

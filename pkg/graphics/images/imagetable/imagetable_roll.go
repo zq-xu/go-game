@@ -17,6 +17,7 @@ type rollImageTable struct {
 // NewRollImages
 func NewRollImages(img imagekit.Image) RollImages {
 	it := NewDungeonImageTable(img)
+	// it.LogBoxes()
 
 	return &rollImageTable{
 		imageTable: it,

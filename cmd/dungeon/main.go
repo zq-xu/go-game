@@ -8,12 +8,9 @@ import (
 )
 
 func main() {
-	err := logs.InitLog("debug")
-	if err != nil {
-		log.Fatal(err)
-	}
+	logs.InitLogger("debug")
 
-	err = dungeon.StartGame()
+	err := dungeon.StartGame()
 	if err != nil {
 		log.Fatal(err)
 	}

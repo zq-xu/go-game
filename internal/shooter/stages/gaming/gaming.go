@@ -8,7 +8,7 @@ import (
 	"github.com/zq-xu/go-game/internal/shooter/stages"
 	"github.com/zq-xu/go-game/internal/shooter/stages/gaming/gamerun"
 	"github.com/zq-xu/go-game/internal/shooter/stages/gaming/navbar"
-	"github.com/zq-xu/go-game/pkg/event"
+	"github.com/zq-xu/go-game/pkg/event/input"
 )
 
 type gamingStage struct {
@@ -17,7 +17,7 @@ type gamingStage struct {
 	gamerun       gamerun.GameRun
 	navbar        navbar.Navbar
 	metrics       *metrics
-	inputListener event.InputListener
+	inputListener input.InputListener
 
 	stages.BaseStage
 }
@@ -76,7 +76,7 @@ func (g *gamingStage) initNavbar() {
 }
 
 func (g *gamingStage) initInputListener() {
-	g.inputListener = event.NewInputListener(func() bool {
+	g.inputListener = input.NewInputListener(func() bool {
 		if g.IsStable() && ebiten.IsKeyPressed(ebiten.KeySpace) {
 			g.Context().SetTempDrawer(g)
 			g.Context().SetCurrentGameStage(stages.PauseStage)

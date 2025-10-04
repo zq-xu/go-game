@@ -7,11 +7,14 @@ import (
 	"github.com/zq-xu/go-game/internal/dungeon/actor"
 	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/internal/dungeon/tiledmap"
+	"github.com/zq-xu/go-game/pkg/event/collision"
 )
 
 type game struct {
 	tMap  tiledmap.TiledMap
 	actor actor.Actor
+
+	collisionSpace collision.Space
 }
 
 // StartGame
@@ -30,6 +33,7 @@ func StartGame() error {
 func NewGame() (ebiten.Game, error) {
 	var err error
 	g := &game{}
+
 	g.tMap, err = tiledmap.NewTiledMap(config.MapImg, config.MapPath)
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to load tiledmap")
@@ -39,6 +43,13 @@ func NewGame() (ebiten.Game, error) {
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to load actor")
 	}
+
+	g.collisionSpace = collision.NewCollisionSpace(
+		g.tMap.Width(), g.tMap.Height(),
+		g.tMap.TileWidth(), g.tMap.TileHeight())
+
+	g.collisionSpace.AddObject(g.tMap.CollisionObjects()...)
+	g.collisionSpace.AddObject(g.actor.CollisionObject())
 
 	return g, err
 }

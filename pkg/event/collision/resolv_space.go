@@ -1,0 +1,44 @@
+package collision
+
+import (
+	"github.com/solarlune/resolv"
+
+	"github.com/zq-xu/go-game/pkg/logs"
+)
+
+type Space interface {
+	AddObject(objs ...Object)
+
+	Debug()
+}
+
+type resolvSpace struct {
+	space *resolv.Space
+}
+
+// NewResolvCollision
+func NewCollisionSpace(spaceWidth, spaceHeight, cellWidth, cellHeight int) Space {
+	rc := &resolvSpace{}
+	logs.Logger.Debug("space size:", spaceWidth, spaceHeight, cellWidth, cellHeight)
+	rc.space = resolv.NewSpace(spaceWidth, spaceHeight, cellWidth, cellHeight)
+	return rc
+}
+
+func (rc *resolvSpace) AddObject(objs ...Object) {
+	for _, v := range objs {
+		rc.space.Add(v.(*resolvObject).obj)
+	}
+}
+
+func (rc *resolvSpace) Debug() {
+	rc.space.ForEachShape(func(shape resolv.IShape, index, maxCount int) bool {
+		logs.Logger.Debugf("resolv space %d shape range: (x=%.1f, y=%.1f, width=%.1f, height=%.1f)\n",
+			shape.ID(),
+			shape.Position().X-shape.Bounds().Width()/2,
+			shape.Position().Y-shape.Bounds().Height()/2,
+			shape.Bounds().Width(),
+			shape.Bounds().Height(),
+		)
+		return true
+	})
+}
