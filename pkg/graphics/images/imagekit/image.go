@@ -18,7 +18,7 @@ type Image interface {
 }
 
 // NewImageFromEmbed
-func NewImageFromEmbed(embedFS *embed.FS, path string) (*basicImage, error) {
+func NewImageFromEmbed(embedFS *embed.FS, path string) (Image, error) {
 	f, err := embedFS.Open(path)
 	if err != nil {
 		return nil, err

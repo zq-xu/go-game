@@ -7,15 +7,11 @@ import (
 	"github.com/zq-xu/go-game/internal/dungeon/resources"
 )
 
-type Background interface {
-	DrawBackground(screen *ebiten.Image, x, y float64)
-}
-
 type imgBackground struct {
 	img *ebiten.Image
 }
 
-func NewBackground(imgPath string) (Background, error) {
+func newBackground(imgPath string) (*imgBackground, error) {
 	var err error
 	var b imgBackground
 
@@ -28,7 +24,7 @@ func NewBackground(imgPath string) (Background, error) {
 	return &b, nil
 }
 
-func (b *imgBackground) DrawBackground(screen *ebiten.Image, x, y float64) {
+func (b *imgBackground) Draw(screen *ebiten.Image, x, y float64) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(x, y)
 	screen.DrawImage(b.img, op)

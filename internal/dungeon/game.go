@@ -34,7 +34,7 @@ func NewGame() (ebiten.Game, error) {
 	var err error
 	g := &game{}
 
-	g.tMap, err = tiledmap.NewTiledMap(config.MapImg, config.MapPath)
+	g.tMap, err = tiledmap.NewTiledMap(config.GetTiledmapConfig())
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to load tiledmap")
 	}
@@ -60,7 +60,7 @@ func (g *game) Update() error {
 }
 
 func (g *game) Draw(screen *ebiten.Image) {
-	g.tMap.DrawBackground(screen, 0, 0)
+	g.tMap.Draw(screen, 0, 0)
 	g.actor.Draw(screen)
 }
 
