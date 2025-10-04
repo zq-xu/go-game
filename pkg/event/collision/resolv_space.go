@@ -14,11 +14,13 @@ type Space interface {
 
 type resolvSpace struct {
 	space *resolv.Space
+
+	objRecord map[uint32]string
 }
 
 // NewResolvCollision
-func NewCollisionSpace(spaceWidth, spaceHeight, cellWidth, cellHeight int) Space {
-	rc := &resolvSpace{}
+func NewResolvSpace(spaceWidth, spaceHeight, cellWidth, cellHeight int) Space {
+	rc := &resolvSpace{objRecord: make(map[uint32]string, 0)}
 	logs.Logger.Debug("space size:", spaceWidth, spaceHeight, cellWidth, cellHeight)
 	rc.space = resolv.NewSpace(spaceWidth, spaceHeight, cellWidth, cellHeight)
 	return rc
@@ -26,7 +28,10 @@ func NewCollisionSpace(spaceWidth, spaceHeight, cellWidth, cellHeight int) Space
 
 func (rc *resolvSpace) AddObject(objs ...Object) {
 	for _, v := range objs {
-		rc.space.Add(v.(*resolvObject).obj)
+		ro := v.(*resolvObject)
+		rc.space.Add(ro.obj)
+		ro.space = rc
+		rc.objRecord[ro.obj.ID()] = ro.name
 	}
 }
 

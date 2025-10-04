@@ -21,7 +21,8 @@ func (tm *tiledMap) CollisionObjects() []collision.Object {
 
 	for _, v := range tm.tMap.ObjectGroups {
 		for _, obj := range v.Objects {
-			o := collision.NewResolvObject(
+			o := collision.NewResolvRectObject(
+				obj.Name,
 				getObjectX(obj), getObjectY(obj),
 				obj.Width, obj.Height,
 			)

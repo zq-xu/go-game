@@ -16,13 +16,19 @@ type Object interface {
 
 type resolvObject struct {
 	w, h float64
-	obj  *resolv.ConvexPolygon
+
+	name string
+
+	obj *resolv.ConvexPolygon
+
+	space *resolvSpace
 }
 
-func NewResolvObject(x, y, w, h float64) Object {
+func NewResolvRectObject(name string, x, y, w, h float64) Object {
 	return &resolvObject{
-		w: w,
-		h: h,
+		name: name,
+		w:    w,
+		h:    h,
 
 		obj: resolv.NewRectangleFromTopLeft(x, y, w, h),
 	}
@@ -45,7 +51,7 @@ func (o *resolvObject) isCollision() bool {
 		// Check only shapes that are near the rectangle (within 1 cell's margin)
 		TestAgainst: o.obj.SelectTouchingCells(1).FilterShapes(),
 		OnIntersect: func(set resolv.IntersectionSet) bool {
-			logs.Logger.Debug("There was an intersection with some other object! Here's the data:", set)
+			logs.Logger.Debugf("Collision with %s", o.space.objRecord[set.OtherShape.ID()])
 			return true
 		},
 	})

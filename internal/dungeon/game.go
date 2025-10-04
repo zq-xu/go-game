@@ -44,14 +44,14 @@ func NewGame() (ebiten.Game, error) {
 		return nil, eris.Wrap(err, "failed to load actor")
 	}
 
-	g.collisionSpace = collision.NewCollisionSpace(
+	g.collisionSpace = collision.NewResolvSpace(
 		g.tMap.Width(), g.tMap.Height(),
 		g.tMap.TileWidth(), g.tMap.TileHeight())
 
 	g.collisionSpace.AddObject(g.tMap.CollisionObjects()...)
 	g.collisionSpace.AddObject(g.actor.CollisionObject())
 
-	return g, err
+	return g, nil
 }
 
 func (g *game) Update() error {

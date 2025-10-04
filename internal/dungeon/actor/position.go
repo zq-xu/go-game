@@ -22,7 +22,7 @@ func newPosition() *position {
 		// maxX: maxX,
 		// maxY: maxY,
 
-		collisionObject: collision.NewResolvObject(100, 100, 20, 30),
+		collisionObject: collision.NewResolvRectObject("The knight", 100, 100, 20, 30),
 	}
 }
 
