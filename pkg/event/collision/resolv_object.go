@@ -8,8 +8,10 @@ import (
 
 type Object interface {
 	// The point from topLeft
-	X() float64
-	Y() float64
+	LeftTop() (float64, float64)
+
+	// The point from center
+	Center() (float64, float64)
 
 	Move(x, y float64)
 }
@@ -34,7 +36,15 @@ func NewResolvRectObject(name string, x, y, w, h float64) Object {
 	}
 }
 
-func (o *resolvObject) X() float64 { return o.obj.Position().X - o.w/2 }
+func (o *resolvObject) LeftTop() (float64, float64) {
+	c := o.obj.Position()
+	return c.X - o.w/2, c.Y - o.h/2
+}
+
+func (o *resolvObject) Center() (float64, float64) {
+	c := o.obj.Position()
+	return c.X, c.Y
+}
 
 func (o *resolvObject) Y() float64 { return o.obj.Position().Y - o.h/2 }
 

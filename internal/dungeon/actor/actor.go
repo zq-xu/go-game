@@ -46,9 +46,8 @@ func (a *actor) move(key ebiten.Key) {
 }
 
 func (a *actor) Draw(screen *ebiten.Image) {
-	a.postures.Draw(screen,
-		a.position.collisionObject.X(),
-		a.position.collisionObject.Y())
+	x, y := a.position.collisionObject.LeftTop()
+	a.postures.Draw(screen, x, y)
 }
 
 func (a *actor) CollisionObject() collision.Object { return a.position.collisionObject }

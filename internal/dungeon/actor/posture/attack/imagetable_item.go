@@ -29,9 +29,11 @@ func newImageTableItem(direction config.Direction, imgPath string) (*imageTableI
 }
 
 func (a *imageTableItem) Draw(screen *ebiten.Image, x, y float64) {
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(x, y)
-	screen.DrawImage(a.rollImages.Image().Image(), op)
+	if a.direction == config.LeftDirection || a.direction == config.UpDirection {
+		x, y = getDrawBeginningOnRightBottom(a.rollImages.Image(), x, y)
+	}
+
+	drawImage(screen, a.rollImages.Image(), x, y)
 	a.rollImages.Next()
 }
 

@@ -10,6 +10,7 @@ import (
 )
 
 type Gif interface {
+	Image() imagekit.Image
 	Draw(screen *ebiten.Image, x, y float64)
 
 	IsDrawing() bool
@@ -43,14 +44,12 @@ func newGifBaseFromEmbed(embedFS *embed.FS, imgPaths []string) (*gifBase, error)
 }
 
 func (g *gifBase) draw(screen *ebiten.Image, x, y float64) {
+	img := g.Image()
+
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(x, y)
-	screen.DrawImage(g.images[g.index].Image(), op)
+	screen.DrawImage(img.Image(), op)
 }
-
-// func (g *gifBase) IsDrawFinished() bool {
-// 	return g.index >= len(g.images)
-// }
 
 func (g *gifBase) MoveToStart() { g.index = 0 }
 
@@ -66,4 +65,8 @@ func (g *gifBase) next() {
 
 func (g *gifBase) SetUpdateInterval(i int) {
 	g.updateInterval = i
+}
+
+func (g *gifBase) Image() imagekit.Image {
+	return g.images[g.index]
 }

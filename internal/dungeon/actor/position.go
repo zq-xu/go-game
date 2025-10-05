@@ -3,6 +3,7 @@ package actor
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 
+	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/pkg/event/collision"
 )
 
@@ -14,7 +15,7 @@ type position struct {
 
 func (a *actor) initPosition() {
 	a.position = &position{
-		collisionObject: collision.NewResolvRectObject("The knight", 100, 100, 20, 30),
+		collisionObject: collision.NewResolvRectObject("The knight", 100, 100, config.ActorWidth, config.ActorHeight),
 	}
 }
 

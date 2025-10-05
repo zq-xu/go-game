@@ -3,6 +3,7 @@ package attack
 import (
 	"fmt"
 
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/dungeon/config"
@@ -28,6 +29,14 @@ func newGifItem(direction config.Direction, imgPath string) (*gifItem, error) {
 	s.Gif = gifkit.NewOnceGif(imgTable.Images()...)
 	s.Gif.SetUpdateInterval(3)
 	return s, nil
+}
+
+func (g *gifItem) Draw(screen *ebiten.Image, x, y float64) {
+	if g.direction == config.LeftDirection || g.direction == config.UpDirection {
+		x, y = getDrawBeginningOnRightBottom(g.Gif.Image(), x, y)
+	}
+
+	g.Gif.Draw(screen, x, y)
 }
 
 func (g *gifItem) Direction() config.Direction { return g.direction }
