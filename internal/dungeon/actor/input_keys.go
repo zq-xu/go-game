@@ -18,7 +18,7 @@ var (
 )
 
 func getAttackInterval() time.Duration {
-	return time.Millisecond * 100
+	return time.Millisecond * 200
 }
 
 func (a *actor) initInputListener() error {
@@ -28,22 +28,30 @@ func (a *actor) initInputListener() error {
 	a.inputListener.Listen(&input.KeyEvent{
 		Key: ebiten.KeySpace,
 		Do: func() {
+			if a.postures.IsAttacking() {
+				return
+			}
 			a.postures.UpdateKeyPress(ebiten.KeySpace)
 		},
 		Interval:   getAttackInterval(),
-		Exclusive:  false,
-		Repeatable: true,
+		Exclusive:  true,
+		Repeatable: false,
 	})
 
 	for _, key := range moveKeyList {
 		a.inputListener.Listen(&input.KeyEvent{
-			Key:        key,
-			Do:         func() { a.move(key) },
-			Exclusive:  false,
+			Key: key,
+			Do: func() {
+				if a.postures.IsAttacking() {
+					return
+				}
+				a.move(key)
+			},
+			Exclusive:  true,
 			Repeatable: true,
 		})
 	}
 
-	a.inputListener.Idle(a.postures.UpdateIdle)
+	a.inputListener.Idle(func() { a.move(-1) })
 	return nil
 }

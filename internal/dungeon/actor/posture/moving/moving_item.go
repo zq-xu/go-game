@@ -1,4 +1,4 @@
-package posture
+package moving
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
+	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/internal/dungeon/resources"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagetable"
 )
@@ -14,11 +15,11 @@ const chanegPostureInterval = 20
 
 type movingItem struct {
 	counter    int // to change the image
-	direction  Direction
+	direction  config.Direction
 	imageTable imagetable.RollImages
 }
 
-func newMovingItem(direction Direction, imgPath string) (*movingItem, error) {
+func newMovingItem(direction config.Direction, imgPath string) (*movingItem, error) {
 	s := &movingItem{direction: direction}
 
 	img, err := resources.NewDungeonImage(imgPath)
@@ -46,4 +47,4 @@ func (a *movingItem) Draw(screen *ebiten.Image, x, y float64) {
 	screen.DrawImage(a.imageTable.Image().Image(), op)
 }
 
-func (a *movingItem) Direction() Direction { return a.direction }
+func (a *movingItem) Direction() config.Direction { return a.direction }

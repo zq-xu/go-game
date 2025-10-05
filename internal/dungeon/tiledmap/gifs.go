@@ -21,7 +21,7 @@ func (tm *tiledMap) initGifs() error {
 	tm.gifs = &gifs{gifs: make(map[string]gifItem, 0)}
 
 	for name, v := range tm.cfg.Gifs {
-		gg, err := gifkit.NewEmbedGif(&dungeon.EmbeddedDungeon, v.ImgPaths)
+		gg, err := gifkit.NewNeverStopGifFromEmbed(&dungeon.EmbeddedDungeon, v.ImgPaths)
 		if err != nil {
 			return eris.Wrapf(err, "new embed gif for %s failed.", name)
 		}

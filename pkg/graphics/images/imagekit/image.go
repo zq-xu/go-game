@@ -37,3 +37,18 @@ func NewImageFromEmbed(embedFS *embed.FS, path string) (Image, error) {
 		height: img.Bounds().Dy(),
 	}, nil
 }
+
+// NewImageListFromEmbed
+func NewImageListFromEmbed(embedFS *embed.FS, imgPaths []string) ([]Image, error) {
+	list := make([]Image, 0)
+
+	for _, v := range imgPaths {
+		img, err := NewImageFromEmbed(embedFS, v)
+		if err != nil {
+			return nil, eris.Wrap(err, "new image from embed failed")
+		}
+		list = append(list, img)
+	}
+
+	return list, nil
+}

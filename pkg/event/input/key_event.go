@@ -12,20 +12,23 @@ type KeyEvent struct {
 	Exclusive  bool // If the key is pressed, ignore others
 	Repeatable bool // Whether the key can be held down for continuous triggering.
 	Interval   time.Duration
-	lastPress  time.Time
+
+	lastPress time.Time
+	pressed   bool
 }
 
 // return:
-//  1. if pressed;
-//  2. if exclusive
-func (e *KeyEvent) listern(lastPress ebiten.Key) (bool, bool) {
+// 1. if pressed
+// 2. if exclusive
+func (e *KeyEvent) listern() (bool, bool) {
 	if !ebiten.IsKeyPressed(e.Key) {
-		return false, false
+		e.pressed = false
+		return e.pressed, false
 	}
 
 	// logs.Logger.Debugf("lastPress %s key %s", lastPress.String(), e.Key.String())
-	if lastPress == e.Key && !e.Repeatable {
-		return true, false
+	if e.pressed && !e.Repeatable {
+		return e.pressed, false
 	}
 
 	if time.Since(e.lastPress) >= e.Interval {
@@ -33,5 +36,6 @@ func (e *KeyEvent) listern(lastPress ebiten.Key) (bool, bool) {
 		e.lastPress = time.Now()
 	}
 
-	return true, e.Exclusive
+	e.pressed = true
+	return e.pressed, e.Exclusive
 }

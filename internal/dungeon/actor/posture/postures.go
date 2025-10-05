@@ -3,49 +3,36 @@ package posture
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
-	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
+
+	"github.com/zq-xu/go-game/internal/dungeon/actor/posture/attack"
+	"github.com/zq-xu/go-game/internal/dungeon/actor/posture/moving"
+	"github.com/zq-xu/go-game/internal/dungeon/config"
 )
-
-const idleInterval = 3
-
-const (
-	UpDirection Direction = iota
-	DownDirection
-	LeftDirection
-	RightDirection
-)
-
-const (
-	IdleStatus Status = iota
-	RunningStatus
-	AttackStatus
-)
-
-type Status int
-type Direction int
 
 type Postures interface {
 	UpdateKeyPress(key ebiten.Key)
-	UpdateIdle()
+
 	Draw(screen *ebiten.Image, x, y float64)
+
+	IsAttacking() bool
 }
 
 type postures struct {
-	status        Status
-	movingPosture *movingPosture
-	attackPosture *attackPosture
+	status        config.ActorStatus
+	movingPosture moving.MovingkPosture
+	attackPosture attack.AttackPosture
 }
 
 func NewPostures() (Postures, error) {
 	var err error
 	a := &postures{}
 
-	a.movingPosture, err = NewMovingPostures()
+	a.movingPosture, err = moving.NewMovingPostures()
 	if err != nil {
 		return nil, eris.Wrap(err, "new moving postures failed.")
 	}
 
-	a.attackPosture, err = NewAttackPosture()
+	a.attackPosture, err = attack.NewGifAttackPosture()
 	if err != nil {
 		return nil, eris.Wrap(err, "new attack postures failed.")
 	}
@@ -54,38 +41,32 @@ func NewPostures() (Postures, error) {
 }
 
 func (a *postures) UpdateKeyPress(key ebiten.Key) {
+	if a.attackPosture.IsAttacking() {
+		return
+	}
+
 	if key == ebiten.KeySpace {
-		a.status = AttackStatus
-		a.attackPosture.Update(a.movingPosture.currentItem.direction)
+		a.status = config.AttackActorStatus
+		a.attackPosture.Attack(a.movingPosture.Direction())
 		return
 	}
 
 	a.movingPosture.UpdateKeyPress(key)
-	a.status = a.movingPosture.status
-}
-
-func (a *postures) UpdateIdle() {
-	a.movingPosture.UpdateIdle()
-	a.status = a.movingPosture.status
+	a.status = a.movingPosture.Status()
 }
 
 func (a *postures) Draw(screen *ebiten.Image, x, y float64) {
-	if a.status == AttackStatus {
-		a.attackPosture.item.Draw(screen, x, y)
+	if a.status == config.AttackActorStatus {
+		a.attackPosture.Draw(screen, x, y)
 		// logs.Logger.Debug("direction: ", a.attackPosture.item.direction,
 		// 	" current index: ", a.attackPosture.item.rollImages.CurrentIndex())
 
 		return
 	}
 
-	a.movingPosture.currentItem.Draw(screen, x, y)
+	a.movingPosture.Draw(screen, x, y)
 }
 
-func (a *postures) DrawTest(screen *ebiten.Image, x, y float64) {
-	a.attackPosture.attackItemSet[DownDirection].rollImages.Range(func(index int, img imagekit.Image) {
-		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Translate(x+float64(50*index), y)
-		screen.DrawImage(img.Image(), op)
-	})
-
+func (a *postures) IsAttacking() bool {
+	return a.attackPosture.IsAttacking()
 }

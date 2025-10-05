@@ -1,7 +1,5 @@
 package input
 
-import "github.com/hajimehoshi/ebiten/v2"
-
 type InputListener interface {
 	Update()
 	Reload()
@@ -11,8 +9,6 @@ type InputListener interface {
 }
 
 type inputListener struct {
-	lastPress ebiten.Key
-
 	idle      func()
 	keyEvents []*KeyEvent
 }
@@ -22,13 +18,12 @@ func NewInputListener() InputListener {
 }
 
 func (g *inputListener) Update() {
-	var isPressed bool
+	var hasKeyPressed bool
 
 	for _, v := range g.keyEvents {
-		pressed, exclusive := v.listern(g.lastPress)
-		if pressed {
-			isPressed = pressed
-			g.lastPress = v.Key
+		isPressed, exclusive := v.listern()
+		if isPressed {
+			hasKeyPressed = true
 		}
 
 		if exclusive {
@@ -36,11 +31,9 @@ func (g *inputListener) Update() {
 		}
 	}
 
-	if isPressed {
+	if hasKeyPressed {
 		return
 	}
-
-	g.lastPress = 0
 
 	if g.idle != nil {
 		g.idle()
