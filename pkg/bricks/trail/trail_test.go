@@ -1,4 +1,4 @@
-package brick
+package trail
 
 import (
 	"testing"

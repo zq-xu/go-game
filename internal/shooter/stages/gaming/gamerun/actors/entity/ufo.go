@@ -4,9 +4,10 @@ import (
 	"math/rand"
 
 	"github.com/rotisserie/eris"
+
 	"github.com/zq-xu/go-game/internal/shooter/settings"
 	"github.com/zq-xu/go-game/internal/shooter/ui/resources"
-	"github.com/zq-xu/go-game/pkg/brick"
+	"github.com/zq-xu/go-game/pkg/bricks/trail"
 	"github.com/zq-xu/go-game/pkg/utils"
 )
 
@@ -46,9 +47,9 @@ func NewUFO() (*UFO, error) {
 
 	maxTrail := utils.RandomForMinFloat64(entity.X, float64(settings.GetSettings().ScreenWidth())-entity.X)
 	if maxTrail > 100 {
-		u.calX = brick.GenerateRandomStableTrail(entity.X, 0, float64(settings.GetSettings().ScreenHeight()), u.XSpeedFactor)
+		u.calX = trail.GenerateRandomStableTrail(entity.X, 0, float64(settings.GetSettings().ScreenHeight()), u.XSpeedFactor)
 	} else {
-		u.calX = brick.GenerateRandomSinTrailWithBase(entity.X, maxTrail, u.XTimesToTop)
+		u.calX = trail.GenerateRandomSinTrailWithBase(entity.X, maxTrail, u.XTimesToTop)
 	}
 
 	return u, nil

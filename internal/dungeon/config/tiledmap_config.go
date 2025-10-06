@@ -34,8 +34,8 @@ func GetTiledmapConfig() *TiledMapConfig {
 					dungeon.GetDungeonImagePath("gif/torch/torch_3.png"),
 					dungeon.GetDungeonImagePath("gif/torch/torch_4.png"),
 				},
-				X: 200,
-				Y: 200,
+				X: 208,
+				Y: 216,
 			},
 			"wall1-torch2": {
 				ImgPaths: []string{
@@ -44,8 +44,8 @@ func GetTiledmapConfig() *TiledMapConfig {
 					dungeon.GetDungeonImagePath("gif/torch/torch_3.png"),
 					dungeon.GetDungeonImagePath("gif/torch/torch_4.png"),
 				},
-				X: 230,
-				Y: 200,
+				X: 238,
+				Y: 216,
 			},
 			"wall2-candle2": {
 				ImgPaths: []string{
@@ -54,8 +54,8 @@ func GetTiledmapConfig() *TiledMapConfig {
 					dungeon.GetDungeonImagePath("gif/candleA/candleA_03.png"),
 					dungeon.GetDungeonImagePath("gif/candleA/candleA_04.png"),
 				},
-				X: 580,
-				Y: 500,
+				X: 583,
+				Y: 514,
 			},
 		},
 	}

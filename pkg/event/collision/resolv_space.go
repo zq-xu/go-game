@@ -28,10 +28,9 @@ func NewResolvSpace(spaceWidth, spaceHeight, cellWidth, cellHeight int) Space {
 
 func (rc *resolvSpace) AddObject(objs ...Object) {
 	for _, v := range objs {
-		ro := v.(*resolvObject)
-		rc.space.Add(ro.obj)
-		ro.space = rc
-		rc.objRecord[ro.obj.ID()] = ro.name
+		rc.objRecord[v.object().ID()] = v.Name()
+		rc.space.Add(v.object())
+		v.setSpace(rc)
 	}
 }
 

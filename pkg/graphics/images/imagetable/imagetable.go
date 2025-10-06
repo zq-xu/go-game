@@ -1,8 +1,10 @@
 package imagetable
 
 import (
+	"embed"
 	"image"
 
+	"github.com/rotisserie/eris"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 	"github.com/zq-xu/go-game/pkg/logs"
 )
@@ -22,7 +24,7 @@ type imageTable struct {
 }
 
 // NewDungeonImageTable
-func NewDungeonImageTable(name string, img imagekit.Image) ImageTable {
+func NewImageTable(name string, img imagekit.Image) ImageTable {
 	it := &imageTable{
 		name:  name,
 		boxes: NewBoundingBoxes(img.GoImage()),
@@ -34,6 +36,15 @@ func NewDungeonImageTable(name string, img imagekit.Image) ImageTable {
 	}
 
 	return it
+}
+
+func NewImageTableFromEmbed(embedFS *embed.FS, name, imgPath string) (ImageTable, error) {
+	img, err := imagekit.NewImageFromEmbed(embedFS, imgPath)
+	if err != nil {
+		return nil, eris.Wrapf(err, "failed to load image file %s.", img)
+	}
+
+	return NewImageTable(name, img), nil
 }
 
 func (i *imageTable) LogBoxes() {

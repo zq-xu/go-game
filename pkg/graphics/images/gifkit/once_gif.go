@@ -1,8 +1,6 @@
 package gifkit
 
 import (
-	"embed"
-
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
@@ -19,22 +17,34 @@ func NewOnceGif(imgs ...imagekit.Image) Gif {
 	}
 }
 
-func NewOnceGifFromEmbed(embedFS *embed.FS, imgPaths []string) (Gif, error) {
-	g, err := newGifBaseFromEmbed(embedFS, imgPaths)
-	if err != nil {
-		return nil, err
-	}
+// func NewOnceGifFromEmbed(embedFS *embed.FS, imgPaths []string) (Gif, error) {
+// 	g, err := newGifBaseFromEmbed(embedFS, imgPaths)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	o := &onceGif{
-		gifBase: g,
-	}
+// 	o := &onceGif{
+// 		gifBase: g,
+// 	}
 
-	return o, nil
-}
+// 	return o, nil
+// }
+
+func (o *onceGif) IsDrawing() bool { return o.drawing }
+
+func (o *onceGif) MoveToStart() { o.gifBase.MoveToStart() }
 
 func (o *onceGif) Draw(screen *ebiten.Image, x, y float64) {
 	o.gifBase.draw(screen, x, y)
+	o.next()
+}
 
+func (o *onceGif) Image() imagekit.Image {
+	defer o.next()
+	return o.image()
+}
+
+func (o *onceGif) next() {
 	maxIndex := len(o.gifBase.images) - 1
 	switch {
 	case o.gifBase.index < maxIndex:
@@ -45,7 +55,3 @@ func (o *onceGif) Draw(screen *ebiten.Image, x, y float64) {
 		o.drawing = false
 	}
 }
-
-func (o *onceGif) IsDrawing() bool { return o.drawing }
-
-func (o *onceGif) MoveToStart() { o.gifBase.MoveToStart() }

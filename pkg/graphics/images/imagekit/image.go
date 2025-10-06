@@ -7,6 +7,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/rotisserie/eris"
+
+	"github.com/zq-xu/go-game/pkg/logs"
 )
 
 type Image interface {
@@ -29,6 +31,8 @@ func NewImageFromEmbed(embedFS *embed.FS, path string) (Image, error) {
 	if err != nil {
 		return nil, eris.Wrap(err, "new image from reader failed.")
 	}
+
+	logs.Logger.Debugf("embed image %s: width=%d, height=%d", path, img.Bounds().Dx(), img.Bounds().Dy())
 
 	return &basicImage{
 		img:    img,

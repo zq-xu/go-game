@@ -49,7 +49,7 @@ func NewGame() (ebiten.Game, error) {
 		g.tMap.TileWidth(), g.tMap.TileHeight())
 
 	g.collisionSpace.AddObject(g.tMap.CollisionObjects()...)
-	g.collisionSpace.AddObject(g.actor.CollisionObject())
+	g.collisionSpace.AddObject(g.actor)
 
 	return g, nil
 }

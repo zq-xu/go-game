@@ -1,14 +1,18 @@
 package gifkit
 
 import (
-	"embed"
-
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 )
 
+const (
+	LeftTopDrawBeginning DrawBeginning = iota
+	CenterBottomDrawBeginning
+	RightBottomDrawBeginning
+)
+
+type DrawBeginning int
 type Gif interface {
 	Image() imagekit.Image
 	Draw(screen *ebiten.Image, x, y float64)
@@ -17,6 +21,7 @@ type Gif interface {
 	MoveToStart()
 
 	SetUpdateInterval(i int)
+	SetDrawBeginning(b DrawBeginning)
 }
 
 type gifBase struct {
@@ -25,7 +30,15 @@ type gifBase struct {
 
 	index  int
 	images []imagekit.Image
+
+	drawBeginning DrawBeginning
 }
+
+func (g *gifBase) SetUpdateInterval(i int) { g.updateInterval = i }
+
+func (g *gifBase) SetDrawBeginning(b DrawBeginning) { g.drawBeginning = b }
+
+func (g *gifBase) MoveToStart() { g.index = 0 }
 
 func newGifBase(imgs ...imagekit.Image) *gifBase {
 	return &gifBase{
@@ -34,24 +47,32 @@ func newGifBase(imgs ...imagekit.Image) *gifBase {
 	}
 }
 
-func newGifBaseFromEmbed(embedFS *embed.FS, imgPaths []string) (*gifBase, error) {
-	list, err := imagekit.NewImageListFromEmbed(embedFS, imgPaths)
-	if err != nil {
-		return nil, eris.Wrap(err, "new image list from embed failed")
-	}
+// func newGifBaseFromEmbed(embedFS *embed.FS, imgPaths []string) (*gifBase, error) {
+// 	list, err := imagekit.NewImageListFromEmbed(embedFS, imgPaths)
+// 	if err != nil {
+// 		return nil, eris.Wrap(err, "new image list from embed failed")
+// 	}
 
-	return newGifBase(list...), nil
-}
+// 	return newGifBase(list...), nil
+// }
 
 func (g *gifBase) draw(screen *ebiten.Image, x, y float64) {
-	img := g.Image()
+	img := g.image()
+
+	switch g.drawBeginning {
+	case CenterBottomDrawBeginning:
+		x = x - float64(img.Width())/2
+		y = y - float64(img.Height())
+	}
 
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(x, y)
 	screen.DrawImage(img.Image(), op)
 }
 
-func (g *gifBase) MoveToStart() { g.index = 0 }
+func (g *gifBase) image() imagekit.Image {
+	return g.images[g.index]
+}
 
 func (g *gifBase) next() {
 	if g.counter < g.updateInterval {
@@ -61,12 +82,4 @@ func (g *gifBase) next() {
 
 	g.index = (g.index + 1) % len(g.images)
 	g.counter = 0
-}
-
-func (g *gifBase) SetUpdateInterval(i int) {
-	g.updateInterval = i
-}
-
-func (g *gifBase) Image() imagekit.Image {
-	return g.images[g.index]
 }

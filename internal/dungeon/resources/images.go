@@ -6,6 +6,11 @@ import (
 )
 
 // NewDungeonImage
-func NewDungeonImage(path string) (imagekit.Image, error) {
-	return imagekit.NewImageFromEmbed(&dungeon.EmbeddedDungeon, path)
+func NewDungeonImage(imgPath string) (imagekit.Image, error) {
+	return imagekit.NewImageFromEmbed(&dungeon.EmbeddedDungeon, imgPath)
+}
+
+// NewDungeonIImageList
+func NewDungeonIImageList(imgPaths []string) ([]imagekit.Image, error) {
+	return imagekit.NewImageListFromEmbed(&dungeon.EmbeddedDungeon, imgPaths)
 }

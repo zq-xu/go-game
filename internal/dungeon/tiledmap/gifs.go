@@ -4,7 +4,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/assets/dungeon"
+	"github.com/zq-xu/go-game/internal/dungeon/resources"
 	"github.com/zq-xu/go-game/pkg/graphics/images/gifkit"
 )
 
@@ -21,11 +21,13 @@ func (tm *tiledMap) initGifs() error {
 	tm.gifs = &gifs{gifs: make(map[string]gifItem, 0)}
 
 	for name, v := range tm.cfg.Gifs {
-		gg, err := gifkit.NewNeverStopGifFromEmbed(&dungeon.EmbeddedDungeon, v.ImgPaths)
+		imgList, err := resources.NewDungeonIImageList(v.ImgPaths)
 		if err != nil {
-			return eris.Wrapf(err, "new embed gif for %s failed.", name)
+			return eris.Wrapf(err, "failed to new dungeon image list %s", v.ImgPaths)
 		}
-
+		gg := gifkit.NewNeverStopGif(imgList...)
+		gg.SetUpdateInterval(5)
+		gg.SetDrawBeginning(gifkit.CenterBottomDrawBeginning)
 		tm.gifs.gifs[name] = gifItem{Gif: gg, x: v.X, y: v.Y}
 	}
 	return nil

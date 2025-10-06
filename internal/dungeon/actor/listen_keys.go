@@ -5,16 +5,8 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 
+	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/pkg/event/input"
-)
-
-var (
-	moveKeyList = []ebiten.Key{
-		ebiten.KeyUp,
-		ebiten.KeyArrowDown,
-		ebiten.KeyArrowLeft,
-		ebiten.KeyArrowRight,
-	}
 )
 
 func getAttackInterval() time.Duration {
@@ -24,34 +16,38 @@ func getAttackInterval() time.Duration {
 func (a *actor) initInputListener() error {
 	a.inputListener = input.NewInputListener()
 
-	// priority
+	a.inputListener.Blocks(a.attack.IsAttack)
+
+	// listen attack, highest priority
 	a.inputListener.Listen(&input.KeyEvent{
-		Key: ebiten.KeySpace,
+		Key: input.AttackKey,
 		Do: func() {
-			if a.postures.IsAttacking() {
-				return
-			}
-			a.postures.UpdateKeyPress(ebiten.KeySpace)
+			a.attack.Attack(a.direction)
+			a.status = config.AttackActorStatus
 		},
 		Interval:   getAttackInterval(),
 		Exclusive:  true,
 		Repeatable: false,
 	})
 
-	for _, key := range moveKeyList {
+	// listen moving on direction
+	input.RangeKeyDirections(func(key ebiten.Key, direction input.Direction) {
 		a.inputListener.Listen(&input.KeyEvent{
 			Key: key,
 			Do: func() {
-				if a.postures.IsAttacking() {
-					return
-				}
-				a.move(key)
+				a.running.Update(key)
+				a.direction = direction
+				a.status = config.RunningActorStatus
 			},
 			Exclusive:  true,
 			Repeatable: true,
 		})
-	}
+	})
 
-	a.inputListener.Idle(func() { a.move(-1) })
+	// listen idle
+	a.inputListener.Idle(func() {
+		a.idle.Update(a.direction)
+		a.status = config.IdleActorStatus
+	})
 	return nil
 }
