@@ -2,10 +2,12 @@ package imagetable
 
 import (
 	"embed"
+	"fmt"
 	"image"
 
 	"github.com/rotisserie/eris"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
+	"github.com/zq-xu/go-game/pkg/graphics/images/imagetable/boxes"
 	"github.com/zq-xu/go-game/pkg/logs"
 )
 
@@ -19,7 +21,7 @@ type ImageTable interface {
 
 type imageTable struct {
 	name   string
-	boxes  []BoundingBox
+	boxes  []boxes.BoundingBox
 	images []imagekit.Image
 }
 
@@ -27,7 +29,7 @@ type imageTable struct {
 func NewImageTable(name string, img imagekit.Image) ImageTable {
 	it := &imageTable{
 		name:  name,
-		boxes: NewBoundingBoxes(img.GoImage()),
+		boxes: boxes.NewBoundingBoxes(img.GoImage()),
 	}
 
 	for _, v := range it.boxes {
@@ -48,11 +50,13 @@ func NewImageTableFromEmbed(embedFS *embed.FS, name, imgPath string) (ImageTable
 }
 
 func (i *imageTable) LogBoxes() {
+	fmt.Println()
 	logs.Logger.Debugf("imagebox %s:", i.name)
 	for i, box := range i.boxes {
 		logs.Logger.Debugf("  subimage %d pixels range: (xmin=%d, ymin=%d, xmax=%d, ymax=%d, width=%d, height=%d)\n",
 			i+1, box.Xmin(), box.Ymin(), box.Xmax(), box.Ymax(), box.Width(), box.Height())
 	}
+	fmt.Println()
 }
 
 func (i *imageTable) Images() []imagekit.Image {
