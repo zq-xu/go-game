@@ -15,9 +15,12 @@ const (
 
 type DrawBeginning int
 type Gif interface {
-	Image() imagekit.Image
-	Draw(screen *ebiten.Image, x, y float64)
+	Width() int
+	Height() int
 
+	Image() imagekit.Image
+
+	Draw(screen *ebiten.Image, x, y float64)
 	IsDrawing() bool
 	MoveToStart()
 
@@ -87,3 +90,6 @@ func (g *gifBase) next() {
 	g.index = (g.index + 1) % len(g.images)
 	g.counter = 0
 }
+
+func (g *gifBase) Width() int  { return g.images[0].Width() }
+func (g *gifBase) Height() int { return g.images[0].Height() }
