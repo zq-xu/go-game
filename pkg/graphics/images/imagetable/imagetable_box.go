@@ -6,12 +6,12 @@ import (
 	"sort"
 )
 
-const grayThreshold = uint32(60000)
+// const grayThreshold = uint32(60000)
 
 var (
-	minArea = 10
-	minW    = 2
-	minH    = 2
+	minArea = 8
+	minW    = 8
+	minH    = 8
 )
 
 type BoundingBox interface {

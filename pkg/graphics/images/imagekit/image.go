@@ -20,8 +20,8 @@ type Image interface {
 }
 
 // NewImageFromEmbed
-func NewImageFromEmbed(embedFS *embed.FS, path string) (Image, error) {
-	f, err := embedFS.Open(path)
+func NewImageFromEmbed(embedFS *embed.FS, imgPath string) (Image, error) {
+	f, err := embedFS.Open(imgPath)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +32,7 @@ func NewImageFromEmbed(embedFS *embed.FS, path string) (Image, error) {
 		return nil, eris.Wrap(err, "new image from reader failed.")
 	}
 
-	logs.Logger.Debugf("embed image %s: width=%d, height=%d", path, img.Bounds().Dx(), img.Bounds().Dy())
+	logs.Logger.Debugf("embed image %s: width=%d, height=%d", imgPath, img.Bounds().Dx(), img.Bounds().Dy())
 
 	return &basicImage{
 		img:    img,
@@ -55,4 +55,21 @@ func NewImageListFromEmbed(embedFS *embed.FS, imgPaths []string) ([]Image, error
 	}
 
 	return list, nil
+}
+
+// NewImageFromFile
+func NewImageFromFile(imgPath string) (Image, error) {
+	img, goImg, err := ebitenutil.NewImageFromFile(imgPath)
+	if err != nil {
+		return nil, eris.Wrap(err, "new image from reader failed.")
+	}
+
+	logs.Logger.Debugf("embed image %s: width=%d, height=%d", imgPath, img.Bounds().Dx(), img.Bounds().Dy())
+
+	return &basicImage{
+		img:    img,
+		goImg:  goImg,
+		width:  img.Bounds().Dx(),
+		height: img.Bounds().Dy(),
+	}, nil
 }

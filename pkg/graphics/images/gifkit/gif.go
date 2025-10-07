@@ -8,6 +8,7 @@ import (
 
 const (
 	LeftTopDrawBeginning DrawBeginning = iota
+	CenterDrawBeginning
 	CenterBottomDrawBeginning
 	RightBottomDrawBeginning
 )
@@ -63,6 +64,9 @@ func (g *gifBase) draw(screen *ebiten.Image, x, y float64) {
 	case CenterBottomDrawBeginning:
 		x = x - float64(img.Width())/2
 		y = y - float64(img.Height())
+	case CenterDrawBeginning:
+		x = x - float64(img.Width())/2
+		y = y - float64(img.Height())/2
 	}
 
 	op := &ebiten.DrawImageOptions{}
