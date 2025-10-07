@@ -5,7 +5,6 @@ import (
 
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/assets/dungeon"
 	"github.com/zq-xu/go-game/internal/dungeon/resources"
 	"github.com/zq-xu/go-game/pkg/event/input"
 	"github.com/zq-xu/go-game/pkg/graphics/images/gifkit"
@@ -14,15 +13,6 @@ import (
 )
 
 const idleInterval = 3
-
-var (
-	idleImagesPath = map[input.Direction]string{
-		input.UpDirection:    dungeon.GetDungeonImagePath("/actor/idle/idle_up.png"),
-		input.DownDirection:  dungeon.GetDungeonImagePath("/actor/idle/idle_down.png"),
-		input.LeftDirection:  dungeon.GetDungeonImagePath("/actor/idle/idle_left.png"),
-		input.RightDirection: dungeon.GetDungeonImagePath("/actor/idle/idle_right.png"),
-	}
-)
 
 type Idle interface {
 	Update(d input.Direction)
@@ -37,7 +27,7 @@ type idle struct {
 	idleImages map[input.Direction]gifkit.Gif
 }
 
-func NewIdle() (Idle, error) {
+func NewIdle(idleImagesPath map[input.Direction]string) (Idle, error) {
 	mp := &idle{
 		direction:  input.DefaultDirection,
 		idleImages: make(map[input.Direction]gifkit.Gif),

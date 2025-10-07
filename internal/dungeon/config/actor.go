@@ -1,10 +1,6 @@
 package config
 
 const (
-	StepLength = 1
-)
-
-const (
 	IdleActorStatus ActorStatus = iota
 	RunningActorStatus
 	AttackActorStatus

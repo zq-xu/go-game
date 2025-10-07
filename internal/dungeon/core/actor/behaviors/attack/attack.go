@@ -5,7 +5,6 @@ import (
 
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/assets/dungeon"
 	"github.com/zq-xu/go-game/internal/dungeon/resources"
 	"github.com/zq-xu/go-game/pkg/event/input"
 	"github.com/zq-xu/go-game/pkg/graphics/images/gifkit"
@@ -19,22 +18,13 @@ type Attack interface {
 	IsAttack() bool
 }
 
-var (
-	attackImagesPath = map[input.Direction]string{
-		input.UpDirection:    dungeon.GetDungeonImagePath("/actor/attack/attack1_up.png"),
-		input.DownDirection:  dungeon.GetDungeonImagePath("/actor/attack/attack1_down.png"),
-		input.LeftDirection:  dungeon.GetDungeonImagePath("/actor/attack/attack1_left.png"),
-		input.RightDirection: dungeon.GetDungeonImagePath("/actor/attack/attack1_right.png"),
-	}
-)
-
 type attack struct {
 	direction     input.Direction
 	gifkit.Gif    // the current one
 	attackItemSet map[input.Direction]gifkit.Gif
 }
 
-func NewAttack() (Attack, error) {
+func NewAttack(attackImagesPath map[input.Direction]string) (Attack, error) {
 	ap := &attack{
 		direction:     input.DefaultDirection,
 		attackItemSet: make(map[input.Direction]gifkit.Gif),

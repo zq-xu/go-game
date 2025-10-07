@@ -6,23 +6,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/assets/dungeon"
-	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/internal/dungeon/resources"
 	"github.com/zq-xu/go-game/pkg/event/collision"
 	"github.com/zq-xu/go-game/pkg/event/input"
 	"github.com/zq-xu/go-game/pkg/graphics/images/gifkit"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagetable"
-)
-
-var (
-	runImagesPath = map[input.Direction]string{
-		input.UpDirection:    dungeon.GetDungeonImagePath("/actor/run/run_up.png"),
-		input.DownDirection:  dungeon.GetDungeonImagePath("/actor/run/run_down.png"),
-		input.LeftDirection:  dungeon.GetDungeonImagePath("/actor/run/run_left.png"),
-		input.RightDirection: dungeon.GetDungeonImagePath("/actor/run/run_right.png"),
-	}
 )
 
 type Running interface {
@@ -36,14 +25,16 @@ type running struct {
 	gifkit.Gif
 	runImages map[input.Direction]gifkit.Gif
 
-	obj collision.Object
+	obj        collision.Object
+	stepLength int
 }
 
-func NewRunning(obj collision.Object) (Running, error) {
+func NewRunning(obj collision.Object, stepLength int, runImagesPath map[input.Direction]string) (Running, error) {
 	rp := &running{
-		obj:       obj,
-		direction: input.DefaultDirection,
-		runImages: make(map[input.Direction]gifkit.Gif),
+		obj:        obj,
+		stepLength: stepLength,
+		direction:  input.DefaultDirection,
+		runImages:  make(map[input.Direction]gifkit.Gif),
 	}
 
 	for k, v := range runImagesPath {
@@ -64,7 +55,7 @@ func NewRunning(obj collision.Object) (Running, error) {
 }
 
 func (rp *running) Update(key ebiten.Key) {
-	rp.obj.MoveByKey(key, config.StepLength)
+	rp.obj.MoveByKey(key, float64(rp.stepLength))
 
 	d := input.GetDirection(key)
 	if d.Unknown() {

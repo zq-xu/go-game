@@ -4,16 +4,16 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/internal/dungeon/actor"
+	"github.com/zq-xu/go-game/internal/dungeon/characters"
 	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/internal/dungeon/tiledmap"
 	"github.com/zq-xu/go-game/pkg/event/collision"
 )
 
 type game struct {
-	tMap  tiledmap.TiledMap
-	actor actor.Actor
+	tMap tiledmap.TiledMap
 
+	characters     []characters.Character
 	collisionSpace collision.Space
 }
 
@@ -39,9 +39,9 @@ func NewGame() (ebiten.Game, error) {
 		return nil, eris.Wrap(err, "failed to load tiledmap")
 	}
 
-	g.actor, err = actor.NewActor()
+	g.characters, err = characters.NewCharacters()
 	if err != nil {
-		return nil, eris.Wrap(err, "failed to load actor")
+		return nil, eris.Wrap(err, "failed to load characters")
 	}
 
 	g.collisionSpace = collision.NewResolvSpace(
@@ -49,19 +49,26 @@ func NewGame() (ebiten.Game, error) {
 		g.tMap.TileWidth(), g.tMap.TileHeight())
 
 	g.collisionSpace.AddObject(g.tMap.CollisionObjects()...)
-	g.collisionSpace.AddObject(g.actor)
+	for _, v := range g.characters {
+		g.collisionSpace.AddObject(v)
+	}
 
 	return g, nil
 }
 
 func (g *game) Update() error {
-	g.actor.Update()
+	for _, v := range g.characters {
+		v.Update()
+	}
 	return nil
 }
 
 func (g *game) Draw(screen *ebiten.Image) {
 	g.tMap.Draw(screen, 0, 0)
-	g.actor.Draw(screen)
+
+	for _, v := range g.characters {
+		v.Draw(screen)
+	}
 }
 
 func (g *game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

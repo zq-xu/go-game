@@ -4,20 +4,24 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/internal/dungeon/actor/behaviors/attack"
-	"github.com/zq-xu/go-game/internal/dungeon/actor/behaviors/idle"
-	"github.com/zq-xu/go-game/internal/dungeon/actor/behaviors/running"
 	"github.com/zq-xu/go-game/internal/dungeon/config"
+	"github.com/zq-xu/go-game/internal/dungeon/core/actor/behaviors/attack"
+	"github.com/zq-xu/go-game/internal/dungeon/core/actor/behaviors/idle"
+	"github.com/zq-xu/go-game/internal/dungeon/core/actor/behaviors/running"
 	"github.com/zq-xu/go-game/pkg/event/collision"
 	"github.com/zq-xu/go-game/pkg/event/input"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 )
 
 type Actor interface {
-	Update()
 	Draw(screen *ebiten.Image)
 
 	collision.Object
+
+	IsAttack() bool
+	Attack()
+	Moving(key ebiten.Key)
+	Idle()
 }
 
 type actor struct {
@@ -37,36 +41,39 @@ type actor struct {
 	inputListener input.InputListener
 }
 
-func NewActor() (Actor, error) {
+func NewActor(op *Option) (Actor, error) {
 	var err error
 	a := &actor{
 		direction: input.DefaultDirection,
 		status:    config.IdleActorStatus,
 
-		Object: collision.NewResolvRectObject("The knight", 100, 100, config.ActorWidth, config.ActorHeight),
+		Object: collision.NewResolvRectObject(
+			op.Name,
+			op.StartX, op.StartY,
+			op.Width, op.Height,
+		),
 	}
 
-	a.attack, err = attack.NewAttack()
+	if op.StepLength == 0 {
+		op.StepLength = 1
+	}
+
+	a.attack, err = attack.NewAttack(op.AttackImagePaths)
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to new actor attack")
 	}
 
-	a.idle, err = idle.NewIdle()
+	a.idle, err = idle.NewIdle(op.IdleImagePaths)
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to new actor idle")
 	}
 
-	a.running, err = running.NewRunning(a.Object)
+	a.running, err = running.NewRunning(a.Object, op.StepLength, op.MovingImagePaths)
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to new actor running")
 	}
 
-	a.initInputListener()
 	return a, nil
-}
-
-func (a *actor) Update() {
-	a.inputListener.Update()
 }
 
 func (a *actor) Draw(screen *ebiten.Image) {
@@ -97,4 +104,22 @@ func (a *actor) image() imagekit.Image {
 	default:
 		return a.idle.Image()
 	}
+}
+
+func (a *actor) IsAttack() bool { return a.attack.IsAttack() }
+
+func (a *actor) Attack() {
+	a.attack.Attack(a.direction)
+	a.status = config.AttackActorStatus
+}
+
+func (a *actor) Moving(key ebiten.Key) {
+	a.running.Update(key)
+	a.direction = input.GetDirection(key)
+	a.status = config.RunningActorStatus
+}
+
+func (a *actor) Idle() {
+	a.idle.Update(a.direction)
+	a.status = config.IdleActorStatus
 }
