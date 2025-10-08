@@ -1,8 +1,9 @@
 package collision
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/solarlune/resolv"
+
+	"github.com/zq-xu/go-game/pkg/event/input"
 )
 
 type Object interface {
@@ -13,7 +14,7 @@ type Object interface {
 	Center() (float64, float64)
 
 	Move(x, y float64)
-	MoveByKey(key ebiten.Key, stepLength float64)
+	MoveDirection(d input.Direction)
 
 	Name() string
 
@@ -29,16 +30,33 @@ type resolvObject struct {
 	name string
 
 	space *resolvSpace
+
+	stepLength float64
 }
 
-func NewResolvRectObject(name string, x, y, w, h float64) Object {
-	return &resolvObject{
-		name: name,
-		w:    w,
-		h:    h,
+type objectOption func(o *resolvObject)
+
+func WithStepLength(si float64) objectOption {
+	return func(o *resolvObject) {
+		o.stepLength = si
+	}
+}
+
+func NewResolvRectObject(name string, x, y, w, h float64, opts ...objectOption) Object {
+	o := &resolvObject{
+		name:       name,
+		w:          w,
+		h:          h,
+		stepLength: 1,
 
 		obj: resolv.NewRectangleFromTopLeft(x, y, w, h),
 	}
+
+	for _, opt := range opts {
+		opt(o)
+	}
+
+	return o
 }
 
 func (o *resolvObject) LeftTop() (float64, float64) {

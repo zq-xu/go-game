@@ -8,25 +8,19 @@ import (
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
 )
 
-type Character interface {
-	actor.Actor
-
-	Update()
-}
-
-func NewCharacters() ([]Character, error) {
-	list := make([]Character, 0)
+func NewCharacters() ([]actor.Actor, error) {
+	list := make([]actor.Actor, 0)
 	p, err := player.NewPlayer()
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to load player")
 	}
 	list = append(list, p)
 
-	s, err := skeleton.NewSkeleton()
+	s, err := skeleton.NewSkeletonList()
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to load skeletons")
 	}
 
-	list = append(list, s)
+	list = append(list, s...)
 	return list, nil
 }

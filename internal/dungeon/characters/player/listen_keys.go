@@ -30,7 +30,7 @@ func (p *player) initInputListener() error {
 	input.RangeKeyDirections(func(key ebiten.Key, direction input.Direction) {
 		p.inputListener.Listen(&input.KeyEvent{
 			Key:        key,
-			Do:         func() { p.Moving(key) },
+			Do:         func() { p.MoveDirection(input.GetDirection(key)) },
 			Exclusive:  true,
 			Repeatable: true,
 		})

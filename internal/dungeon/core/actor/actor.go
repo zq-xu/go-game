@@ -15,13 +15,14 @@ import (
 )
 
 type Actor interface {
+	Update()
 	Draw(screen *ebiten.Image)
 
 	collision.Object
+	MoveDirection(d input.Direction)
 
 	IsAttack() bool
 	Attack()
-	Moving(key ebiten.Key)
 	Idle()
 }
 
@@ -50,13 +51,10 @@ func NewActor(op *Option) (Actor, error) {
 
 		Object: collision.NewResolvRectObject(
 			op.Name,
-			op.StartX, op.StartY,
+			float64(op.StartPoint.X), float64(op.StartPoint.Y),
 			op.Width, op.Height,
+			collision.WithStepLength(op.StepLength),
 		),
-	}
-
-	if op.StepLength == 0 {
-		op.StepLength = 1
 	}
 
 	a.attack, err = attack.NewAttack(op.Name, op.AttackImagePaths)
@@ -69,13 +67,15 @@ func NewActor(op *Option) (Actor, error) {
 		return nil, eris.Wrap(err, "failed to new actor idle")
 	}
 
-	a.moving, err = moving.NewMoving(op.Name, a.Object, op.StepLength, op.MovingImagePaths)
+	a.moving, err = moving.NewMoving(op.Name, a.Object, op.MovingImagePaths)
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to new actor moving")
 	}
 
 	return a, nil
 }
+
+func (a *actor) Update() {}
 
 func (a *actor) Draw(screen *ebiten.Image) {
 	img := a.image()
@@ -108,9 +108,9 @@ func (a *actor) Attack() {
 	a.status = config.AttackActorStatus
 }
 
-func (a *actor) Moving(key ebiten.Key) {
-	a.moving.Move(key)
-	a.direction = input.GetDirection(key)
+func (a *actor) MoveDirection(d input.Direction) {
+	a.direction = d
+	a.moving.Move(a.direction)
 	a.status = config.RunningActorStatus
 }
 

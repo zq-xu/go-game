@@ -6,6 +6,7 @@ import (
 
 	"github.com/zq-xu/go-game/internal/dungeon/characters"
 	"github.com/zq-xu/go-game/internal/dungeon/config"
+	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
 	"github.com/zq-xu/go-game/internal/dungeon/tiledmap"
 	"github.com/zq-xu/go-game/pkg/event/collision"
 )
@@ -13,7 +14,7 @@ import (
 type game struct {
 	tMap tiledmap.TiledMap
 
-	characters     []characters.Character
+	characters     []actor.Actor
 	collisionSpace collision.Space
 }
 

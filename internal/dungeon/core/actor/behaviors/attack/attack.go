@@ -19,15 +19,14 @@ type Attack interface {
 }
 
 type attack struct {
-	direction     input.Direction
-	gifkit.Gif    // the current one
-	attackItemSet map[input.Direction]gifkit.Gif
+	direction    input.Direction
+	gifkit.Gif   // the current one
+	attackImages map[input.Direction]gifkit.Gif
 }
 
 func NewAttack(name string, attackImagesPath map[input.Direction]string) (Attack, error) {
 	ap := &attack{
-		direction:     input.DefaultDirection,
-		attackItemSet: make(map[input.Direction]gifkit.Gif),
+		attackImages: make(map[input.Direction]gifkit.Gif),
 	}
 
 	for k, v := range attackImagesPath {
@@ -40,10 +39,11 @@ func NewAttack(name string, attackImagesPath map[input.Direction]string) (Attack
 		g := gifkit.NewOnceGif(imgTable.Images()...)
 		g.SetUpdateInterval(3)
 
-		ap.attackItemSet[k] = g
+		ap.attackImages[k] = g
 	}
 
-	ap.Gif = ap.attackItemSet[ap.direction]
+	ap.direction = ap.getDefaultDirection()
+	ap.Gif = ap.attackImages[ap.direction]
 	return ap, nil
 }
 
@@ -52,12 +52,35 @@ func (ap *attack) Attack(d input.Direction) {
 		return
 	}
 
-	if d != ap.direction {
-		ap.Gif = ap.attackItemSet[d]
-		ap.direction = d
+	ap.refreshDirection(d)
+	ap.Gif.MoveToStart()
+}
+
+func (ap *attack) getDefaultDirection() input.Direction {
+	_, ok := ap.attackImages[input.DefaultDirection]
+	if ok {
+		return input.DefaultDirection
 	}
 
-	ap.Gif.MoveToStart()
+	for k := range ap.attackImages {
+		return k
+	}
+
+	return input.DefaultDirection
+}
+
+func (ap *attack) refreshDirection(d input.Direction) {
+	_, ok := ap.attackImages[d]
+	if !ok {
+		return
+	}
+
+	if ap.direction == d {
+		return
+	}
+
+	ap.Gif = ap.attackImages[d]
+	ap.direction = d
 }
 
 func (ap *attack) IsAttack() bool { return ap.IsDrawing() }

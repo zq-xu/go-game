@@ -28,8 +28,7 @@ type idle struct {
 }
 
 func NewIdle(name string, idleImagesPath map[input.Direction]string) (Idle, error) {
-	mp := &idle{
-		direction:  input.DefaultDirection,
+	ip := &idle{
 		idleImages: make(map[input.Direction]gifkit.Gif),
 	}
 
@@ -43,11 +42,12 @@ func NewIdle(name string, idleImagesPath map[input.Direction]string) (Idle, erro
 		g := gifkit.NewNeverStopGif(imgTable.Images()...)
 		g.SetUpdateInterval(5)
 
-		mp.idleImages[k] = g
+		ip.idleImages[k] = g
 	}
 
-	mp.Gif = mp.idleImages[mp.direction]
-	return mp, nil
+	ip.direction = ip.getDefaultDirection()
+	ip.Gif = ip.idleImages[ip.direction]
+	return ip, nil
 }
 
 func (ip *idle) Update(d input.Direction) {
@@ -60,9 +60,33 @@ func (ip *idle) Update(d input.Direction) {
 		return
 	}
 
-	if ip.direction != d {
-		ip.idleCounter = 0
-		ip.Gif = ip.idleImages[d]
-		ip.direction = d
+	ip.refreshDirection(d)
+}
+
+func (ip *idle) getDefaultDirection() input.Direction {
+	_, ok := ip.idleImages[input.DefaultDirection]
+	if ok {
+		return input.DefaultDirection
 	}
+
+	for k := range ip.idleImages {
+		return k
+	}
+
+	return input.DefaultDirection
+}
+
+func (ip *idle) refreshDirection(d input.Direction) {
+	_, ok := ip.idleImages[d]
+	if !ok {
+		return
+	}
+
+	if ip.direction == d {
+		return
+	}
+
+	ip.idleCounter = 0
+	ip.Gif = ip.idleImages[d]
+	ip.direction = d
 }

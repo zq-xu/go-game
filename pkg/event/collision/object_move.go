@@ -1,22 +1,22 @@
 package collision
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/solarlune/resolv"
 
 	"github.com/zq-xu/go-game/pkg/event/input"
+	"github.com/zq-xu/go-game/pkg/logs"
 )
 
-func (o *resolvObject) MoveByKey(key ebiten.Key, stepLength float64) {
-	switch key {
-	case ebiten.KeyUp:
-		o.Move(0, -stepLength)
-	case ebiten.KeyDown:
-		o.Move(0, stepLength)
-	case ebiten.KeyLeft:
-		o.Move(-stepLength, 0)
-	case ebiten.KeyRight:
-		o.Move(stepLength, 0)
+func (o *resolvObject) MoveDirection(d input.Direction) {
+	switch d {
+	case input.UpDirection:
+		o.Move(0, -o.stepLength)
+	case input.DownDirection:
+		o.Move(0, o.stepLength)
+	case input.LeftDirection:
+		o.Move(-o.stepLength, 0)
+	case input.RightDirection:
+		o.Move(o.stepLength, 0)
 	}
 }
 
@@ -45,8 +45,8 @@ func (o *resolvObject) getMtvForCollision() ([]mtv, bool) {
 		mtv := computeMTV(o.obj, shape)
 		mtvList = append(mtvList, mtv)
 
-		// logs.Logger.Debugf("Collision with %s, direction: %+v,mtv: %+v",
-		// 	o.space.objRecord[shape.ID()], getDirectionFromIntersectionSet(&result), mtv)
+		logs.Logger.Debugf("Collision with %s, direction: %+v,mtv: %+v",
+			o.space.objRecord[shape.ID()], getDirectionFromIntersectionSet(&result), mtv)
 		return mtvList, true
 	}
 

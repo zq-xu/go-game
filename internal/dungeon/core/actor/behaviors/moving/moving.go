@@ -3,7 +3,6 @@ package moving
 import (
 	"fmt"
 
-	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/dungeon/resources"
@@ -15,7 +14,7 @@ import (
 )
 
 type Moving interface {
-	Move(key ebiten.Key)
+	Move(d input.Direction)
 	Image() imagekit.Image
 }
 
@@ -25,15 +24,12 @@ type moving struct {
 	gifkit.Gif
 	movingImages map[input.Direction]gifkit.Gif
 
-	obj        collision.Object
-	stepLength int
+	obj collision.Object
 }
 
-func NewMoving(name string, obj collision.Object, stepLength int, movingImagesPath map[input.Direction]string) (Moving, error) {
-	rp := &moving{
+func NewMoving(name string, obj collision.Object, movingImagesPath map[input.Direction]string) (Moving, error) {
+	mp := &moving{
 		obj:          obj,
-		stepLength:   stepLength,
-		direction:    input.DefaultDirection,
 		movingImages: make(map[input.Direction]gifkit.Gif),
 	}
 
@@ -47,25 +43,49 @@ func NewMoving(name string, obj collision.Object, stepLength int, movingImagesPa
 		g := gifkit.NewNeverStopGif(imgTable.Images()...)
 		g.SetUpdateInterval(5)
 
-		rp.movingImages[k] = g
+		mp.movingImages[k] = g
 	}
 
-	rp.Gif = rp.movingImages[rp.direction]
-	return rp, nil
+	mp.direction = mp.getDefaultDirection()
+	mp.Gif = mp.movingImages[mp.direction]
+	return mp, nil
 }
 
-func (rp *moving) Move(key ebiten.Key) {
-	rp.obj.MoveByKey(key, float64(rp.stepLength))
+func (mp *moving) Move(d input.Direction) {
+	mp.obj.MoveDirection(d)
 
-	d := input.GetDirection(key)
 	if d.Unknown() {
 		return
 	}
 
-	if rp.direction != d {
-		rp.Gif = rp.movingImages[d]
-		rp.direction = d
-	}
+	mp.refreshDirection(d)
 }
 
-func (rp *moving) IsDrawing() bool { return false }
+func (mp *moving) getDefaultDirection() input.Direction {
+	_, ok := mp.movingImages[input.DefaultDirection]
+	if ok {
+		return input.DefaultDirection
+	}
+
+	for k := range mp.movingImages {
+		return k
+	}
+
+	return input.DefaultDirection
+}
+
+func (mp *moving) refreshDirection(d input.Direction) {
+	_, ok := mp.movingImages[d]
+	if !ok {
+		return
+	}
+
+	if mp.direction == d {
+		return
+	}
+
+	mp.Gif = mp.movingImages[d]
+	mp.direction = d
+}
+
+func (mp *moving) IsDrawing() bool { return false }

@@ -1,6 +1,8 @@
 package player
 
 import (
+	"image"
+
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/assets/dungeon"
@@ -25,11 +27,11 @@ type player struct {
 // NewPlayer
 func NewPlayer() (Player, error) {
 	a, err := actor.NewActor(&actor.Option{
-		Name:   "Boy Knight",
-		StartX: 100,
-		StartY: 100,
-		Width:  config.ActorWidth,
-		Height: config.ActorHeight,
+		Name:       "Boy Knight",
+		StartPoint: &image.Point{100, 100},
+		Width:      config.ActorWidth,
+		Height:     config.ActorHeight,
+		StepLength: 1,
 		AttackImagePaths: map[input.Direction]string{
 			input.UpDirection:    dungeon.GetDungeonImagePath("/characters/player/attack/attack1_up.png"),
 			input.DownDirection:  dungeon.GetDungeonImagePath("/characters/player/attack/attack1_down.png"),

@@ -1,52 +1,50 @@
 package skeleton
 
 import (
+	"image"
+
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/assets/dungeon"
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
+	"github.com/zq-xu/go-game/internal/dungeon/core/controls"
 	"github.com/zq-xu/go-game/pkg/event/input"
 )
-
-type Skeleton interface {
-	actor.Actor
-
-	Update()
-}
 
 type skeleton struct {
 	actor.Actor
 
-	direction  input.Direction
-	stepLength int
+	direction input.Direction
 
-	m *mov
-	// inputListener input.InputListener
+	m controls.Mover
+}
+
+type SkeletonConfig struct {
+	Name string
+
+	StartPoint  *image.Point
+	ActiveRange *image.Rectangle
+
+	StepLength float64
 }
 
 // NewSkeleton
-func NewSkeleton() (Skeleton, error) {
+func NewSkeleton(cfg *SkeletonConfig) (actor.Actor, error) {
 	a, err := actor.NewActor(&actor.Option{
-		Name:   "Skeleton",
-		StartX: 160,
-		StartY: 100,
-		Width:  36,
-		Height: 33,
+		Name:       cfg.Name,
+		StartPoint: cfg.StartPoint,
+		StepLength: cfg.StepLength,
+		Width:      36,
+		Height:     33,
 		AttackImagePaths: map[input.Direction]string{
-			input.UpDirection:    dungeon.GetDungeonImagePath("/characters/skeleton/attack/attack_up.png"),
-			input.DownDirection:  dungeon.GetDungeonImagePath("/characters/skeleton/attack/attack_down.png"),
 			input.LeftDirection:  dungeon.GetDungeonImagePath("/characters/skeleton/attack/attack_left.png"),
 			input.RightDirection: dungeon.GetDungeonImagePath("/characters/skeleton/attack/attack_right.png"),
 		},
 		IdleImagePaths: map[input.Direction]string{
-			input.UpDirection:    dungeon.GetDungeonImagePath("/characters/skeleton/idle/idle_up.png"),
-			input.DownDirection:  dungeon.GetDungeonImagePath("/characters/skeleton/idle/idle_down.png"),
 			input.LeftDirection:  dungeon.GetDungeonImagePath("/characters/skeleton/idle/idle_left.png"),
 			input.RightDirection: dungeon.GetDungeonImagePath("/characters/skeleton/idle/idle_right.png"),
 		},
 		MovingImagePaths: map[input.Direction]string{
-			input.UpDirection:    dungeon.GetDungeonImagePath("/characters/skeleton/moving/moving_up.png"),
-			input.DownDirection:  dungeon.GetDungeonImagePath("/characters/skeleton/moving/moving_down.png"),
 			input.LeftDirection:  dungeon.GetDungeonImagePath("/characters/skeleton/moving/moving_left.png"),
 			input.RightDirection: dungeon.GetDungeonImagePath("/characters/skeleton/moving/moving_right.png"),
 		},
@@ -56,17 +54,14 @@ func NewSkeleton() (Skeleton, error) {
 	}
 
 	s := &skeleton{
-		Actor:      a,
-		direction:  input.RightDirection,
-		stepLength: 1,
+		Actor:     a,
+		direction: input.RightDirection,
 	}
-	s.m = NewMov(s, 100, 200)
-	// s.initInputListener()
+
+	s.m = controls.NewRandomMover(s, cfg.ActiveRange)
 	return s, nil
 }
 
 func (s *skeleton) Update() {
-	s.m.RandomMove()
-	// s.Idle()
-	// s.inputListener.Update()
+	s.m.Move()
 }
