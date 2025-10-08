@@ -4,7 +4,6 @@ import (
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/assets/dungeon"
-	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
 	"github.com/zq-xu/go-game/pkg/event/input"
 )
@@ -22,16 +21,17 @@ type skeleton struct {
 	stepLength int
 
 	m *mov
+	// inputListener input.InputListener
 }
 
 // NewSkeleton
 func NewSkeleton() (Skeleton, error) {
 	a, err := actor.NewActor(&actor.Option{
 		Name:   "Skeleton",
-		StartX: 450,
-		StartY: 300,
-		Width:  config.ActorWidth,
-		Height: config.ActorHeight,
+		StartX: 160,
+		StartY: 100,
+		Width:  36,
+		Height: 33,
 		AttackImagePaths: map[input.Direction]string{
 			input.UpDirection:    dungeon.GetDungeonImagePath("/characters/skeleton/attack/attack_up.png"),
 			input.DownDirection:  dungeon.GetDungeonImagePath("/characters/skeleton/attack/attack_down.png"),
@@ -60,11 +60,13 @@ func NewSkeleton() (Skeleton, error) {
 		direction:  input.RightDirection,
 		stepLength: 1,
 	}
-	s.m = NewMov(s, 300, 600)
-
+	s.m = NewMov(s, 100, 200)
+	// s.initInputListener()
 	return s, nil
 }
 
 func (s *skeleton) Update() {
 	s.m.RandomMove()
+	// s.Idle()
+	// s.inputListener.Update()
 }

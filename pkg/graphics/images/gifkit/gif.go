@@ -3,6 +3,7 @@ package gifkit
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 
+	"github.com/zq-xu/go-game/pkg/graphics"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 )
 
@@ -72,9 +73,7 @@ func (g *gifBase) draw(screen *ebiten.Image, x, y float64) {
 		y = y - float64(img.Height())/2
 	}
 
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(x, y)
-	screen.DrawImage(img.Image(), op)
+	graphics.DrawImage(screen, img.Image(), x, y)
 }
 
 func (g *gifBase) image() imagekit.Image {

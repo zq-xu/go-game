@@ -7,9 +7,10 @@ import (
 	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor/behaviors/attack"
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor/behaviors/idle"
-	"github.com/zq-xu/go-game/internal/dungeon/core/actor/behaviors/running"
+	"github.com/zq-xu/go-game/internal/dungeon/core/actor/behaviors/moving"
 	"github.com/zq-xu/go-game/pkg/event/collision"
 	"github.com/zq-xu/go-game/pkg/event/input"
+	"github.com/zq-xu/go-game/pkg/graphics"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 )
 
@@ -33,17 +34,17 @@ type actor struct {
 	// status
 	status config.ActorStatus
 
-	attack  attack.Attack
-	idle    idle.Idle
-	running running.Running
+	attack attack.Attack
+	idle   idle.Idle
+	moving moving.Moving
 
-	// listen to the key input
-	inputListener input.InputListener
+	op *Option
 }
 
 func NewActor(op *Option) (Actor, error) {
 	var err error
 	a := &actor{
+		op:        op,
 		direction: input.DefaultDirection,
 		status:    config.IdleActorStatus,
 
@@ -58,19 +59,19 @@ func NewActor(op *Option) (Actor, error) {
 		op.StepLength = 1
 	}
 
-	a.attack, err = attack.NewAttack(op.AttackImagePaths)
+	a.attack, err = attack.NewAttack(op.Name, op.AttackImagePaths)
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to new actor attack")
 	}
 
-	a.idle, err = idle.NewIdle(op.IdleImagePaths)
+	a.idle, err = idle.NewIdle(op.Name, op.IdleImagePaths)
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to new actor idle")
 	}
 
-	a.running, err = running.NewRunning(a.Object, op.StepLength, op.MovingImagePaths)
+	a.moving, err = moving.NewMoving(op.Name, a.Object, op.StepLength, op.MovingImagePaths)
 	if err != nil {
-		return nil, eris.Wrap(err, "failed to new actor running")
+		return nil, eris.Wrap(err, "failed to new actor moving")
 	}
 
 	return a, nil
@@ -79,20 +80,14 @@ func NewActor(op *Option) (Actor, error) {
 func (a *actor) Draw(screen *ebiten.Image) {
 	img := a.image()
 
-	// draw from leftTop
-	// keep the leftTop point as default
-	leftTopX, leftTopY := a.LeftTop()
-	// when the direction is left or top, keep the rightBottom point fixed
-	if a.direction == input.LeftDirection ||
-		a.direction == input.UpDirection {
-		leftTopX = leftTopX + config.ActorWidth - float64(img.Width())
-		leftTopY = leftTopY + config.ActorHeight - float64(img.Height())
+	// a.debugCollisionBorder(screen)
+	// a.debugImageBorder(screen, img)
 
-	}
+	x, y := a.Center()
+	leftTopX := x - float64(img.Width())/2
+	leftTopY := y - float64(img.Height())/2
 
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(leftTopX, leftTopY)
-	screen.DrawImage(img.Image(), op)
+	graphics.DrawImage(screen, img.Image(), leftTopX, leftTopY)
 }
 
 func (a *actor) image() imagekit.Image {
@@ -100,7 +95,7 @@ func (a *actor) image() imagekit.Image {
 	case config.AttackActorStatus:
 		return a.attack.Image()
 	case config.RunningActorStatus:
-		return a.running.Image()
+		return a.moving.Image()
 	default:
 		return a.idle.Image()
 	}
@@ -114,7 +109,7 @@ func (a *actor) Attack() {
 }
 
 func (a *actor) Moving(key ebiten.Key) {
-	a.running.Update(key)
+	a.moving.Move(key)
 	a.direction = input.GetDirection(key)
 	a.status = config.RunningActorStatus
 }

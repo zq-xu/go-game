@@ -5,6 +5,7 @@ import (
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/shooter/ui/resources"
+	"github.com/zq-xu/go-game/pkg/graphics"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 )
 
@@ -110,9 +111,7 @@ func (i *ImageEntity) MoveDown(dy float64) {
 }
 
 func (i *ImageEntity) Draw(screen *ebiten.Image) {
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(i.X, i.Y)
-	screen.DrawImage(i.Img.Image(), op)
+	graphics.DrawImage(screen, i.Img.Image(), i.X, i.Y)
 }
 
 func (i *ImageEntity) IsUpOfScreen() bool {

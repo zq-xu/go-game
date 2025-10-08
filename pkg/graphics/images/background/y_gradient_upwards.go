@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"github.com/zq-xu/go-game/internal/shooter/settings"
+	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 type yGradientUpwards struct {
@@ -32,9 +33,7 @@ func (g *yGradientUpwards) Draw(screen *ebiten.Image) {
 	startY := -math.Mod(g.offsetY, float64(g.bgH))
 
 	for y := startY; y < float64(settings.GetSettings().ScreenHeight()); y += float64(g.bgH) {
-		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Translate(0, y)
-		screen.DrawImage(g.bg, op)
+		graphics.DrawImage(screen, g.bg, 0, y)
 	}
 }
 

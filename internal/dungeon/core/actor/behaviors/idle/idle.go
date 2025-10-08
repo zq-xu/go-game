@@ -27,7 +27,7 @@ type idle struct {
 	idleImages map[input.Direction]gifkit.Gif
 }
 
-func NewIdle(idleImagesPath map[input.Direction]string) (Idle, error) {
+func NewIdle(name string, idleImagesPath map[input.Direction]string) (Idle, error) {
 	mp := &idle{
 		direction:  input.DefaultDirection,
 		idleImages: make(map[input.Direction]gifkit.Gif),
@@ -38,8 +38,8 @@ func NewIdle(idleImagesPath map[input.Direction]string) (Idle, error) {
 		if err != nil {
 			return nil, eris.Wrapf(err, "failed to new dungeon image %s", v)
 		}
-		imgTable := imagetable.NewImageTable(fmt.Sprintf("idle-%s", k.String()), img)
-
+		imgTable := imagetable.NewImageTable(fmt.Sprintf("%s-idle-%s", name, k.String()), img)
+		imgTable.LogBoxes()
 		g := gifkit.NewNeverStopGif(imgTable.Images()...)
 		g.SetUpdateInterval(5)
 

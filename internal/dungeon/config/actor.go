@@ -7,7 +7,7 @@ const (
 )
 
 var (
-	ActorWidth  float64 = 20
+	ActorWidth  float64 = 22
 	ActorHeight float64 = 30
 )
 

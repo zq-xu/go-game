@@ -5,6 +5,7 @@ import (
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/dungeon/resources"
+	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
 type imgBackground struct {
@@ -25,7 +26,5 @@ func newBackground(imgPath string) (*imgBackground, error) {
 }
 
 func (b *imgBackground) Draw(screen *ebiten.Image, x, y float64) {
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(x, y)
-	screen.DrawImage(b.img, op)
+	graphics.DrawImage(screen, b.img, x, y)
 }

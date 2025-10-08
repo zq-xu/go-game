@@ -1,4 +1,4 @@
-package running
+package moving
 
 import (
 	"fmt"
@@ -14,47 +14,47 @@ import (
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagetable"
 )
 
-type Running interface {
-	Update(key ebiten.Key)
+type Moving interface {
+	Move(key ebiten.Key)
 	Image() imagekit.Image
 }
 
-type running struct {
+type moving struct {
 	direction input.Direction
 
 	gifkit.Gif
-	runImages map[input.Direction]gifkit.Gif
+	movingImages map[input.Direction]gifkit.Gif
 
 	obj        collision.Object
 	stepLength int
 }
 
-func NewRunning(obj collision.Object, stepLength int, runImagesPath map[input.Direction]string) (Running, error) {
-	rp := &running{
-		obj:        obj,
-		stepLength: stepLength,
-		direction:  input.DefaultDirection,
-		runImages:  make(map[input.Direction]gifkit.Gif),
+func NewMoving(name string, obj collision.Object, stepLength int, movingImagesPath map[input.Direction]string) (Moving, error) {
+	rp := &moving{
+		obj:          obj,
+		stepLength:   stepLength,
+		direction:    input.DefaultDirection,
+		movingImages: make(map[input.Direction]gifkit.Gif),
 	}
 
-	for k, v := range runImagesPath {
+	for k, v := range movingImagesPath {
 		img, err := resources.NewDungeonImage(v)
 		if err != nil {
 			return nil, eris.Wrapf(err, "failed to new dungeon image %s", v)
 		}
-		imgTable := imagetable.NewImageTable(fmt.Sprintf("idle-%s", k.String()), img)
-
+		imgTable := imagetable.NewImageTable(fmt.Sprintf("%s-moving-%s", name, k.String()), img)
+		imgTable.LogBoxes()
 		g := gifkit.NewNeverStopGif(imgTable.Images()...)
 		g.SetUpdateInterval(5)
 
-		rp.runImages[k] = g
+		rp.movingImages[k] = g
 	}
 
-	rp.Gif = rp.runImages[rp.direction]
+	rp.Gif = rp.movingImages[rp.direction]
 	return rp, nil
 }
 
-func (rp *running) Update(key ebiten.Key) {
+func (rp *moving) Move(key ebiten.Key) {
 	rp.obj.MoveByKey(key, float64(rp.stepLength))
 
 	d := input.GetDirection(key)
@@ -63,9 +63,9 @@ func (rp *running) Update(key ebiten.Key) {
 	}
 
 	if rp.direction != d {
-		rp.Gif = rp.runImages[d]
+		rp.Gif = rp.movingImages[d]
 		rp.direction = d
 	}
 }
 
-func (rp *running) IsDrawing() bool { return false }
+func (rp *moving) IsDrawing() bool { return false }

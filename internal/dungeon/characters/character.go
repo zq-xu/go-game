@@ -2,6 +2,7 @@ package characters
 
 import (
 	"github.com/rotisserie/eris"
+
 	"github.com/zq-xu/go-game/internal/dungeon/characters/monstors/skeleton"
 	"github.com/zq-xu/go-game/internal/dungeon/characters/player"
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor"

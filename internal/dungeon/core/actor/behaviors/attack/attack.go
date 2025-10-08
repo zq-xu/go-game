@@ -24,7 +24,7 @@ type attack struct {
 	attackItemSet map[input.Direction]gifkit.Gif
 }
 
-func NewAttack(attackImagesPath map[input.Direction]string) (Attack, error) {
+func NewAttack(name string, attackImagesPath map[input.Direction]string) (Attack, error) {
 	ap := &attack{
 		direction:     input.DefaultDirection,
 		attackItemSet: make(map[input.Direction]gifkit.Gif),
@@ -35,8 +35,8 @@ func NewAttack(attackImagesPath map[input.Direction]string) (Attack, error) {
 		if err != nil {
 			return nil, eris.Wrapf(err, "failed to new dungeon image %s", v)
 		}
-		imgTable := imagetable.NewImageTable(fmt.Sprintf("attack-%s", k.String()), img)
-
+		imgTable := imagetable.NewImageTable(fmt.Sprintf("%s-attack-%s", name, k.String()), img)
+		imgTable.LogBoxes()
 		g := gifkit.NewOnceGif(imgTable.Images()...)
 		g.SetUpdateInterval(3)
 

@@ -3,8 +3,6 @@ package collision
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/solarlune/resolv"
-
-	"github.com/zq-xu/go-game/pkg/logs"
 )
 
 type Object interface {
@@ -51,40 +49,6 @@ func (o *resolvObject) LeftTop() (float64, float64) {
 func (o *resolvObject) Center() (float64, float64) {
 	c := o.obj.Position()
 	return c.X, c.Y
-}
-
-func (o *resolvObject) Y() float64 { return o.obj.Position().Y - o.h/2 }
-
-func (o *resolvObject) MoveByKey(key ebiten.Key, stepLength float64) {
-	switch key {
-	case ebiten.KeyUp:
-		o.Move(0, -stepLength)
-	case ebiten.KeyDown:
-		o.Move(0, stepLength)
-	case ebiten.KeyLeft:
-		o.Move(-stepLength, 0)
-	case ebiten.KeyRight:
-		o.Move(stepLength, 0)
-	}
-}
-
-func (o *resolvObject) Move(x, y float64) {
-	o.obj.Move(x, y)
-
-	if o.isCollision() {
-		o.obj.Move(-x, -y)
-	}
-}
-
-func (o *resolvObject) isCollision() bool {
-	return o.obj.IntersectionTest(resolv.IntersectionTestSettings{
-		// Check only shapes that are near the rectangle (within 1 cell's margin)
-		TestAgainst: o.obj.SelectTouchingCells(1).FilterShapes(),
-		OnIntersect: func(set resolv.IntersectionSet) bool {
-			logs.Logger.Debugf("Collision with %s", o.space.objRecord[set.OtherShape.ID()])
-			return true
-		},
-	})
 }
 
 func (o *resolvObject) Name() string { return o.name }
