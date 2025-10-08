@@ -14,8 +14,6 @@ import (
 type skeleton struct {
 	actor.Actor
 
-	direction input.Direction
-
 	m controls.Mover
 }
 
@@ -53,11 +51,7 @@ func NewSkeleton(cfg *SkeletonConfig) (actor.Actor, error) {
 		return nil, eris.Wrap(err, "failed to new actor")
 	}
 
-	s := &skeleton{
-		Actor:     a,
-		direction: input.RightDirection,
-	}
-
+	s := &skeleton{Actor: a}
 	s.m = controls.NewRandomMover(s, cfg.ActiveRange)
 	return s, nil
 }

@@ -4,7 +4,6 @@ import (
 	"github.com/solarlune/resolv"
 
 	"github.com/zq-xu/go-game/pkg/event/input"
-	"github.com/zq-xu/go-game/pkg/logs"
 )
 
 func (o *resolvObject) MoveDirection(d input.Direction) {
@@ -45,8 +44,8 @@ func (o *resolvObject) getMtvForCollision() ([]mtv, bool) {
 		mtv := computeMTV(o.obj, shape)
 		mtvList = append(mtvList, mtv)
 
-		logs.Logger.Debugf("Collision with %s, direction: %+v,mtv: %+v",
-			o.space.objRecord[shape.ID()], getDirectionFromIntersectionSet(&result), mtv)
+		// logs.Logger.Debugf("Collision with %s, direction: %+v,mtv: %+v",
+		// 	o.space.objRecord[shape.ID()], getDirectionFromIntersectionSet(&result), mtv)
 		return mtvList, true
 	}
 
