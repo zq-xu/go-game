@@ -1,22 +1,27 @@
 package collision
 
 import (
+	"math"
+
 	"github.com/solarlune/resolv"
 
 	"github.com/zq-xu/go-game/pkg/event/input"
 )
 
+const approachingDistance = 70
+
 type Object interface {
+	Name() string
 	// The point from topLeft
 	LeftTop() (float64, float64)
 
 	// The point from center
 	Center() (float64, float64)
 
+	Approaching() []string
+
 	Move(x, y float64)
 	MoveDirection(d input.Direction)
-
-	Name() string
 
 	object() *resolv.ConvexPolygon
 	setSpace(s *resolvSpace)
@@ -59,6 +64,8 @@ func NewResolvRectObject(name string, x, y, w, h float64, opts ...objectOption) 
 	return o
 }
 
+func (o *resolvObject) Name() string { return o.name }
+
 func (o *resolvObject) LeftTop() (float64, float64) {
 	c := o.obj.Position()
 	return c.X - o.w/2, c.Y - o.h/2
@@ -69,7 +76,25 @@ func (o *resolvObject) Center() (float64, float64) {
 	return c.X, c.Y
 }
 
-func (o *resolvObject) Name() string { return o.name }
+func (o *resolvObject) Approaching() []string {
+	nearby := make([]string, 0)
+
+	for _, shape := range o.obj.SelectTouchingCells(1).FilterShapes().Shapes() {
+		if shape == o.obj {
+			continue
+		}
+
+		dx := shape.Position().X - o.obj.Position().X
+		dy := shape.Position().Y - o.obj.Position().Y
+		dist := math.Hypot(dx, dy)
+
+		if dist <= approachingDistance {
+			nearby = append(nearby, o.space.objRecord[shape.ID()])
+		}
+	}
+
+	return nearby
+}
 
 func (o *resolvObject) object() *resolv.ConvexPolygon { return o.obj }
 

@@ -20,6 +20,8 @@ type Player interface {
 type player struct {
 	actor.Actor
 
+	approaching *approachingObjects
+
 	// listen to the key input
 	inputListener input.InputListener
 }
@@ -57,10 +59,11 @@ func NewPlayer() (Player, error) {
 
 	p := &player{Actor: a}
 	p.initInputListener()
-
+	p.initApproachingObjects()
 	return p, nil
 }
 
 func (p *player) Update() {
 	p.inputListener.Update()
+	p.RefreshApproaching()
 }

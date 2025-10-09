@@ -7,6 +7,7 @@ import (
 	"github.com/zq-xu/go-game/internal/dungeon/characters/npcs"
 	"github.com/zq-xu/go-game/internal/dungeon/characters/player"
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
+	"github.com/zq-xu/go-game/internal/dungeon/core/controls"
 )
 
 func NewCharacters() ([]actor.Actor, error) {
@@ -17,11 +18,13 @@ func NewCharacters() ([]actor.Actor, error) {
 	}
 	list = append(list, p)
 
-	npcs, err := npcs.NewNPCs()
+	err = npcs.LoadNPCs()
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to load npcs")
 	}
-	list = append(list, npcs...)
+	for _, v := range controls.NpcSet {
+		list = append(list, v)
+	}
 
 	s, err := skeleton.NewSkeletonList()
 	if err != nil {

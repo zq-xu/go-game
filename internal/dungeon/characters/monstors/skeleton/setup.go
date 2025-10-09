@@ -13,7 +13,7 @@ import (
 func NewSkeletonList() ([]actor.Actor, error) {
 	list := make([]actor.Actor, 0)
 
-	rects := generateRandomRects(5, 200, config.MapWidth, config.MapHeight)
+	rects := generateRandomRects(3, 200, config.MapWidth, config.MapHeight)
 
 	for k, v := range rects {
 		s, err := NewSkeleton(&SkeletonConfig{
