@@ -11,10 +11,12 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/solarlune/resolv v0.8.1
-	github.com/zq-xu/gotools v0.0.19
+	github.com/zq-xu/gotools v0.0.20
 	golang.org/x/image v0.30.0
 )
-replace github.com/zq-xu/gotools => /Users/xuzhiqiang/Documents/code/gopath/src/zq-xu/gotools
+
+// replace github.com/zq-xu/gotools => /Users/xuzhiqiang/Documents/code/gopath/src/zq-xu/gotools
+
 require (
 	github.com/ebitengine/gomobile v0.0.0-20250209143333-6071a2a2351c // indirect
 	github.com/ebitengine/hideconsole v1.0.0 // indirect
