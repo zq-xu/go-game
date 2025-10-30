@@ -1,0 +1,13 @@
+skeleton:
+  width: 36
+  height: 33
+  stepLength: 1
+  attackImagePaths:
+    3: "/characters/skeleton/attack/attack_left.png"
+    4: "/characters/skeleton/attack/attack_right.png"
+  idleImagePaths:
+    3: "/characters/skeleton/idle/idle_left.png"
+    4: "/characters/skeleton/idle/idle_right.png"
+  movingImagePaths:
+    3: "/characters/skeleton/moving/moving_left.png"
+    4: "/characters/skeleton/moving/moving_right.png"

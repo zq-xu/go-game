@@ -36,8 +36,9 @@ func NewAttack(name string, attackImagesPath map[input.Direction]string) (Attack
 		}
 		imgTable := imagetable.NewImageTable(fmt.Sprintf("%s-attack-%s", name, k.String()), img)
 		imgTable.LogBoxes()
+
 		g := gifkit.NewOnceGif(imgTable.Images()...)
-		g.SetUpdateInterval(3)
+		g.SetUpdateInterval(10)
 
 		ap.attackImages[k] = g
 	}

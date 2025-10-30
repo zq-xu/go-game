@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/rotisserie/eris"
+
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 )
 

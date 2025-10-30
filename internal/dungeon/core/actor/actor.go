@@ -57,19 +57,25 @@ func NewActor(op *Option) (Actor, error) {
 		),
 	}
 
-	a.attack, err = attack.NewAttack(op.Name, op.AttackImagePaths)
-	if err != nil {
-		return nil, eris.Wrap(err, "failed to new actor attack")
+	if len(op.AttackImagePaths) > 0 {
+		a.attack, err = attack.NewAttack(op.Name, op.AttackImagePaths)
+		if err != nil {
+			return nil, eris.Wrap(err, "failed to new actor attack")
+		}
 	}
 
-	a.idle, err = idle.NewIdle(op.Name, op.IdleImagePaths)
-	if err != nil {
-		return nil, eris.Wrap(err, "failed to new actor idle")
+	if len(op.IdleImagePaths) > 0 {
+		a.idle, err = idle.NewIdle(op.Name, op.IdleImagePaths)
+		if err != nil {
+			return nil, eris.Wrap(err, "failed to new actor idle")
+		}
 	}
 
-	a.moving, err = moving.NewMoving(op.Name, a.Object, op.MovingImagePaths)
-	if err != nil {
-		return nil, eris.Wrap(err, "failed to new actor moving")
+	if len(op.MovingImagePaths) > 0 {
+		a.moving, err = moving.NewMoving(op.Name, a.Object, op.MovingImagePaths)
+		if err != nil {
+			return nil, eris.Wrap(err, "failed to new actor moving")
+		}
 	}
 
 	return a, nil
@@ -101,20 +107,38 @@ func (a *actor) image() imagekit.Image {
 	}
 }
 
-func (a *actor) IsAttack() bool { return a.attack.IsAttack() }
+func (a *actor) IsAttack() bool {
+	if a.attack == nil {
+		return false
+	}
+
+	return a.attack.IsAttack()
+}
 
 func (a *actor) Attack() {
+	if a.attack == nil {
+		return
+	}
+
 	a.attack.Attack(a.direction)
 	a.status = config.AttackActorStatus
 }
 
 func (a *actor) MoveDirection(d input.Direction) {
+	if a.moving == nil {
+		return
+	}
+
 	a.direction = d
 	a.moving.Move(a.direction)
 	a.status = config.RunningActorStatus
 }
 
 func (a *actor) Idle() {
+	if a.idle == nil {
+		return
+	}
+
 	a.idle.Update(a.direction)
 	a.status = config.IdleActorStatus
 }

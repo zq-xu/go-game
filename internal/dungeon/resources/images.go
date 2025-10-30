@@ -7,10 +7,14 @@ import (
 
 // NewDungeonImage
 func NewDungeonImage(imgPath string) (imagekit.Image, error) {
-	return imagekit.NewImageFromEmbed(&dungeon.EmbeddedDungeon, imgPath)
+	return imagekit.NewImageFromEmbed(&dungeon.EmbeddedDungeon, dungeon.GetDungeonImagePath(imgPath))
 }
 
 // NewDungeonIImageList
 func NewDungeonIImageList(imgPaths []string) ([]imagekit.Image, error) {
-	return imagekit.NewImageListFromEmbed(&dungeon.EmbeddedDungeon, imgPaths)
+	list := make([]string, len(imgPaths))
+	for k, v := range imgPaths {
+		list[k] = dungeon.GetDungeonImagePath(v)
+	}
+	return imagekit.NewImageListFromEmbed(&dungeon.EmbeddedDungeon, list)
 }

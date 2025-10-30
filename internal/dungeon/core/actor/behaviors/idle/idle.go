@@ -40,7 +40,7 @@ func NewIdle(name string, idleImagesPath map[input.Direction]string) (Idle, erro
 		imgTable := imagetable.NewImageTable(fmt.Sprintf("%s-idle-%s", name, k.String()), img)
 		imgTable.LogBoxes()
 		g := gifkit.NewNeverStopGif(imgTable.Images()...)
-		g.SetUpdateInterval(5)
+		g.SetUpdateInterval(10)
 
 		ip.idleImages[k] = g
 	}

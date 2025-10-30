@@ -2,17 +2,16 @@ package base
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-
-	"github.com/zq-xu/go-game/pkg/logs"
+	"github.com/zq-xu/gotools/logx"
 )
 
 // ShowGifs
 func ShowGifs(imgPaths ...string) {
-	logs.InitLogger("debug")
+	logx.InitLogger()
 
 	g, err := NewGame(imgPaths...)
 	if err != nil {
-		logs.Logger.Fatalf("new image from file %s failed. %v", imgPaths, err)
+		logx.Logger.Fatalf("new image from file %s failed. %v", imgPaths, err)
 	}
 
 	ebiten.SetWindowSize(g.ScreenWidth, g.ScreenHeight)
@@ -20,6 +19,6 @@ func ShowGifs(imgPaths ...string) {
 
 	err = ebiten.RunGame(g)
 	if err != nil {
-		logs.Logger.Fatal("run game failed.", err)
+		logx.Logger.Fatal("run game failed.", err)
 	}
 }

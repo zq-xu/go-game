@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/rotisserie/eris"
+
 	"github.com/zq-xu/go-game/internal/shooter/data"
 	"github.com/zq-xu/go-game/internal/shooter/stages"
 	"github.com/zq-xu/go-game/internal/shooter/stages/beginning"

@@ -2,41 +2,32 @@ package config
 
 import (
 	"image/color"
+
+	"github.com/zq-xu/gotools/configx"
 )
 
-var Cfg = &Config{
-	ScreenConfig: ScreenConfig{
-		FullScreen:   true,
-		ScreenWidth:  int(BaseScreenWidth),
-		ScreenHeight: int(BaseScreenHeight),
-	},
+var Cfg Config
 
-	Title:          "Ebiten Game",
-	AuthorText:     "AUTHOR: ZHIQIANG XU",
-	StartHintTexts: []string{"", "", "PRESS ENTER KEY TO START", "", "", "", ""},
-
-	BgColor:     color.RGBA{0xff, 0xff, 0xff, 0xff},
-	ShadowColor: color.RGBA{0x30, 0x30, 0x30, 0x30},
-
-	KeyInterval: 500,
+func init() {
+	configx.RegisterByFile("settings", &Cfg, configx.DefaultSetupFunc)
 }
 
 type Config struct {
-	ScreenConfig ScreenConfig `json:",inline"`
+	ScreenConfig ScreenConfig
 
-	Title          string   `json:"title"`
-	AuthorText     string   `json:"authorText"`
-	StartHintTexts []string `json:"startHintTexts"`
+	Title          string
+	AuthorText     string
+	StartHintTexts []string
 
-	BgColor color.RGBA `json:"bgColor"`
+	BgColor color.RGBA
 
-	ShadowColor color.RGBA `json:"shadowColor"`
+	ShadowColor color.RGBA
 
-	KeyInterval int `json:"keyInterval" description:"base on the TPS"`
+	KeyInterval int `description:"base on the TPS"`
 }
 
 type ScreenConfig struct {
-	FullScreen   bool `json:"fullScreen"`
-	ScreenWidth  int  `json:"screenWidth"`
-	ScreenHeight int  `json:"screenHeight"`
+	FullScreen   bool
+	ScreenWidth  int
+	ScreenHeight int
 }

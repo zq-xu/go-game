@@ -1,42 +1,25 @@
 package base
 
 import (
-	"image"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
 	"github.com/zq-xu/go-game/internal/dungeon/core/dialog"
 	"github.com/zq-xu/go-game/internal/dungeon/types"
-	"github.com/zq-xu/go-game/pkg/event/input"
 )
 
 type npc struct {
 	cfg *NPCConfig
+
 	actor.Actor
 
 	approaching bool
 	dialog.Dialog
 }
 
-type NPCConfig struct {
-	Name string
-
-	Width, Height             float64
-	StartPoint                *image.Point
-	DialogOffsetToRightCenter *types.Offset
-	IdleImagePaths            map[input.Direction]string
-}
-
 func NewNPC(cfg *NPCConfig) (types.NPC, error) {
-	a, err := actor.NewActor(&actor.Option{
-		Name:           cfg.Name,
-		StartPoint:     cfg.StartPoint,
-		Width:          cfg.Width,
-		Height:         cfg.Height,
-		IdleImagePaths: cfg.IdleImagePaths,
-	})
+	a, err := actor.NewActor(&cfg.Option)
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to new actor")
 	}

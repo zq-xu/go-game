@@ -7,10 +7,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/lafriks/go-tiled"
 	"github.com/rotisserie/eris"
+	"github.com/zq-xu/gotools/logx"
 
 	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/pkg/event/collision"
-	"github.com/zq-xu/go-game/pkg/logs"
 )
 
 type TiledMap interface {
@@ -70,7 +70,7 @@ func (tm *tiledMap) TileHeight() int { return tm.tMap.TileHeight }
 func (tm *tiledMap) PrintObjects() {
 	for _, v := range tm.tMap.ObjectGroups {
 		for _, obj := range v.Objects {
-			logs.Logger.Debugf("obj %s:\n%+v", obj.Name, obj)
+			logx.Logger.Debugf("obj %s:\n%+v", obj.Name, obj)
 		}
 	}
 }

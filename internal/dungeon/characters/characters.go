@@ -30,6 +30,7 @@ func NewCharacters() ([]actor.Actor, error) {
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to load skeletons")
 	}
+
 	list = append(list, s...)
 	return list, nil
 }

@@ -1,12 +1,10 @@
 package player
 
 import (
-	"image"
-
 	"github.com/rotisserie/eris"
+	"github.com/zq-xu/gotools/configx"
+	"github.com/zq-xu/gotools/logx"
 
-	"github.com/zq-xu/go-game/assets/dungeon"
-	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
 	"github.com/zq-xu/go-game/pkg/event/input"
 )
@@ -26,33 +24,16 @@ type player struct {
 	inputListener input.InputListener
 }
 
+var PlayerCfg actor.Option
+
+func init() {
+	configx.RegisterByFile("player", &PlayerCfg, configx.DefaultSetupFunc)
+}
+
 // NewPlayer
 func NewPlayer() (Player, error) {
-	a, err := actor.NewActor(&actor.Option{
-		Name:       "Boy Knight",
-		StartPoint: &image.Point{100, 100},
-		Width:      config.ActorWidth,
-		Height:     config.ActorHeight,
-		StepLength: 1,
-		AttackImagePaths: map[input.Direction]string{
-			input.UpDirection:    dungeon.GetDungeonImagePath("/characters/player/attack/attack1_up.png"),
-			input.DownDirection:  dungeon.GetDungeonImagePath("/characters/player/attack/attack1_down.png"),
-			input.LeftDirection:  dungeon.GetDungeonImagePath("/characters/player/attack/attack1_left.png"),
-			input.RightDirection: dungeon.GetDungeonImagePath("/characters/player/attack/attack1_right.png"),
-		},
-		IdleImagePaths: map[input.Direction]string{
-			input.UpDirection:    dungeon.GetDungeonImagePath("/characters/player/idle/idle_up.png"),
-			input.DownDirection:  dungeon.GetDungeonImagePath("/characters/player/idle/idle_down.png"),
-			input.LeftDirection:  dungeon.GetDungeonImagePath("/characters/player/idle/idle_left.png"),
-			input.RightDirection: dungeon.GetDungeonImagePath("/characters/player/idle/idle_right.png"),
-		},
-		MovingImagePaths: map[input.Direction]string{
-			input.UpDirection:    dungeon.GetDungeonImagePath("/characters/player/run/run_up.png"),
-			input.DownDirection:  dungeon.GetDungeonImagePath("/characters/player/run/run_down.png"),
-			input.LeftDirection:  dungeon.GetDungeonImagePath("/characters/player/run/run_left.png"),
-			input.RightDirection: dungeon.GetDungeonImagePath("/characters/player/run/run_right.png"),
-		},
-	})
+	logx.Logger.Info("Loading Player")
+	a, err := actor.NewActor(&PlayerCfg)
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to new actor")
 	}
@@ -60,6 +41,8 @@ func NewPlayer() (Player, error) {
 	p := &player{Actor: a}
 	p.initInputListener()
 	p.initApproachingObjects()
+
+	logx.Logger.Info("Loaded Player")
 	return p, nil
 }
 

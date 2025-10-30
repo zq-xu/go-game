@@ -1,0 +1,12 @@
+logs:
+  logLevel: debug
+
+settings: etc/dungeon/settings.yaml
+
+tiledmap: etc/dungeon/tiledmap.yaml
+npcs: etc/dungeon/npcs.yaml
+
+player: etc/dungeon/player.yaml
+monsters: etc/dungeon/monsters.yaml
+
+dialog: etc/dungeon/dialog.yaml

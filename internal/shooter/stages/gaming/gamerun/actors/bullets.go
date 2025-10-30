@@ -9,7 +9,6 @@ import (
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/shooter/stages/gaming/gamerun/actors/entity"
-
 	"github.com/zq-xu/go-game/pkg/metrics"
 )
 

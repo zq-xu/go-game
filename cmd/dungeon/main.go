@@ -3,14 +3,20 @@ package main
 import (
 	"log"
 
+	"github.com/zq-xu/gotools/configx"
+
 	"github.com/zq-xu/go-game/internal/dungeon"
-	"github.com/zq-xu/go-game/pkg/logs"
 )
 
-func main() {
-	logs.InitLogger("debug")
+var configFile = "etc/dungeon/config.yaml"
 
-	err := dungeon.StartGame()
+func main() {
+	err := configx.Setup(configFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = dungeon.StartGame()
 	if err != nil {
 		log.Fatal(err)
 	}

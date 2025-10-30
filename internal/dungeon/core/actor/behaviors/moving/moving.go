@@ -41,7 +41,7 @@ func NewMoving(name string, obj collision.Object, movingImagesPath map[input.Dir
 		imgTable := imagetable.NewImageTable(fmt.Sprintf("%s-moving-%s", name, k.String()), img)
 		imgTable.LogBoxes()
 		g := gifkit.NewNeverStopGif(imgTable.Images()...)
-		g.SetUpdateInterval(5)
+		g.SetUpdateInterval(10)
 
 		mp.movingImages[k] = g
 	}

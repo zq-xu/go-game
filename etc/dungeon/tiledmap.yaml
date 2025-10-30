@@ -1,0 +1,30 @@
+bgImgPath: "map1.png"
+mapPath: "assets/dungeon/map1.tmx"
+
+gifs:
+  wall1-torch1:
+    imgPaths:
+      - "gif/torch/torch_1.png"
+      - "gif/torch/torch_2.png"
+      - "gif/torch/torch_3.png"
+      - "gif/torch/torch_4.png"
+    x: 208
+    y: 216
+
+  wall1-torch2:
+    imgPaths:
+      - "gif/torch/torch_1.png"
+      - "gif/torch/torch_2.png"
+      - "gif/torch/torch_3.png"
+      - "gif/torch/torch_4.png"
+    x: 238
+    y: 216
+
+  wall2-candle2:
+    imgPaths:
+      - "gif/candleA/candleA_01.png"
+      - "gif/candleA/candleA_02.png"
+      - "gif/candleA/candleA_03.png"
+      - "gif/candleA/candleA_04.png"
+    x: 583
+    y: 514

@@ -1,0 +1,4 @@
+logs:
+  logLevel: debug
+
+settings: etc/shooter/settings.yaml

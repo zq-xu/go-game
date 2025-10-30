@@ -1,0 +1,26 @@
+
+name: "Boy Knight"
+startPoint:
+  x: 100
+  y: 100
+width: 22   # 这里保持为变量引用
+height: 30
+stepLength: 1
+
+attackImagePaths:
+  1: "/characters/player/attack/attack1_up.png"
+  2: "/characters/player/attack/attack1_down.png"
+  3: "/characters/player/attack/attack1_left.png"
+  4: "/characters/player/attack/attack1_right.png"
+
+idleImagePaths:
+  1: "/characters/player/idle/idle_up.png"
+  2: "/characters/player/idle/idle_down.png"
+  3: "/characters/player/idle/idle_left.png"
+  4: "/characters/player/idle/idle_right.png"
+
+movingImagePaths:
+  1: "/characters/player/run/run_up.png"
+  2: "/characters/player/run/run_down.png"
+  3: "/characters/player/run/run_left.png"
+  4: "/characters/player/run/run_right.png"

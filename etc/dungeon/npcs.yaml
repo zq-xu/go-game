@@ -1,0 +1,38 @@
+grocery:
+  name: "Grocery"
+  startPoint:
+    x: 100
+    y: 650
+  width: 40
+  height: 45
+  dialogOffsetToRightCenter:
+    x: 0
+    y: 5
+  idleImagePaths:
+    2: "/characters/npcs/grocery/idle.png"
+
+moonTower:
+  name: "MoonTower"
+  startPoint:
+    x: 550
+    y: 50
+  width: 70
+  height: 90
+  dialogOffsetToRightCenter:
+    x: 0
+    y: 5
+  idleImagePaths:
+    2: "/characters/npcs/moon_tower/idle.png"
+
+mageGuardian:
+  name: "MageGuardian-blue"
+  startPoint:
+    x: 700
+    y: 300
+  width: 35
+  height: 60
+  dialogOffsetToRightCenter:
+    x: 0
+    y: 5
+  idleImagePaths:
+    2: "/characters/npcs/mage_guardian/idle.png"

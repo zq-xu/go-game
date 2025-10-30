@@ -39,15 +39,15 @@ type setting struct {
 // GetSettings
 func GetSettings() Settings {
 	if globalSettings == nil {
-		globalSettings = newSetting(config.Cfg)
+		globalSettings = newSetting(&config.Cfg)
 	}
 	return globalSettings
 }
 
 func newSetting(cfg *config.Config) Settings {
 	s := &setting{
-		screenWidth:       int(config.BaseScreenWidth),
-		screenHeight:      int(config.BaseScreenHeight),
+		screenWidth:       int(cfg.ScreenConfig.ScreenWidth),
+		screenHeight:      int(cfg.ScreenConfig.ScreenHeight),
 		shipXSpeedFactor:  BaseShipXSpeedFactor,
 		shipYSpeedFactor:  BaseShipYSpeedFactor,
 		bulletSpeedFactor: BaseBulletSpeedFactor,

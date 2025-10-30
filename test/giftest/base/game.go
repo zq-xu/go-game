@@ -5,11 +5,11 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/samber/lo"
+	"github.com/zq-xu/gotools/logx"
 
 	"github.com/zq-xu/go-game/pkg/graphics/images/gifkit"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagetable"
-	"github.com/zq-xu/go-game/pkg/logs"
 )
 
 type game struct {
@@ -39,7 +39,7 @@ func NewGame(imgPaths ...string) (*game, error) {
 	for _, imgPath := range imgPaths {
 		img, err := imagekit.NewImageFromFile(imgPath)
 		if err != nil {
-			logs.Logger.Fatalf("new image from file %s failed. %v", imgPath, err)
+			logx.Logger.Fatalf("new image from file %s failed. %v", imgPath, err)
 		}
 
 		imgTable := imagetable.NewImageTable(imgPath, img)

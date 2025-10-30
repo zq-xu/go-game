@@ -2,13 +2,13 @@ package imagetable
 
 import (
 	"embed"
-	"fmt"
 	"image"
 
 	"github.com/rotisserie/eris"
+	"github.com/zq-xu/gotools/logx"
+
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagetable/boxes"
-	"github.com/zq-xu/go-game/pkg/logs"
 )
 
 type ImageTable interface {
@@ -50,13 +50,12 @@ func NewImageTableFromEmbed(embedFS *embed.FS, name, imgPath string) (ImageTable
 }
 
 func (i *imageTable) LogBoxes() {
-	fmt.Println()
-	logs.Logger.Debugf("imagebox %s:", i.name)
+	logx.Logger.Out.Write([]byte("\n"))
+	logx.Logger.Debugf("imagebox %s:", i.name)
 	for i, box := range i.boxes {
-		logs.Logger.Debugf("  subimage %d pixels range: (xmin=%d, ymin=%d, xmax=%d, ymax=%d, width=%d, height=%d)\n",
+		logx.Logger.Debugf("  subimage %d pixels range: (xmin=%d, ymin=%d, xmax=%d, ymax=%d, width=%d, height=%d)",
 			i+1, box.Xmin(), box.Ymin(), box.Xmax(), box.Ymax(), box.Width(), box.Height())
 	}
-	fmt.Println()
 }
 
 func (i *imageTable) Images() []imagekit.Image {

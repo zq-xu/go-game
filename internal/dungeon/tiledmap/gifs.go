@@ -26,7 +26,7 @@ func (tm *tiledMap) initGifs() error {
 			return eris.Wrapf(err, "failed to new dungeon image list %s", v.ImgPaths)
 		}
 		gg := gifkit.NewNeverStopGif(imgList...)
-		gg.SetUpdateInterval(5)
+		gg.SetUpdateInterval(10)
 		gg.SetDrawBeginning(gifkit.CenterBottomDrawBeginning)
 		tm.gifs.gifs[name] = gifItem{Gif: gg, x: v.X, y: v.Y}
 	}

@@ -1,0 +1,30 @@
+screenConfig:
+  fullScreen: true
+  screenWidth: 1280
+  screenHeight: 720
+
+title: "Ebiten Game"
+authorText: "AUTHOR: ZHIQIANG XU"
+
+startHintTexts:
+  - ""
+  - ""
+  - "PRESS ENTER KEY TO START"
+  - ""
+  - ""
+  - ""
+  - ""
+
+bgColor:
+  r: 255
+  g: 255
+  b: 255
+  a: 255
+
+shadowColor:
+  r: 48
+  g: 48
+  b: 48
+  a: 48
+
+keyInterval: 500

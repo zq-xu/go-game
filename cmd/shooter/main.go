@@ -4,13 +4,18 @@ import (
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/zq-xu/gotools/configx"
 
 	"github.com/zq-xu/go-game/internal/shooter/game"
-	"github.com/zq-xu/go-game/pkg/logs"
 )
 
+var configFile = "etc/shooter/config.yaml"
+
 func main() {
-	logs.InitLogger("debug")
+	err := configx.Setup(configFile)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	g, err := game.NewGame()
 	if err != nil {

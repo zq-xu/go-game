@@ -6,9 +6,4 @@ const (
 	AttackActorStatus
 )
 
-var (
-	ActorWidth  float64 = 22
-	ActorHeight float64 = 30
-)
-
 type ActorStatus int

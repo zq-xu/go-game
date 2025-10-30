@@ -3,6 +3,7 @@ package components
 import (
 	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
+
 	"github.com/zq-xu/go-game/pkg/graphics"
 )
 
