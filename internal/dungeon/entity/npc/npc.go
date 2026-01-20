@@ -1,13 +1,20 @@
-package base
+package npc
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
+	"github.com/zq-xu/go-game/internal/dungeon/core/controls"
 	"github.com/zq-xu/go-game/internal/dungeon/core/dialog"
-	"github.com/zq-xu/go-game/internal/dungeon/types"
+	"github.com/zq-xu/gotools/logx"
 )
+
+type NPC interface {
+	actor.Actor
+
+	controls.ApprochObject
+}
 
 type npc struct {
 	cfg *NPCConfig
@@ -18,7 +25,28 @@ type npc struct {
 	dialog.Dialog
 }
 
-func NewNPC(cfg *NPCConfig) (types.NPC, error) {
+// LoadNPCs
+func LoadNPCs() ([]actor.Actor, error) {
+	list := make([]actor.Actor, 0)
+
+	for k, v := range NPCConfigSet {
+		logx.Logger.Infof("Loading NPC %s", k)
+		npc, err := NewNPC(v)
+		if err != nil {
+			return nil, eris.Wrapf(err, "failed to new %s", v.Name)
+		}
+
+		list = append(list, npc)
+		logx.Logger.Infof("Loaded NPC %s", k)
+
+		controls.RegisterNPC(npc.Name(), npc)
+	}
+
+	return list, nil
+}
+
+// NewNPC
+func NewNPC(cfg *NPCConfig) (NPC, error) {
 	a, err := actor.NewActor(&cfg.Option)
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to new actor")

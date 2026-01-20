@@ -1,16 +1,16 @@
-package characters
+package entity
 
 import (
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/internal/dungeon/characters/monstors/skeleton"
-	"github.com/zq-xu/go-game/internal/dungeon/characters/npcs"
-	"github.com/zq-xu/go-game/internal/dungeon/characters/player"
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
-	"github.com/zq-xu/go-game/internal/dungeon/core/controls"
+	"github.com/zq-xu/go-game/internal/dungeon/core/tiledmap"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/monstors/skeleton"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/npc"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/player"
 )
 
-func NewCharacters() ([]actor.Actor, error) {
+func NewEntities(tm tiledmap.TiledMap) ([]actor.Actor, error) {
 	list := make([]actor.Actor, 0)
 	p, err := player.NewPlayer()
 	if err != nil {
@@ -18,15 +18,13 @@ func NewCharacters() ([]actor.Actor, error) {
 	}
 	list = append(list, p)
 
-	err = npcs.LoadNPCs()
+	n, err := npc.LoadNPCs()
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to load npcs")
 	}
-	for _, v := range controls.NpcSet {
-		list = append(list, v)
-	}
+	list = append(list, n...)
 
-	s, err := skeleton.NewSkeletonList()
+	s, err := skeleton.NewSkeletonList(tm)
 	if err != nil {
 		return nil, eris.Wrap(err, "failed to load skeletons")
 	}

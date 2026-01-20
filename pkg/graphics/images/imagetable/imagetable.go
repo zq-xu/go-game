@@ -50,7 +50,6 @@ func NewImageTableFromEmbed(embedFS *embed.FS, name, imgPath string) (ImageTable
 }
 
 func (i *imageTable) LogBoxes() {
-	logx.Logger.Out.Write([]byte("\n"))
 	logx.Logger.Debugf("imagebox %s:", i.name)
 	for i, box := range i.boxes {
 		logx.Logger.Debugf("  subimage %d pixels range: (xmin=%d, ymin=%d, xmax=%d, ymax=%d, width=%d, height=%d)",

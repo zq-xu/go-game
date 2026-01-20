@@ -8,13 +8,13 @@ import (
 	"github.com/rotisserie/eris"
 	"github.com/zq-xu/gotools/logx"
 
-	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
+	"github.com/zq-xu/go-game/internal/dungeon/core/tiledmap"
 )
 
-func NewSkeletonList() ([]actor.Actor, error) {
+func NewSkeletonList(tm tiledmap.TiledMap) ([]actor.Actor, error) {
 	list := make([]actor.Actor, 0)
-	rects := generateRandomRects(3, 200, config.MapWidth, config.MapHeight)
+	rects := generateRandomRects(3, 200, float64(tm.Width()), float64(tm.Height()))
 
 	logx.Logger.Info("Loading Skeletons")
 	for k, v := range rects {

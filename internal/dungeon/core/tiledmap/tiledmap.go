@@ -9,7 +9,6 @@ import (
 	"github.com/rotisserie/eris"
 	"github.com/zq-xu/gotools/logx"
 
-	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/pkg/event/collision"
 )
 
@@ -29,7 +28,7 @@ type TiledMap interface {
 }
 
 type tiledMap struct {
-	cfg *config.TiledMapConfig
+	cfg *TiledMapConfig
 
 	tMap *tiled.Map
 
@@ -39,7 +38,7 @@ type tiledMap struct {
 	Tiles
 }
 
-func NewTiledMap(cfg *config.TiledMapConfig) (TiledMap, error) {
+func NewTiledMap(cfg *TiledMapConfig) (TiledMap, error) {
 	var err error
 	tm := &tiledMap{cfg: cfg}
 

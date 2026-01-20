@@ -6,7 +6,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/internal/dungeon/resources"
 	"github.com/zq-xu/go-game/pkg/graphics"
 	"github.com/zq-xu/go-game/pkg/graphics/images/imagekit"
@@ -27,7 +26,7 @@ func NewDialog() (Dialog, error) {
 	var err error
 	d := &dialog{}
 
-	cfg := config.GetDialogConfig()
+	cfg := GetDialogConfig()
 	d.icon, err = resources.NewDungeonImage(cfg.Icon)
 	if err != nil {
 		return nil, eris.Wrap(err, "load dialog icon image failed.")

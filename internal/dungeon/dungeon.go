@@ -4,33 +4,22 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/internal/dungeon/characters"
 	"github.com/zq-xu/go-game/internal/dungeon/config"
 	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
-	"github.com/zq-xu/go-game/internal/dungeon/tiledmap"
+	"github.com/zq-xu/go-game/internal/dungeon/core/tiledmap"
+	"github.com/zq-xu/go-game/internal/dungeon/entity"
 	"github.com/zq-xu/go-game/pkg/event/collision"
 )
 
+// Implement ebiten.Game
 type game struct {
 	tMap tiledmap.TiledMap
 
-	characters     []actor.Actor
+	entities       []actor.Actor
 	collisionSpace collision.Space
 }
 
-// StartGame
-func StartGame() error {
-	ebiten.SetWindowSize(config.MapWidth, config.MapHeight)
-	ebiten.SetWindowTitle("Dungeon")
-
-	g, err := NewGame()
-	if err != nil {
-		return eris.Wrap(err, "failed to initialize game")
-	}
-
-	return ebiten.RunGame(g)
-}
-
+// NewGame
 func NewGame() (ebiten.Game, error) {
 	var err error
 	g := &game{}
@@ -40,25 +29,28 @@ func NewGame() (ebiten.Game, error) {
 		return nil, eris.Wrap(err, "failed to load tiledmap")
 	}
 
-	g.characters, err = characters.NewCharacters()
+	g.entities, err = entity.NewEntities(g.tMap)
 	if err != nil {
-		return nil, eris.Wrap(err, "failed to load characters")
+		return nil, eris.Wrap(err, "failed to load entities")
 	}
 
+	g.initialiseCollision()
+	return g, nil
+}
+
+func (g *game) initialiseCollision() {
 	g.collisionSpace = collision.NewResolvSpace(
 		g.tMap.Width(), g.tMap.Height(),
 		g.tMap.TileWidth(), g.tMap.TileHeight())
 
 	g.collisionSpace.AddObject(g.tMap.CollisionObjects()...)
-	for _, v := range g.characters {
+	for _, v := range g.entities {
 		g.collisionSpace.AddObject(v)
 	}
-
-	return g, nil
 }
 
 func (g *game) Update() error {
-	for _, v := range g.characters {
+	for _, v := range g.entities {
 		v.Update()
 	}
 	return nil
@@ -67,7 +59,7 @@ func (g *game) Update() error {
 func (g *game) Draw(screen *ebiten.Image) {
 	g.tMap.Draw(screen, 0, 0)
 
-	for _, v := range g.characters {
+	for _, v := range g.entities {
 		v.Draw(screen)
 	}
 }

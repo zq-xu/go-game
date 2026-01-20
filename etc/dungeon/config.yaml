@@ -1,5 +1,5 @@
 logs:
-  logLevel: debug
+  logLevel: info
 
 settings: etc/dungeon/settings.yaml
 

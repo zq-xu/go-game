@@ -3,7 +3,7 @@ name: "Boy Knight"
 startPoint:
   x: 100
   y: 100
-width: 22   # 这里保持为变量引用
+width: 22
 height: 30
 stepLength: 1
 

@@ -1,13 +1,6 @@
 package config
 
-import (
-	"github.com/zq-xu/gotools/configx"
+var (
+	ScreenWidth  = 800
+	ScreenHeight = 800
 )
-
-type Config struct{}
-
-func init() {
-	configx.RegisterByFile("tiledmap", &TiledMapCfg, configx.DefaultSetupFunc)
-	configx.RegisterByFile("dialog", &DialogCfg, configx.DefaultSetupFunc)
-
-}

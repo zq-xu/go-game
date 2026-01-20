@@ -1,4 +1,4 @@
-package base
+package npc
 
 import (
 	"github.com/zq-xu/gotools/configx"

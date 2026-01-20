@@ -16,5 +16,5 @@ type MonsterConfig struct {
 }
 
 func init() {
-	configx.RegisterByFile("monsters", &MonsterConfigSet, configx.DebugSetupFunc("monsters", &MonsterConfigSet))
+	configx.RegisterByFile("monsters", &MonsterConfigSet, configx.DefaultSetupFunc)
 }
