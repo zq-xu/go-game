@@ -3,7 +3,7 @@ package npc
 import (
 	"github.com/zq-xu/gotools/configx"
 
-	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/core/actor"
 	"github.com/zq-xu/go-game/internal/dungeon/types"
 )
 

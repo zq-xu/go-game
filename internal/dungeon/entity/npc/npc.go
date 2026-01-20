@@ -4,9 +4,9 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/rotisserie/eris"
 
-	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
-	"github.com/zq-xu/go-game/internal/dungeon/core/controls"
-	"github.com/zq-xu/go-game/internal/dungeon/core/dialog"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/core/actor"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/core/controls"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/core/dialog"
 	"github.com/zq-xu/gotools/logx"
 )
 

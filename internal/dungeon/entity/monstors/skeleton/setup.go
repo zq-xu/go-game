@@ -8,8 +8,8 @@ import (
 	"github.com/rotisserie/eris"
 	"github.com/zq-xu/gotools/logx"
 
-	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
-	"github.com/zq-xu/go-game/internal/dungeon/core/tiledmap"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/core/actor"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/core/tiledmap"
 )
 
 func NewSkeletonList(tm tiledmap.TiledMap) ([]actor.Actor, error) {

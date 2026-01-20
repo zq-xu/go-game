@@ -5,9 +5,9 @@ import (
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/dungeon/config"
-	"github.com/zq-xu/go-game/internal/dungeon/core/actor"
-	"github.com/zq-xu/go-game/internal/dungeon/core/tiledmap"
 	"github.com/zq-xu/go-game/internal/dungeon/entity"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/core/actor"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/core/tiledmap"
 	"github.com/zq-xu/go-game/pkg/event/collision"
 )
 

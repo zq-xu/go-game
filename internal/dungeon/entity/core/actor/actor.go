@@ -5,9 +5,9 @@ import (
 	"github.com/rotisserie/eris"
 
 	"github.com/zq-xu/go-game/internal/dungeon/config"
-	"github.com/zq-xu/go-game/internal/dungeon/core/actor/behaviors/attack"
-	"github.com/zq-xu/go-game/internal/dungeon/core/actor/behaviors/idle"
-	"github.com/zq-xu/go-game/internal/dungeon/core/actor/behaviors/moving"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/core/actor/behaviors/attack"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/core/actor/behaviors/idle"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/core/actor/behaviors/moving"
 	"github.com/zq-xu/go-game/pkg/event/collision"
 	"github.com/zq-xu/go-game/pkg/event/input"
 	"github.com/zq-xu/go-game/pkg/graphics"

@@ -3,7 +3,7 @@ package player
 import (
 	"slices"
 
-	"github.com/zq-xu/go-game/internal/dungeon/core/controls"
+	"github.com/zq-xu/go-game/internal/dungeon/entity/core/controls"
 )
 
 type approachingObjects struct {
